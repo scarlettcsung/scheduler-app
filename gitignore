@@ -1,0 +1,10 @@
+# don't use ** in patterns unless absolutely necessary
+# for more information:
+# $ git help gitignore
+
+.metadata/
+bin/
+doc/
+
+# for Mac users
+.DS_Store
