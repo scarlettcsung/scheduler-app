@@ -5,6 +5,7 @@
 .metadata/
 bin/
 doc/
+idea/
 
 # for Mac users
 .DS_Store
