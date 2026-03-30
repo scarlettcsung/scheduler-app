@@ -1,6 +1,6 @@
 package User;
 
-<<<<<<< HEAD
+
 import UserCalendar.UserCalendar;
 
 public class User {
@@ -30,9 +30,6 @@ public class User {
 	public boolean isAdmin() {
 		return isAdmin;
 	}
-=======
-public class User {
->>>>>>> origin/main
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
