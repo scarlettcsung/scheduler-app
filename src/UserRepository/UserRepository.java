@@ -25,6 +25,7 @@ public class UserRepository {
 				return u;
 			}
 		}
+		return null; // if no match is found
 	}
 	
 
