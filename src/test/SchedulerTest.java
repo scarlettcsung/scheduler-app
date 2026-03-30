@@ -7,7 +7,7 @@ public class SchedulerTest extends TestCase {
 
     private Scheduler scheduler;
 
-    protected void setUp() throws Exception {
+    protected void setUp() {
         scheduler = new Scheduler();
     }
 
@@ -17,7 +17,7 @@ public class SchedulerTest extends TestCase {
 
     public void testAvailableSlotEqual() {
         boolean test = scheduler.findAvailableSlot("test");
-        assertEquals(false,test);
+        assertFalse(test);
     }
 
 }

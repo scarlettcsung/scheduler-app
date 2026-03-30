@@ -1,6 +1,7 @@
 package Scheduler;
 
 public class Scheduler {
+
     public boolean findAvailableSlot(String Event) {
         return false; // Placeholder
     }
