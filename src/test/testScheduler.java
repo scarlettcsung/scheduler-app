@@ -3,7 +3,7 @@ package test;
 import Scheduler.Scheduler;
 import junit.framework.TestCase;
 
-public class SchedulerTest extends TestCase {
+public class testScheduler extends TestCase {
 
     private Scheduler scheduler;
 
