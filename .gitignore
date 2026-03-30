@@ -6,6 +6,10 @@
 bin/
 doc/
 .idea/
+*.zip
+.settings/
+.project
+.classpath
 
 # for Mac users
 .DS_Store
