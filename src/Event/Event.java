@@ -3,6 +3,8 @@ package Event;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import Invite.Invite;
 import User.User;
 
 public class Event {
@@ -37,10 +39,10 @@ public class Event {
         return invites;
     }
     public void addInvite(Invite invite) {
-        this.invites.add(invite);
+        invites.add(invite);
     }
     public void removeInvite(Invite invite) {
-        this.invites.removeIf(n -> n == invite);
+        invites.removeIf(n -> n == invite);
     }
 
 }
