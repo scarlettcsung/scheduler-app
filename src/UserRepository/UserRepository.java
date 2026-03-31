@@ -40,16 +40,5 @@ public class UserRepository {
 		else {
 			return false;
 		}
-	}
-	public boolean deleteUser(String username) {
-	    if (username == null) return false;        
-
-	    User target = findUsername(username);  
-
-	    if (target != null) {                     
-	        users.remove(target);                  
-	        return true;                           
-	    }
-	    return false;                              
-	}
+	}                         
 }
