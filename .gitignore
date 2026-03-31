@@ -5,6 +5,7 @@
 .metadata/
 bin/
 doc/
+out/
 .idea/
 *.zip
 .settings/
