@@ -1,4 +1,4 @@
-package src.Authentication;
+package Authentication;
 import User.User;
 import UserRepository.UserRepository;
 
@@ -17,7 +17,7 @@ public class Authentication {
 
 	public boolean login(String UserName, String UserPassword) {
 		
-		User currentUser = repository.findusername(UserName);
+		User currentUser = repository.findUsername(UserName);
 		
 		if(currentUser!=null){
 			if (currentUser.getPassword().equals(UserPassword)) 

@@ -34,7 +34,12 @@ public class UserRepository {
     }
 
 	public boolean isExistingUser(String username) {
-    	return findUsername(username) != null;
+		if (findUsername(username) != null){
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	public boolean deleteUser(String username) {
 	    if (username == null) return false;        
