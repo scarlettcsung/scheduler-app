@@ -1,0 +1,16 @@
+# don't use ** in patterns unless absolutely necessary
+# for more information:
+# $ git help gitignore
+
+.metadata/
+bin/
+doc/
+out/
+.idea/
+*.zip
+.settings/
+.project
+.classpath
+
+# for Mac users
+.DS_Store
