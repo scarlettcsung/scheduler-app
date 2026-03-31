@@ -1,6 +1,5 @@
 package test;
 
-import User.User;
 import UserService.UserService;
 import junit.framework.TestCase;
 
@@ -13,32 +12,29 @@ public class testUserService extends TestCase {
     }
 
     public void testRegisterUser() {
-        String username = "testUser";
-
-        boolean result = userService.registerUser(username, "testPassword");
+		userService.deleteUser("testUser");
+        boolean result = userService.registerUser("testUser", "testPassword");
 
         assertEquals(result, true);
     }
 
     public void testRegisterUserReturnsFalseWhenUserAlreadyExists() {
-        String username = "testUser";
-        boolean result = userService.registerUser(username, "anotherPassword");
+    	userService.registerUser("testUser", "testPassword");
+        boolean result = userService.registerUser("testUser", "anotherPassword");
 
         assertEquals(result, false);
     }
 
     public void testDeleteUser() {
-        String username = "testUser";
-
-        boolean result = userService.deleteUser(username);
+    	userService.registerUser("testUser", "testPassword");
+        boolean result = userService.deleteUser("testUser");
 
         assertEquals(result, true);
     }
 
     public void testDeleteUserReturnsFalseWhenUserDoesNotExist() {
-        String username = "missingUser";
-
-        boolean result = userService.deleteUser(username);
+    	userService.deleteUser("testUser");
+        boolean result = userService.deleteUser("missingUser");
 
         assertEquals(result, false);
     }
