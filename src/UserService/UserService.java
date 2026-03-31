@@ -11,7 +11,7 @@ public class UserService {
     }
 
     public boolean registerUser(String username, String password) {
-		if (userRepository.isExistingUser(username) == true) {
+		if (userRepository.isExistingUser(username)) {
 			return false;
 		}
 		else {
@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public boolean deleteUser(String username) {
-		if (userRepository.isExistingUser(username) == true) {
+		if (userRepository.isExistingUser(username)) {
 			userRepository.deleteUserData(username);
 			return true;
 		}
