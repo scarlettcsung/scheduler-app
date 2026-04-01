@@ -6,7 +6,7 @@ import UserRepository.UserRepository;
 import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 
-public class testUserRepo3 extends TestCase {
+public class testUserRepository extends TestCase {
     
     private UserRepository repository;
     private User testUser;

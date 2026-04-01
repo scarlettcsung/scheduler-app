@@ -1,41 +1,46 @@
 package test;
 
 import UserService.UserService;
+import UserRepository.UserRepository; // Added this import
 import junit.framework.TestCase;
 
 public class testUserService extends TestCase {
 
     private UserService userService;
 
+    // setUp() runs automatically BEFORE every single test method
     protected void setUp() {
-        userService = new UserService();
+        // 1. Create a fresh, totally empty repository for THIS specific test
+        UserRepository testRepo = new UserRepository();
+        
+        // 2. Inject it into the service
+        userService = new UserService(testRepo);
     }
 
     public void testRegisterUser() {
-		userService.deleteUser("testUser");
+        
         boolean result = userService.registerUser("testUser", "testPassword");
-
-        assertEquals(result, true);
+        assertEquals(true, result); 
     }
 
     public void testRegisterUserReturnsFalseWhenUserAlreadyExists() {
-    	userService.registerUser("testUser", "testPassword");
+        userService.registerUser("testUser", "testPassword");
         boolean result = userService.registerUser("testUser", "anotherPassword");
 
-        assertEquals(result, false);
+        assertEquals(false, result);
     }
 
     public void testDeleteUser() {
-    	userService.registerUser("testUser", "testPassword");
+        userService.registerUser("testUser", "testPassword");
         boolean result = userService.deleteUser("testUser");
 
-        assertEquals(result, true);
+        assertEquals(true, result);
     }
 
     public void testDeleteUserReturnsFalseWhenUserDoesNotExist() {
-    	userService.deleteUser("testUser");
+        // Again, no need to manually delete first!
         boolean result = userService.deleteUser("missingUser");
 
-        assertEquals(result, false);
+        assertEquals(false, result);
     }
 }

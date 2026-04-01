@@ -7,7 +7,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public UserService() {
-        this.userRepository = UserRepository.getInstance();
+        this.userRepository = new UserRepository();
     }
 
     public boolean registerUser(String username, String password) {

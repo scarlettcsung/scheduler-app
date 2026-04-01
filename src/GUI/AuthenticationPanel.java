@@ -11,6 +11,8 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+
+import Authentication.Authentication;
 import UserService.UserService;
 import javax.swing.JOptionPane;
 
@@ -73,8 +75,12 @@ public class AuthenticationPanel extends JPanel {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String username = textInUsername.getText();
+		        String password = new String(textInPassword.getPassword());
+		        Authentication Auth = new Authentication();
+		        boolean success = Auth.login(username, password);
+
 				
-				// just write your code here.
 			}
 		});
 		
