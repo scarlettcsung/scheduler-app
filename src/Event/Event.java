@@ -32,6 +32,8 @@ public class Event {
         }
     }
 
+    public String getEventName() {return eventName;}
+    public Date getEventDate() {return eventDate;}
     public User getOrganizer() {
         return organizer;
     }

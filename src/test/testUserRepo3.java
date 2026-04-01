@@ -35,19 +35,19 @@ public class testUserRepo3 extends TestCase {
     public void testDeleteUserSuccess() {
         repository.saveUser(testUser);
         
-        boolean deleted = repository.deleteUser("testUser");
+        boolean deleted = repository.deleteUserData("testUser");
         
         assertTrue(deleted);
         assertNull(repository.findUsername("testUser"));
     }
 
     public void testDeleteUserNotFound() {
-        boolean deleted = repository.deleteUser("MissingUser");
+        boolean deleted = repository.deleteUserData("MissingUser");
         assertFalse(deleted);
     }
 
     public void testDeleteNullUsername() {
-        boolean deleted = repository.deleteUser(null);
+        boolean deleted = repository.deleteUserData(null);
         assertFalse(deleted);
     }
 
