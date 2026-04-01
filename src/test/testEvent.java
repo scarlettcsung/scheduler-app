@@ -41,4 +41,5 @@ public class testEvent extends TestCase {
         assertEquals(expected,event.getInvites());
     }
 
+    //Invite to be completed
 }
