@@ -11,7 +11,7 @@ public class Authentication {
 	private UserRepository repository;
 	
 	public Authentication() {
-		this.repository= new UserRepository();
+		repository = UserRepository.getInstance();
 		this.authenticatedUser=null;
 	}
 
@@ -26,7 +26,7 @@ public class Authentication {
 				return true;
 				}
 			else {
-				System.out.println("password not found");	
+	
 			return false;
 			}
 			} 
