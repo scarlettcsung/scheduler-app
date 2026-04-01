@@ -1,6 +1,11 @@
 package test;
 
 import junit.framework.TestCase;
+import java.time.LocalDateTime;
+
+import Event.Event;
+import EventManager.EventManager;
+import User.User;
 
 import java.time.LocalDateTime;
 
@@ -30,3 +35,4 @@ public class testEventManager extends TestCase {
 */
 	
 }
+
