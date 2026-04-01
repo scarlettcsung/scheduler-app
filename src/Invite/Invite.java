@@ -9,10 +9,10 @@ public class Invite {
     private Event event;
     private inviteStatus status;
 
-    public Invite(User recipient, Event event, inviteStatus status) {
+    public Invite(User recipient, Event event) {
         this.recipient = recipient;
         this.event = event;
-        this.status = status;
+        this.status = inviteStatus.PENDING;
         }
 
     public void accept() {
@@ -27,4 +27,5 @@ public class Invite {
     public Event getEvent() {
         return event;
     }
+    public inviteStatus getStatus() {return status;}
 }
