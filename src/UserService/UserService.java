@@ -6,10 +6,7 @@ import UserRepository.UserRepository;
 public class UserService {
     private UserRepository userRepository;
 
-    // Dependency Injection: The repository is passed in from the outside
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
 
     public boolean registerUser(String username, String password) {
 		if (userRepository.isExistingUser(username)) {
