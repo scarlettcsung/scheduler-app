@@ -11,6 +11,8 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+
+import Authentication.Authentication;
 import UserService.UserService;
 import javax.swing.JOptionPane;
 
@@ -78,11 +80,6 @@ public class AuthenticationPanel extends JPanel {
 		        Authentication Auth = new Authentication();
 		        boolean success = Auth.login(username, password);
 
-		        if (success) {
-		            JOptionPane.showMessageDialog(null, "User logged in!");
-		        } else {
-		            JOptionPane.showMessageDialog(null, "failed login");
-		    		
 				
 			}
 		});
