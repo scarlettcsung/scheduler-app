@@ -13,7 +13,7 @@ public class UserService {
     public boolean registerUser(String username, String password) {
 		if (userRepository.isExistingUser(username)) {
 			return false;
-		}
+		}	
 		else {
         User newUser = new User(username, password, null, true);
         userRepository.saveUser(newUser);
