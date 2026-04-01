@@ -34,7 +34,7 @@ public class AuthenticationPanel extends JPanel {
 	    setOpaque(true);
 
 	    //Backend stuff meets with frontend stuff
-	    
+
 	    userService = new UserService();
 	    
 	    
@@ -110,8 +110,6 @@ public class AuthenticationPanel extends JPanel {
 		add(btnRegister, gbc_btnRegister);
 
 	}
-
-
 
 public static void main(String[] args) {
     JFrame frame = new JFrame("Test");
