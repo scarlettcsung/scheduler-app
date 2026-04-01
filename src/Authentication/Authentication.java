@@ -6,8 +6,8 @@ import UserRepository.UserRepository;
 
 public class Authentication {
 	//Authenticated User, the User that will have their details presented
-	
 	private User authenticatedUser;
+	//Instanstiating repository
 	private UserRepository repository;
 	
 	public Authentication() {
@@ -16,7 +16,7 @@ public class Authentication {
 	}
 
 	public boolean login(String UserName, String UserPassword) {
-		
+		//
 		User currentUser = repository.findUsername(UserName);
 		
 		if(currentUser!=null){

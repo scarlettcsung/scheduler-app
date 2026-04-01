@@ -11,8 +11,9 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
-
 import UserService.UserService;
+import javax.swing.JOptionPane;
+
 
 import javax.swing.JLabel;
 import java.awt.Color;
@@ -22,7 +23,7 @@ public class AuthenticationPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField textInUsername;
 	private JPasswordField textInPassword;
-	private UserService userService;
+	private UserService userService = new UserService();
 	
 	/**
 	 * Create the panel.
@@ -72,6 +73,8 @@ public class AuthenticationPanel extends JPanel {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				// just write your code here.
 			}
 		});
 		
@@ -99,8 +102,18 @@ public class AuthenticationPanel extends JPanel {
 		
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        String username = textInUsername.getText();
+		        String password = new String(textInPassword.getPassword());
+
+		        boolean success = userService.registerUser(username, password);
+
+		        if (success) {
+		            JOptionPane.showMessageDialog(null, "User registered!");
+		        } else {
+		            JOptionPane.showMessageDialog(null, "User already exists!");
+		        }
+		    }
 		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.anchor = GridBagConstraints.NORTH;
