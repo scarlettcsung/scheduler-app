@@ -6,7 +6,9 @@ import UserRepository.UserRepository;
 public class UserService {
     private UserRepository userRepository;
 
-
+    public UserService() {
+        this.userRepository = new UserRepository();
+    }
 
     public boolean registerUser(String username, String password) {
 		if (userRepository.isExistingUser(username)) {
