@@ -1,3 +1,8 @@
+package UserLoader;
+
+import User.User;
+import UserCalendar.UserCalendar;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -25,9 +30,8 @@ public class UserLoader {
                 String adminLine = reader.nextLine();
                 
                 boolean isAdmin = Boolean.parseBoolean(adminLine);
-                
-                String myCalendarPath = username + ".txt";
-                String myCalendar = "no calender system yet";
+
+                UserCalendar myCalendar = null;
                 //format user: (String username, String password, UserCalendar myCalendar, boolean isAdmin)
                 
                 User user = new User(username, password, myCalendar, isAdmin);
