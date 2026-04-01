@@ -79,7 +79,11 @@ public class AuthenticationPanel extends JPanel {
 		        String password = new String(textInPassword.getPassword());
 		        Authentication Auth = new Authentication();
 		        boolean success = Auth.login(username, password);
-
+		        if (success) {
+		            JOptionPane.showMessageDialog(null, "Login successful!");
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Invalid username or password!");
+		        }
 				
 			}
 		});
