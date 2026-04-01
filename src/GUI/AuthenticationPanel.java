@@ -73,8 +73,17 @@ public class AuthenticationPanel extends JPanel {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String username = textInUsername.getText();
+		        String password = new String(textInPassword.getPassword());
+		        Authentication Auth = new Authentication();
+		        boolean success = Auth.login(username, password);
+
+		        if (success) {
+		            JOptionPane.showMessageDialog(null, "User logged in!");
+		        } else {
+		            JOptionPane.showMessageDialog(null, "failed login");
+		    		
 				
-				// just write your code here.
 			}
 		});
 		
