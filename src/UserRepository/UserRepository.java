@@ -8,7 +8,7 @@ public class UserRepository {
     private static final UserRepository instance = new UserRepository();
     private List<User> users;
 
-    private UserRepository() {
+    public UserRepository() {
         this.users = new ArrayList<>();
     }
 
