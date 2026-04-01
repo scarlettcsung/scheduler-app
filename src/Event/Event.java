@@ -1,16 +1,18 @@
 package Event;
 
+// Additional Packages
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// Packages in Project
 import Invite.Invite;
 import User.User;
 
 public class Event {
 
     private String eventName;
-    public LocalDateTime eventTime;
+    private LocalDateTime eventTime;
     private int eventDuration;
     private String eventDescription;
     private User organizer;
@@ -32,25 +34,16 @@ public class Event {
         }
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-    public void setEventTime(LocalDateTime eventTime) {
-        this.eventTime = eventTime;
-    }
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
-    }
-    public void setEventDuration(int eventDuration) {
-        this.eventDuration = eventDuration;
-    }
-
-
+    // Getter Methods
     public String getEventName() {return eventName;}
     public LocalDateTime getEventTime() {return eventTime;}
     public User getOrganizer() {
         return organizer;
     }
+    public String getEventDescription() {return eventDescription; }
+    public int getEventDuration() {return eventDuration;}
+
+    // Invites Methods
     public  List<Invite> getInvites() {
         return invites;
     }
@@ -60,5 +53,11 @@ public class Event {
     public void removeInvite(Invite invite) {
         invites.removeIf(n -> n == invite);
     }
+
+    // Setter Methods
+    public void setEventName(String eventName) {this.eventName = eventName;}
+    public void setEventTime(LocalDateTime eventTime) {this.eventTime = eventTime;}
+    public void setEventDescription(String eventDescription) {this.eventDescription = eventDescription;}
+    public void setEventDuration(int eventDuration) {this.eventDuration = eventDuration;}
 
 }
