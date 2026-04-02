@@ -19,10 +19,9 @@ public class Event {
     private Boolean isImported;
     private List<Invite> invites;
 
-    public Event(String eventName, LocalDateTime eventTime, int eventDuration, String eventDescription,
+    public Event(String eventName, int eventDuration, String eventDescription,
                  User organizer, Boolean isImported,  List<Invite> invites) {
         this.eventName = eventName;
-        this.eventTime = eventTime;
         this.eventDuration = eventDuration;
         this.eventDescription = eventDescription;
         this.organizer = organizer;
@@ -33,6 +32,12 @@ public class Event {
             this.invites = invites;
         }
     }
+
+    // Setter Methods
+    public void setEventName(String eventName) {this.eventName = eventName;}
+    public void setEventTime(LocalDateTime eventTime) {this.eventTime = eventTime;}
+    public void setEventDescription(String eventDescription) {this.eventDescription = eventDescription;}
+    public void setEventDuration(int eventDuration) {this.eventDuration = eventDuration;}
 
     // Getter Methods
     public String getEventName() {return eventName;}
@@ -54,10 +59,5 @@ public class Event {
         invites.removeIf(n -> n == invite);
     }
 
-    // Setter Methods
-    public void setEventName(String eventName) {this.eventName = eventName;}
-    public void setEventTime(LocalDateTime eventTime) {this.eventTime = eventTime;}
-    public void setEventDescription(String eventDescription) {this.eventDescription = eventDescription;}
-    public void setEventDuration(int eventDuration) {this.eventDuration = eventDuration;}
 
 }

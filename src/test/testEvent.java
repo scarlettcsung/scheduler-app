@@ -19,10 +19,10 @@ public class testEvent extends TestCase {
     private User example_invitee;
 
     protected void setUp() {
-        UserCalendar calendar = new UserCalendar();
+        UserCalendar calendar = new UserCalendar(example_organizer,null);
         example_organizer = new User("Charles","123456", calendar,false);
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
-        event = new Event("testEvent", example_time,60,"testEvent",
+        event = new Event("testEvent", 60,"testEvent",
                 example_organizer,false,null);
         example_invitee = new User("Joe","789012", calendar,false);
         invite = new Invite(example_invitee,event);
@@ -30,9 +30,7 @@ public class testEvent extends TestCase {
 
     // Test Getters
     public void testEventName() {assertEquals("testEvent", event.getEventName());}
-    public void testEventTime() {
-        assertEquals(example_time,event.getEventTime());
-    }
+    public void testEventTime() {assertEquals(null,event.getEventTime());}
     public void testOrganizer() {
         assertEquals(example_organizer,event.getOrganizer());
     }
@@ -64,10 +62,9 @@ public class testEvent extends TestCase {
         assertEquals("testEvent2",event.getEventName());
     }
     public void testSetEventTime() {
-        LocalDateTime new_time = LocalDateTime.of(2026, 1, 1, 11, 0);
-        event.setEventTime(new_time);
-        assertNotSame(example_time,event.getEventName());
-        assertEquals(new_time,event.getEventName());
+        event.setEventTime(example_time);
+        assertNotNull("Time was not set",event.getEventTime());
+        assertEquals(example_time, event.getEventTime().getYear());
     }
     public void testSetEventDescription() {
         event.setEventDescription("testEvent2");
