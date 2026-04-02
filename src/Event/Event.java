@@ -1,13 +1,11 @@
 package Event;
 
 // Additional Packages
-import java.util.ArrayList;
-import java.time.LocalDateTime;
-import java.util.List;
-
-// Packages in Project
 import Invite.Invite;
 import User.User;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Event {
 
