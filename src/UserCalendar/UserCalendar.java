@@ -25,6 +25,10 @@ public class UserCalendar {
     public User getOwner() {
     	return owner;
     }
+
+    public void SetOwner(User newOwner) {
+        this.owner = newOwner;
+    }
     
     
     public void addEvent(Event event) {
