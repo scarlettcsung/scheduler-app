@@ -89,6 +89,16 @@ public class AuthenticationPanel extends JPanel {
 		        
 		        if (success) {
 		            JOptionPane.showMessageDialog(null, "Login successful!");
+		            // EO GI: Transition to the admin panel or user dashboard here
+		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+
+		            if(username.equals("admin")) {
+		            	topFrame.setContentPane(new AdminPanel());
+		            } else {
+		            	topFrame.setContentPane(new UserPanel());
+		            }
+		            topFrame.revalidate();
+		            topFrame.repaint();
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Invalid username or password!");
 		        }
@@ -139,6 +149,22 @@ public class AuthenticationPanel extends JPanel {
 		gbc_btnRegister.gridx = 1;
 		gbc_btnRegister.gridy = 9;
 		add(btnRegister, gbc_btnRegister);
+		
+		JButton btnEasterEgg = new JButton("Make Your Day:))");
+		GridBagConstraints gbc_btnEasterEgg = new GridBagConstraints();
+		gbc_btnEasterEgg.insets = new Insets(0, 0, 5, 0);
+		gbc_btnEasterEgg.gridx = 2;
+		gbc_btnEasterEgg.gridy = 9;
+		add(btnEasterEgg, gbc_btnEasterEgg);
+		
+		btnEasterEgg.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+			topFrame.setContentPane(new EasterEgg());
+			topFrame.revalidate();
+			topFrame.repaint();
+		}
+		});
 
 	}
 
