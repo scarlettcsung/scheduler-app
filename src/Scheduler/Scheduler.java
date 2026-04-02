@@ -35,6 +35,7 @@ public class Scheduler {
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime dayCursor = now;
 
+        // Check each day in the search window and return the first fitting gap.
         for (int i = 0; i < maxLookaheadDays; i++) {
             LocalDateTime dayStartTime = dayCursor.with(LocalTime.of(dayStart, 0));
             LocalDateTime dayEndTime = dayCursor.with(LocalTime.of(dayEnd, 0));
@@ -44,6 +45,7 @@ public class Scheduler {
                 candidate = now;
             }
 
+            // Merge busy entries from organizer and invitees for this specific day.
             List<Event> busyEvents = new ArrayList<>();
 
             User organizer = event.getOrganizer();
@@ -62,6 +64,7 @@ public class Scheduler {
                 }
             }
 
+            // Scan conflicts in chronological order to find the earliest free slot.
             busyEvents.sort(Comparator.comparing(Event::getEventTime));
 
             for (Event busy : busyEvents) {
@@ -106,6 +109,7 @@ public class Scheduler {
                 invitee.getCalendar().addEvent(event);
             }
 
+            // Recreate invites so they reset to default PENDING status.
             event.removeInvite(invite);
             if (invitee != null) {
                 event.addInvite(new Invite(invitee, event));
