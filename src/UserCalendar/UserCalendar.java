@@ -1,21 +1,38 @@
 package UserCalendar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Event.Event;
+import User.User;
 
 public class UserCalendar {
 	
-	public UserCalendar() {
-		
+	public UserCalendar(User owner, List<Event> events) {
+		this.owner = owner;
+		if (events == null) {
+            this.events = new ArrayList<>();
+        } else {
+            this.events = events;
+        }
 	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void removeEvent(Event event) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	private User owner;
+	private List<Event> events;
+	
+	public  List<Event> getEvents() {
+        return events;
+    }
+	
+    public User getOwner() {
+    	return owner;
+    }
+    
+    
+    public void addEvent(Event event) {
+        events.add(event);
+    }
+    
+    public void removeEvent(Event event) {
+        events.removeIf(n -> n == event);
+    }
 }
