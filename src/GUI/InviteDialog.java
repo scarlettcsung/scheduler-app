@@ -7,6 +7,8 @@ public class InviteDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JTextField usernameTextField;
+    private JButton sendButton;
 
     public InviteDialog() {
         setContentPane(contentPane);
