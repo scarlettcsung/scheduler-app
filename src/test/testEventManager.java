@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import Event.Event;
 import EventManager.EventManager;
 import User.User;
+import UserCalendar.UserCalendar;
 
 import java.time.LocalDateTime;
 
@@ -16,24 +17,33 @@ import User.User;
 
 public class testEventManager extends TestCase {
 
+	UserCalendar orgCalendar = new UserCalendar();
+	User example_organizer = new User("testUser","testPass",orgCalendar,false) ; // creating a dummy user for testing
+	LocalDateTime example_date = LocalDateTime.of(2026, 4, 1, 12, 0);; // creating a dummy date for testing
+	EventManager eveupdateEvent = new EventManager();
+	Event event = new Event("osman", example_date,60,"testEvent",
+	example_organizer,false,null);
 	
-	public void testUpdateEvent() {
-		User example_organizer = null;
-		LocalDateTime example_date = null;
+	public void testUpdateEventShouldChangeEventName() {
 		
-		EventManager eveupdateEvent = new EventManager();
-		Event event = new Event("osman", example_date,60,"testEvent",
-				example_organizer,false,null);
 		eveupdateEvent.updateEvent(event, "eventName", "abc");
-		assertEquals("abc", event.getEventName());
+		assertEquals("abc", event.getEventName()); 
 }
-	/*
+	
 	public void testDeleteEvent() {
 		
+		assertNotNull(event.getEventName());
+	    assertNotNull(event.getEventDescription());
+	    assertNotNull(event.getEventTime());
+	    
+		eveupdateEvent.deleteEvent(event);
 		
-		
+		assertEquals(null,event.getEventName());
+		assertEquals(null,event.getEventDescription());
+		assertEquals(null,event.getEventTime());
+		assertEquals(0,event.getEventDuration());
 }
-*/
+
 	
 }
 

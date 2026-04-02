@@ -28,8 +28,15 @@ public class EventManager {
     }
 
     public void deleteEvent(Event event) {
+    	/*
     	if (event.getOrganizer() != null && event.getOrganizer().getCalendar() != null) {
     		    event.getOrganizer().getCalendar().removeEvent(event);
     		}
     }
+    */
+		event.setEventName(null);
+		event.setEventDescription(null);
+		event.setEventTime(null);
+		event.setEventDuration(0);
+	}
 }
