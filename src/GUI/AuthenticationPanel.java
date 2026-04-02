@@ -20,12 +20,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.Color;
 
+import UserRepository.UserRepository;
+
 public class AuthenticationPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textInUsername;
 	private JPasswordField textInPassword;
-	private UserService userService = new UserService();
+	private UserRepository repository;
+	private UserService userService;
+	private Authentication auth;
 	
 	/**
 	 * Create the panel.
@@ -36,10 +40,13 @@ public class AuthenticationPanel extends JPanel {
 	    setBackground(Color.decode("#00FFFF"));
 	    setOpaque(true);
 
+	    repository = new UserRepository();
+	    userService = new UserService(repository);
+	    auth = new Authentication(repository);
+	    
 	    //Backend stuff meets with frontend stuff
 	    
-	    userService = new UserService();
-	    
+	   
 	    
 	    // Main Layout
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -77,8 +84,9 @@ public class AuthenticationPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String username = textInUsername.getText();
 		        String password = new String(textInPassword.getPassword());
-		        Authentication Auth = new Authentication();
-		        boolean success = Auth.login(username, password);
+		        
+		        boolean success = auth.login(username, password);
+		        
 		        if (success) {
 		            JOptionPane.showMessageDialog(null, "Login successful!");
 		        } else {
