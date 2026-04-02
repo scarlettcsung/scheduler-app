@@ -22,6 +22,7 @@ public class testScheduler extends TestCase {
     private Clock fixedClock;
 
     protected void setUp() {
+        // Fixed clock keeps scheduling assertions deterministic.
         baseNow = LocalDateTime.of(2026, 4, 1, 8, 0);
         fixedClock = Clock.fixed(
                 baseNow.atZone(ZoneId.systemDefault()).toInstant(),
@@ -38,6 +39,7 @@ public class testScheduler extends TestCase {
     }
 
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
+        // Duration longer than the daily window should never be schedulable.
         Scheduler oneHourWindow = new Scheduler(8, 9, 3, fixedClock);
         Event tooLong = new Event(
                 "meeting",
@@ -55,6 +57,7 @@ public class testScheduler extends TestCase {
     }
 
     public void testFindAvailableSlotReturnsFirstFreeSlotAfterBusyEvent() {
+        // A busy block at the start should push the slot to the first free minute after it.
         LocalDateTime busyStart = baseNow.plusMinutes(1);
         Event busy = new Event(
                 "busy",
@@ -83,6 +86,7 @@ public class testScheduler extends TestCase {
     }
 
     public void testScheduleEventSetsDateAndAddsToAllCalendars() {
+        // Successful scheduling should set event time, add to calendars, and keep invites pending.
         Event event = new Event(
                 "meeting",
                 baseNow,
@@ -106,6 +110,7 @@ public class testScheduler extends TestCase {
     }
 
     public void testScheduleEventReturnsFalseWhenNoSlotInLookahead() {
+        // If the whole lookahead window is blocked, scheduling must fail.
         Scheduler oneDayLookahead = new Scheduler(8, 10, 1, fixedClock);
 
         LocalDateTime dayStart = baseNow
