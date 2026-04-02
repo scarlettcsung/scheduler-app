@@ -14,8 +14,9 @@ public class testUserRepository extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         repository = new UserRepository();
-        UserCalendar testCalendar = new UserCalendar();
-        testUser = new User("testUser", "pw123", testCalendar, false);
+        testUser = new User("testUser", "pw123", null, false);
+        UserCalendar testCalendar = new UserCalendar(testUser, null);
+        testUser.setCalendar(testCalendar);
     }
 
     public void testSaveAndFindUser() {

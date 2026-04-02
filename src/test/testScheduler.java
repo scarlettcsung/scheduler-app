@@ -29,13 +29,13 @@ public class testScheduler extends TestCase {
                 ZoneId.systemDefault()
         );
         scheduler = new Scheduler(0, 23, 7, fixedClock);
-        UserCalendar organizerCalendar = new UserCalendar();
-        organizer = new User("organizer", "pw", organizerCalendar, false);
-        organizerCalendar.setOwner(organizer);
+        organizer = new User("organizer", "pw", null, false);
+        UserCalendar organizerCalendar = new UserCalendar(organizer, null);
+        organizer.setCalendar(organizerCalendar);
 
-        UserCalendar inviteeCalendar = new UserCalendar();
-        invitee = new User("invitee", "pw", inviteeCalendar, false);
-        inviteeCalendar.setOwner(invitee);
+        invitee = new User("invitee", "pw", null, false);
+        UserCalendar inviteeCalendar = new UserCalendar(invitee, null);
+        invitee.setCalendar(inviteeCalendar);
     }
 
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
