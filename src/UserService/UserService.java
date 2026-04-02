@@ -5,11 +5,12 @@ import UserRepository.UserRepository;
 
 public class UserService {
     private UserRepository userRepository;
-
-    public UserService() {
-        this.userRepository = new UserRepository();
+// changed 
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
-
+    
+// changed 
     public boolean registerUser(String username, String password) {
 		if (userRepository.isExistingUser(username)) {
 			return false;
@@ -17,6 +18,7 @@ public class UserService {
 		else {
         User newUser = new User(username, password, null, true);
         userRepository.saveUser(newUser);
+       
         return true;
 		}
     }
@@ -31,3 +33,4 @@ public class UserService {
 		}
     }
 }
+

@@ -9,12 +9,12 @@ public class Authentication {
 	private User authenticatedUser;
 	//Instanstiating repository
 	private UserRepository repository;
-	
-	public Authentication() {
-		repository = UserRepository.getInstance();
-		this.authenticatedUser=null;
+	// changed to 
+	public Authentication(UserRepository repository) { 
+	    this.repository = repository;
+	    this.authenticatedUser = null;
 	}
-
+ // changed 
 	public boolean login(String UserName, String UserPassword) {
 		//
 		User currentUser = repository.findUsername(UserName);
@@ -30,7 +30,7 @@ public class Authentication {
 			return false;
 			}
 			} 
-		else {System.out.println("Username not found");
+		else {
 			return false;}
 		}
 	public void logout() {
