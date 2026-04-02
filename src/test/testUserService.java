@@ -18,9 +18,6 @@ public class testUserService extends TestCase {
     }
 
     public void testRegisterUser() {
-        // Look how clean this is! 
-        // We don't need to call deleteUser("testUser") first anymore 
-        // because setUp() guarantees the list is completely empty!
         
         boolean result = userService.registerUser("testUser", "testPassword");
         assertEquals(true, result); 

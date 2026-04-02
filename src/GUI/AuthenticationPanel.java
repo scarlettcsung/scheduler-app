@@ -11,6 +11,8 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+
+import Authentication.Authentication;
 import UserService.UserService;
 import javax.swing.JOptionPane;
 
@@ -18,12 +20,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.Color;
 
+import UserRepository.UserRepository;
+
 public class AuthenticationPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField textInUsername;
 	private JPasswordField textInPassword;
-	private UserService userService = new UserService();
+	private UserRepository repository;
+	private UserService userService;
+	private Authentication auth;
 	
 	/**
 	 * Create the panel.
@@ -34,10 +40,13 @@ public class AuthenticationPanel extends JPanel {
 	    setBackground(Color.decode("#00FFFF"));
 	    setOpaque(true);
 
+	    repository = new UserRepository();
+	    userService = new UserService(repository);
+	    auth = new Authentication(repository);
+	    
 	    //Backend stuff meets with frontend stuff
 	    
-	    userService = new UserService();
-	    
+	   
 	    
 	    // Main Layout
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -73,8 +82,17 @@ public class AuthenticationPanel extends JPanel {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String username = textInUsername.getText();
+		        String password = new String(textInPassword.getPassword());
+		        
+		        boolean success = auth.login(username, password);
+		        
+		        if (success) {
+		            JOptionPane.showMessageDialog(null, "Login successful!");
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Invalid username or password!");
+		        }
 				
-				// just write your code here.
 			}
 		});
 		
