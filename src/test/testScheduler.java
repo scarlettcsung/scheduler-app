@@ -1,23 +1,57 @@
 package test;
 
+import Event.Event;
+import Invite.Invite;
+import Invite.inviteStatus;
 import Scheduler.Scheduler;
+import User.User;
+import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class testScheduler extends TestCase {
 
     private Scheduler scheduler;
+    private User organizer;
+    private User invitee;
+    private LocalDateTime baseNow;
+    private Clock fixedClock;
 
     protected void setUp() {
-        scheduler = new Scheduler();
+        baseNow = LocalDateTime.of(2026, 4, 1, 8, 0);
+        fixedClock = Clock.fixed(
+                baseNow.atZone(ZoneId.systemDefault()).toInstant(),
+                ZoneId.systemDefault()
+        );
+        scheduler = new Scheduler(0, 23, 7, fixedClock);
+        UserCalendar organizerCalendar = new UserCalendar();
+        organizer = new User("organizer", "pw", organizerCalendar, false);
+        organizerCalendar.setOwner(organizer);
+
+        UserCalendar inviteeCalendar = new UserCalendar();
+        invitee = new User("invitee", "pw", inviteeCalendar, false);
+        inviteeCalendar.setOwner(invitee);
     }
 
-    public void testAvailableSlot() {
-        assertNotNull(scheduler.findAvailableSlot("test"));
-    }
+    public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
+        Scheduler oneHourWindow = new Scheduler(8, 9, 3, fixedClock);
+        Event tooLong = new Event(
+                "meeting",
+                baseNow,
+                61,
+                "test meeting",
+                organizer,
+                false,
+                new ArrayList<>()
+        );
 
-    public void testAvailableSlotEqual() {
-        boolean test = scheduler.findAvailableSlot("test");
-        assertFalse(test);
+        LocalDateTime slot = oneHourWindow.findAvailableSlot(tooLong);
+
+        assertNull(slot);
     }
 
 }
