@@ -104,4 +104,38 @@ public class testScheduler extends TestCase {
         assertEquals(invitee, event.getInvites().get(0).getRecipient());
         assertEquals(inviteStatus.PENDING, event.getInvites().get(0).getStatus());
     }
+
+    public void testScheduleEventReturnsFalseWhenNoSlotInLookahead() {
+        Scheduler oneDayLookahead = new Scheduler(8, 10, 1, fixedClock);
+
+        LocalDateTime dayStart = baseNow
+                .withHour(8)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
+        Event block = new Event(
+                "busy",
+                dayStart,
+                120,
+                "busy slot",
+                organizer,
+                false,
+                new ArrayList<>()
+        );
+        organizer.getCalendar().addEvent(block);
+
+        Event toSchedule = new Event(
+                "meeting",
+                baseNow,
+                60,
+                "test meeting",
+                organizer,
+                false,
+                new ArrayList<>()
+        );
+        boolean scheduled = oneDayLookahead.scheduleEvent(toSchedule);
+
+        assertFalse(scheduled);
+        assertFalse(organizer.getCalendar().getEvents().contains(toSchedule));
+    }
 }
