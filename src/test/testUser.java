@@ -1,14 +1,21 @@
 package test;
 
-
-import User.User;
 import UserCalendar.UserCalendar;
+import User.User;
 import junit.framework.TestCase;
 
+
 public class testUser extends TestCase {
+    private User User;
+    private UserCalendar myCalendar;
+
+    @Override
+    protected void setUp() {
+        User = new User("testUser", "testPassword", null, true);
+        myCalendar = new UserCalendar(User, null);
+        User.setCalendar(myCalendar);
+    }
 	
-	UserCalendar myCalendar = new UserCalendar();
-	User User = new User("testUser", "testPassword", myCalendar, true);
 	public void testGetUsername() {
 		
 		assertEquals("testUser", User.getUsername());

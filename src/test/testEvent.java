@@ -19,7 +19,7 @@ public class testEvent extends TestCase {
     private User example_invitee;
 
     protected void setUp() {
-        UserCalendar calendar = new UserCalendar();
+        UserCalendar calendar = new UserCalendar(null, null);
         example_organizer = new User("Charles","123456", calendar,false);
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new Event("testEvent", example_time,60,"testEvent",
@@ -66,8 +66,8 @@ public class testEvent extends TestCase {
     public void testSetEventTime() {
         LocalDateTime new_time = LocalDateTime.of(2026, 1, 1, 11, 0);
         event.setEventTime(new_time);
-        assertNotSame(example_time,event.getEventName());
-        assertEquals(new_time,event.getEventName());
+        assertNotSame(example_time,event.getEventTime());
+        assertEquals(new_time,event.getEventTime());
     }
     public void testSetEventDescription() {
         event.setEventDescription("testEvent2");

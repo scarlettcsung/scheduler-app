@@ -4,7 +4,6 @@ import UserCalendar.UserCalendar;
 
 import User.User;
 import UserRepository.UserRepository;
-import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 
 public class testUserRepository extends TestCase {

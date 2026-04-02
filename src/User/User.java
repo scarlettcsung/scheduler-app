@@ -21,12 +21,19 @@ public class User {
 	public String getUsername() {
 		return username;
 	}
+	
 	public String getPassword() {
 		return password;
 	}
+	
 	public UserCalendar getCalendar() {
 		return myCalendar;
 	}
+	
+	public void setCalendar(UserCalendar calendar) {
+	    this.myCalendar = calendar;
+	}
+	
 	public boolean isAdmin() {
 		return isAdmin;
 	}
