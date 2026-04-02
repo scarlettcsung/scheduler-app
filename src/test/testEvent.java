@@ -30,7 +30,7 @@ public class testEvent extends TestCase {
 
     // Test Getters
     public void testEventName() {assertEquals("testEvent", event.getEventName());}
-    public void testEventTime() {assertEquals(null,event.getEventTime());}
+    public void testEventTime() {assertNull(event.getEventTime());}
     public void testOrganizer() {
         assertEquals(example_organizer,event.getOrganizer());
     }
@@ -64,7 +64,7 @@ public class testEvent extends TestCase {
     public void testSetEventTime() {
         event.setEventTime(example_time);
         assertNotNull("Time was not set",event.getEventTime());
-        assertEquals(example_time, event.getEventTime().getYear());
+        assertEquals(example_time, event.getEventTime());
     }
     public void testSetEventDescription() {
         event.setEventDescription("testEvent2");
