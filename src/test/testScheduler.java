@@ -110,9 +110,7 @@ public class testScheduler extends TestCase {
 
         LocalDateTime dayStart = baseNow
                 .withHour(8)
-                .withMinute(0)
-                .withSecond(0)
-                .withNano(0);
+                .withMinute(0);
         Event block = new Event(
                 "busy",
                 dayStart,

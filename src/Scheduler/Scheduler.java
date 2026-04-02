@@ -32,7 +32,7 @@ public class Scheduler {
         int minutesInDay = (dayEnd - dayStart) * 60;
         if (duration > minutesInDay) return null;
 
-        LocalDateTime now = LocalDateTime.now(clock).withSecond(0);
+        LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime dayCursor = now;
 
         for (int i = 0; i < maxLookaheadDays; i++) {
