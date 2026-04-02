@@ -1,11 +1,10 @@
 package Event;
 
-import java.util.ArrayList;
-import java.time.LocalDateTime;
-import java.util.List;
-
 import Invite.Invite;
 import User.User;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Event {
 
@@ -45,7 +44,7 @@ public class Event {
         this.eventDuration = eventDuration;
     }
 
-
+    public int getEventDuration() {return eventDuration;}
     public String getEventName() {return eventName;}
     public LocalDateTime getEventTime() {return eventTime;}
     public User getOrganizer() {
