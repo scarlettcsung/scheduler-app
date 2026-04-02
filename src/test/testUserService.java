@@ -1,12 +1,14 @@
 package test;
 
 import UserService.UserService;
-import UserRepository.UserRepository; // Added this import
+import UserRepository.UserRepository; 
 import junit.framework.TestCase;
+import Authentication.Authentication;
 
 public class testUserService extends TestCase {
 
     private UserService userService;
+    private Authentication authentication;
 
     // setUp() runs automatically BEFORE every single test method
     protected void setUp() {
@@ -32,6 +34,7 @@ public class testUserService extends TestCase {
 
     public void testDeleteUser() {
         userService.registerUser("testUser", "testPassword");
+        userService.login("testUser", "testPassword"); // Log in as the user to be deleted
         boolean result = userService.deleteUser("testUser");
 
         assertEquals(true, result);
