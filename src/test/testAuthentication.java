@@ -7,7 +7,7 @@ import UserRepository.UserRepository;
 
 
 
-public class testAuth extends TestCase {
+public class testAuthentication extends TestCase {
 	public Authentication auth;
 	private UserRepository repository;
 
