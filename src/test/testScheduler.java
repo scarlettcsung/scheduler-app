@@ -54,4 +54,31 @@ public class testScheduler extends TestCase {
         assertNull(slot);
     }
 
+    public void testFindAvailableSlotReturnsFirstFreeSlotAfterBusyEvent() {
+        LocalDateTime busyStart = baseNow.plusMinutes(1);
+        Event busy = new Event(
+                "busy",
+                busyStart,
+                60,
+                "busy slot",
+                organizer,
+                false,
+                new ArrayList<>()
+        );
+        organizer.getCalendar().addEvent(busy);
+
+        Event toSchedule = new Event(
+                "meeting",
+                baseNow,
+                30,
+                "test meeting",
+                organizer,
+                false,
+                new ArrayList<>()
+        );
+        LocalDateTime slot = scheduler.findAvailableSlot(toSchedule);
+
+        assertNotNull(slot);
+        assertFalse(slot.isBefore(busyStart.plusMinutes(60)));
+    }
 }
