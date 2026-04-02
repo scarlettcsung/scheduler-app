@@ -87,4 +87,30 @@ public class Scheduler {
 
         return null;
     }
+
+    public boolean scheduleEvent(Event event) {
+        LocalDateTime slot = findAvailableSlot(event);
+        if (slot == null) return false;
+
+        event.setEventTime(slot);
+
+        User organizer = event.getOrganizer();
+        if (organizer != null && organizer.getCalendar() != null) {
+            organizer.getCalendar().addEvent(event);
+        }
+
+        List<Invite> currentInvites = new ArrayList<>(event.getInvites());
+        for (Invite invite : currentInvites) {
+            User invitee = invite.getRecipient();
+            if (invitee != null && invitee.getCalendar() != null) {
+                invitee.getCalendar().addEvent(event);
+            }
+
+            event.removeInvite(invite);
+            if (invitee != null) {
+                event.addInvite(new Invite(invitee, event));
+            }
+        }
+        return true;
+    }
 }
