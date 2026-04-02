@@ -24,11 +24,14 @@ public class UserService {
     }
 
     public boolean deleteUser(String username) {
-		if (userRepository.isExistingUser(username)) {
-			userRepository.deleteUserData(username);
-			return true;
+		if (!userRepository.isExistingUser(username)) {
+			return false;
 		}
-		else {
+		User currentUser = userRepository.findUsername(username);
+		int deleteStatus = userRepository.deleteUserData(username, currentUser);
+		if (deleteStatus == 2 || deleteStatus == 3) {
+			return true;
+		} else {
 			return false;
 		}
     }
