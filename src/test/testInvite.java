@@ -20,7 +20,7 @@ public class testInvite extends TestCase{
     private User new_invitee;
 
     protected void setUp() {
-        UserCalendar calendar = new UserCalendar();
+        UserCalendar calendar = new UserCalendar(null, null);
         example_organizer = new User("Charles","123456", calendar,false);
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new Event("testEvent", example_time,60,"testEvent",
