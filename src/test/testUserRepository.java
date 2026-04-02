@@ -1,5 +1,6 @@
 package test;
 
+import UserCalendar.UserCalendar;
 
 import User.User;
 import UserRepository.UserRepository;
@@ -10,12 +11,13 @@ public class testUserRepository extends TestCase {
     
     private UserRepository repository;
     private User testUser;
+    private UserCalendar userCalendar;
 
     protected void setUp() throws Exception {
         super.setUp();
+        testUser = new User("testUser", "pw123", userCalendar, false);
         repository = new UserRepository();
-        UserCalendar testCalendar = new UserCalendar();
-        testUser = new User("testUser", "pw123", testCalendar, false);
+        UserCalendar testCalendar = new UserCalendar(testUser, null);
     }
 
     public void testSaveAndFindUser() {
