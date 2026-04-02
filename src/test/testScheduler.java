@@ -81,4 +81,27 @@ public class testScheduler extends TestCase {
         assertNotNull(slot);
         assertFalse(slot.isBefore(busyStart.plusMinutes(60)));
     }
+
+    public void testScheduleEventSetsDateAndAddsToAllCalendars() {
+        Event event = new Event(
+                "meeting",
+                baseNow,
+                30,
+                "test meeting",
+                organizer,
+                false,
+                new ArrayList<>()
+        );
+        event.addInvite(new Invite(invitee, event));
+
+        boolean scheduled = scheduler.scheduleEvent(event);
+
+        assertTrue(scheduled);
+        assertNotNull(event.getEventTime());
+        assertTrue(organizer.getCalendar().getEvents().contains(event));
+        assertTrue(invitee.getCalendar().getEvents().contains(event));
+        assertEquals(1, event.getInvites().size());
+        assertEquals(invitee, event.getInvites().get(0).getRecipient());
+        assertEquals(inviteStatus.PENDING, event.getInvites().get(0).getStatus());
+    }
 }
