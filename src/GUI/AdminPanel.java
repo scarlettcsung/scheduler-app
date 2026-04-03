@@ -9,6 +9,8 @@ import java.awt.GridBagConstraints;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Insets;
@@ -136,6 +138,19 @@ public class AdminPanel extends JPanel {
 		
 		JLabel label_31 = new JLabel("");
 		add(label_31, "cell 6 5,grow");
+		
+		// EO GI: 3/4/2026 - Logout button added to AdminPanel
+		JButton btnLogout = new JButton("Log Out");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// EO GI: Transition back to the authentication panel
+				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
+				topFrame.setContentPane(new AuthenticationPanel());
+				topFrame.revalidate();
+				topFrame.repaint();
+			}
+		});
+		add(btnLogout, "flowy,cell 7 5");
 		
 		JLabel label_32 = new JLabel("");
 		add(label_32, "cell 7 5,grow");
