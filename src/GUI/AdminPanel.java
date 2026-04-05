@@ -18,15 +18,19 @@ import java.awt.Color;
 import javax.swing.border.CompoundBorder;
 import java.awt.GridLayout;
 import net.miginfocom.swing.MigLayout;
+import UserRepository.UserRepository;
 
 public class AdminPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private UserRepository repository;
 
 	/**
 	 * Create the panel.
 	 */
-	public AdminPanel() {
+	public AdminPanel(UserRepository repository) {
+		
+		this.repository = repository;
 		setBackground(Color.MAGENTA);
 		setLayout(new MigLayout("", "[75px][75px][75px][][][75px][75px][75px]", "[50px][50px][50px][50px][50px][50px]"));
 		
@@ -118,7 +122,7 @@ public class AdminPanel extends JPanel {
 		btnDeleteUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
-				topFrame.setContentPane(new AdminPanelDeleteUser());
+				topFrame.setContentPane(new AdminPanelDeleteUser(repository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
