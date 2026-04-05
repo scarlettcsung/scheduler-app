@@ -16,7 +16,18 @@ public class UserRepository {
     public void saveUser(User user) {
         users.add(user);
     }
-
+    
+    // Get user list EO GI: 5/4/2026. copies the list 
+    public List<User> getListUsers()
+    {
+    	List<User> safeList = new ArrayList<User>();
+    	for(int i = 0; i < users.size();i++)
+    	{
+    		safeList.add(users.get(i));
+    	}
+    	return safeList;
+    }
+    
     public int deleteUserData(String username, User currentUser) {
 
         // 1 → Not logged in
@@ -24,7 +35,7 @@ public class UserRepository {
             return 1;
         }
 
-        // 2 → Admin → can delete anyone
+        // 2 → Admin → can delete anyone	
         if (currentUser.isAdmin()) {
 
             boolean removed = users.removeIf(u -> u.getUsername().equals(username));
