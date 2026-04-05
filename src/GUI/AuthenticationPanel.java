@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import java.awt.Color;
 
 import UserRepository.UserRepository;
+import User.User;
 
 public class AuthenticationPanel extends JPanel {
 
@@ -45,8 +46,6 @@ public class AuthenticationPanel extends JPanel {
 	    auth = new Authentication(repository);
 	    
 	    //Backend stuff meets with frontend stuff
-	    
-	   
 	    
 	    // Main Layout
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -87,13 +86,16 @@ public class AuthenticationPanel extends JPanel {
 		        
 		        boolean success = auth.login(username, password);
 		        
+		        // EO GI: 5/4/2026 23.42 currentUser upgrade
+		        User currentUser = auth.getauthenticatedUser();
+		        
 		        if (success) {
 		            JOptionPane.showMessageDialog(null, "Login successful!");
 		            // EO GI: Transition to the admin panel or user dashboard here
 		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
 
 		            if(username.equals("admin")) {
-		            	topFrame.setContentPane(new AdminPanel(repository));
+		            	topFrame.setContentPane(new AdminPanel(repository,currentUser));
 		            } else {
 		            	topFrame.setContentPane(new UserPanel());
 		            }
