@@ -34,13 +34,13 @@ public class AuthenticationPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public AuthenticationPanel() {
+	public AuthenticationPanel(UserRepository repository) {
 		// Fancy Colors:))
 		
 	    setBackground(Color.decode("#00FFFF"));
 	    setOpaque(true);
-
-	    repository = new UserRepository();
+	    
+	    this.repository = repository;
 	    userService = new UserService(repository);
 	    auth = new Authentication(repository);
 	    
@@ -93,7 +93,7 @@ public class AuthenticationPanel extends JPanel {
 		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
 
 		            if(username.equals("admin")) {
-		            	topFrame.setContentPane(new AdminPanel());
+		            	topFrame.setContentPane(new AdminPanel(repository));
 		            } else {
 		            	topFrame.setContentPane(new UserPanel());
 		            }
@@ -175,7 +175,8 @@ public static void main(String[] args) {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(800, 600);
 
-    frame.setContentPane(new AuthenticationPanel());
+    UserRepository repository = new UserRepository();
+    frame.setContentPane(new AuthenticationPanel(repository));
     frame.setVisible(true);
 }
 }
