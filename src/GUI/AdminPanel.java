@@ -95,6 +95,7 @@ public class AdminPanel extends JPanel {
 		add(label_18, "cell 1 3,grow");
 		
 		JButton btnDeleteEvents = new JButton("Delete Events");
+		
 		add(btnDeleteEvents, "cell 3 3,grow");
 		
 		JLabel label_19 = new JLabel("");
@@ -113,6 +114,15 @@ public class AdminPanel extends JPanel {
 		add(label_23, "cell 1 4,grow");
 		
 		JButton btnDeleteUser = new JButton("Delete User");
+		// connected to delete user panel EO GI: 5/4/2026
+		btnDeleteUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
+				topFrame.setContentPane(new AdminPanelDeleteUser());
+				topFrame.revalidate();
+				topFrame.repaint();
+			}
+		});
 		add(btnDeleteUser, "cell 3 4,grow");
 		
 		JLabel label_24 = new JLabel("");
