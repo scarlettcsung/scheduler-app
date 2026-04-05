@@ -16,6 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.Insets;
 import java.awt.Color;
 import javax.swing.border.CompoundBorder;
+
+import User.User;
+
 import java.awt.GridLayout;
 import net.miginfocom.swing.MigLayout;
 import UserRepository.UserRepository;
@@ -25,10 +28,9 @@ public class AdminPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private UserRepository repository;
 
-	/**
-	 * Create the panel.
-	 */
-	public AdminPanel(UserRepository repository) {
+	// existing repository instance here EO GI: 5/4/2026
+	// EO G: 5/4/2026 23.37 adminUser as a parameter
+	public AdminPanel(UserRepository repository, User adminUser) {
 		
 		this.repository = repository;
 		setBackground(Color.MAGENTA);
@@ -122,7 +124,8 @@ public class AdminPanel extends JPanel {
 		btnDeleteUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
-				topFrame.setContentPane(new AdminPanelDeleteUser(repository));
+				// chanelled right repository EO GI: 5/4/2026
+				topFrame.setContentPane(new AdminPanelDeleteUser(repository, adminUser));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -159,7 +162,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// EO GI: Transition back to the authentication panel
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
-				topFrame.setContentPane(new AuthenticationPanel());
+				topFrame.setContentPane(new AuthenticationPanel(repository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
