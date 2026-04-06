@@ -1,25 +1,15 @@
 package GUI;
 
 import javax.swing.JPanel;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-
 import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Insets;
 import java.awt.Color;
-import javax.swing.border.CompoundBorder;
 
 import User.User;
-
-import java.awt.GridLayout;
 import net.miginfocom.swing.MigLayout;
 import UserRepository.UserRepository;
 
@@ -129,7 +119,7 @@ public class AdminPanel extends JPanel {
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
-		});
+		});	
 		add(btnDeleteUser, "cell 3 4,grow");
 		
 		JLabel label_24 = new JLabel("");
