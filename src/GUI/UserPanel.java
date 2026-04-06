@@ -7,6 +7,7 @@ import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import User.User;
@@ -30,6 +31,19 @@ public class UserPanel extends JPanel {
 		setLayout(gridBagLayout);
 				
 		JButton btnDeleteAccount = new JButton("Delete Account");
+		btnDeleteAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// SN GI: 6/4/2026 
+				int confirm = JOptionPane.showConfirmDialog(UserPanel.this, "Are you sure you want to delete your account?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION) {
+					repository.deleteUserData(currentUser.getUsername(), currentUser);
+					JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
+					topFrame.setContentPane(new AuthenticationPanel(repository));
+					topFrame.revalidate();
+					topFrame.repaint();
+				}
+			}
+		});
 		GridBagConstraints gbc_btnDeleteAccount = new GridBagConstraints();
 		gbc_btnDeleteAccount.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_btnDeleteAccount.insets = new Insets(0, 0, 5, 5);
