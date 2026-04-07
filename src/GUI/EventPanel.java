@@ -1,5 +1,9 @@
 package GUI;
 
+// Util imports
+import java.util.List;
+import java.util.ArrayList;
+
 // GUI related imports
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -22,6 +26,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import java.awt.Color;
+import javax.swing.JFormattedTextField;
 
 // Back-end related imports
 import UserRepository.UserRepository;
@@ -29,10 +34,9 @@ import User.User;
 import Event.Event;
 import Scheduler.Scheduler;
 import UserService.UserService;
-import javax.swing.JFormattedTextField;
 
 
-public class CreateEventPanel extends JPanel {
+public class EventPanel extends JPanel {
 
 	// UI items
 	private static final long serialVersionUID = 1L;
@@ -45,33 +49,37 @@ public class CreateEventPanel extends JPanel {
 	private JTextField txtParticipantUsername;
 	private JTextArea textAreaShowParticipants; // Participants
 	private JLabel lblParticipants; 
-	
-	// Back-end items
-	private UserRepository repository;
-	private UserService userService;
-	private User currentUser;
-	private Event event;
-	private Scheduler scheduler;
 	private JLabel lblEventName;
 	private JLabel lblEventDuration;
 	private JLabel lblEarliestDate;
 	private JLabel lblLatestDate;
 	private JFormattedTextField frmtdtxtfldEarliestDate;
 	private JFormattedTextField frmtdtxtfldLatestDate;
+	
+	// Back-end items
+	private UserRepository repository;
+	private UserService userService;
+	private User currentUser;
+	private boolean isNewEvent;
+	private Event event;
+	private Scheduler scheduler;
+	private List<User> tempInvites = new ArrayList<>();
 
 
 	/**
 	 * Create the panel.
 	 */
-	public CreateEventPanel(UserRepository repository, User currentUser, 
-			Event event, Scheduler scheduler) {
+	public EventPanel(UserRepository repository, User currentUser, 
+			boolean isNewEvent, Event event, Scheduler scheduler) {
 		
 		// Initialization
 		this.repository = repository;
 		userService = new UserService(repository);
 		this.currentUser = currentUser;
+		this.isNewEvent = isNewEvent;
 		this.event = event;
 		this.scheduler = scheduler;
+
 		
 		// Layout
 		setBackground(Color.CYAN);
@@ -85,16 +93,16 @@ public class CreateEventPanel extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		JLabel lblCreateEvent = new JLabel("Create Event");
-		lblCreateEvent.setAlignmentY(Component.TOP_ALIGNMENT);
-		lblCreateEvent.setFont(new Font("Tahoma", Font.BOLD, 16));
-		GridBagConstraints gbc_lblCreateEvent = new GridBagConstraints();
-		gbc_lblCreateEvent.anchor = GridBagConstraints.NORTH;
-		gbc_lblCreateEvent.insets = new Insets(0, 0, 5, 0);
-		gbc_lblCreateEvent.gridwidth = 5;
-		gbc_lblCreateEvent.gridx = 0;
-		gbc_lblCreateEvent.gridy = 0;
-		add(lblCreateEvent, gbc_lblCreateEvent);
+		JLabel lblEvent = new JLabel("Event");
+		lblEvent.setAlignmentY(Component.TOP_ALIGNMENT);
+		lblEvent.setFont(new Font("Tahoma", Font.BOLD, 16));
+		GridBagConstraints gbc_lblEvent = new GridBagConstraints();
+		gbc_lblEvent.anchor = GridBagConstraints.NORTH;
+		gbc_lblEvent.insets = new Insets(0, 0, 5, 0);
+		gbc_lblEvent.gridwidth = 5;
+		gbc_lblEvent.gridx = 0;
+		gbc_lblEvent.gridy = 0;
+		add(lblEvent, gbc_lblEvent);
 		
 		lblEventName = new JLabel("Event name");
 		GridBagConstraints gbc_lblEventName = new GridBagConstraints();
@@ -233,12 +241,21 @@ public class CreateEventPanel extends JPanel {
 		gbc_btnSave.gridy = 9;
 		add(btnSave, gbc_btnSave);
 		
+		// Load existing event
+		if (!isNewEvent && event != null) {
+			txtEventName.setText(event.getEventName());
+			txtEventDurationminutes.setText(String.valueOf(event.getEventDuration()));
+			updateParticipantList();
+		}
+		
+		// Duration must be integer
 		try {
 		    int duration = Integer.parseInt(txtEventDurationminutes.getText());
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 		
+		// Dates must be in YYYY-MM-DD
 		try {
 		    javax.swing.text.MaskFormatter dateMask = new javax.swing.text.MaskFormatter("####-##-##");
 		    dateMask.setPlaceholderCharacter('_');
@@ -250,8 +267,22 @@ public class CreateEventPanel extends JPanel {
 		} catch (java.text.ParseException e) {
 		    e.printStackTrace();
 		}
-
+		
 	}
 	
-	
+	public void updateParticipantList() {
+		textAreaShowParticipants.setText("");
+		if (event != null && event.getInvites() != null) {
+			for (Invite.Invite invite : event.getInvites()) {
+				String username = invite.getRecipient().getUsername();
+				textAreaShowParticipants.append(username + "\n");
+			}
+		}
+		
+		if (tempInvites != null) {
+			for (User user : tempInvites) {
+				textAreaShowParticipants.append(user.getUsername() + "(New)\n");
+			}
+		}
+	}
 }
