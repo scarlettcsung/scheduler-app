@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import java.awt.Color;
 
 import UserRepository.UserRepository;
+import User.User;
 
 public class AuthenticationPanel extends JPanel {
 
@@ -34,19 +35,17 @@ public class AuthenticationPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public AuthenticationPanel() {
+	public AuthenticationPanel(UserRepository repository) {
 		// Fancy Colors:))
 		
 	    setBackground(Color.decode("#00FFFF"));
 	    setOpaque(true);
-
-	    repository = new UserRepository();
+	    
+	    this.repository = repository;
 	    userService = new UserService(repository);
 	    auth = new Authentication(repository);
 	    
 	    //Backend stuff meets with frontend stuff
-	    
-	   
 	    
 	    // Main Layout
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -87,8 +86,21 @@ public class AuthenticationPanel extends JPanel {
 		        
 		        boolean success = auth.login(username, password);
 		        
+		        // EO GI: 5/4/2026 23.42 currentUser upgrade
+		        User currentUser = auth.getauthenticatedUser();
+		        
 		        if (success) {
 		            JOptionPane.showMessageDialog(null, "Login successful!");
+		            // EO GI: Transition to the admin panel or user dashboard here
+		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+
+		            if(username.equals("admin")) {
+		            	topFrame.setContentPane(new AdminPanel(repository,currentUser));
+		            } else {
+		            	topFrame.setContentPane(new UserPanel(repository,currentUser));
+		            }
+		            topFrame.revalidate();
+		            topFrame.repaint();
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Invalid username or password!");
 		        }
@@ -139,6 +151,22 @@ public class AuthenticationPanel extends JPanel {
 		gbc_btnRegister.gridx = 1;
 		gbc_btnRegister.gridy = 9;
 		add(btnRegister, gbc_btnRegister);
+		
+		JButton btnEasterEgg = new JButton("Make Your Day:))");
+		GridBagConstraints gbc_btnEasterEgg = new GridBagConstraints();
+		gbc_btnEasterEgg.insets = new Insets(0, 0, 5, 0);
+		gbc_btnEasterEgg.gridx = 2;
+		gbc_btnEasterEgg.gridy = 9;
+		add(btnEasterEgg, gbc_btnEasterEgg);
+		
+		btnEasterEgg.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+			topFrame.setContentPane(new EasterEgg());
+			topFrame.revalidate();
+			topFrame.repaint();
+		}
+		});
 
 	}
 
@@ -149,7 +177,8 @@ public static void main(String[] args) {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(800, 600);
 
-    frame.setContentPane(new AuthenticationPanel());
+    UserRepository repository = new UserRepository();
+    frame.setContentPane(new AuthenticationPanel(repository));
     frame.setVisible(true);
 }
 }

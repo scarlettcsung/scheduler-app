@@ -8,6 +8,7 @@ doc/
 out/
 .idea/
 *.zip
+*.iml
 .settings/
 .project
 .classpath

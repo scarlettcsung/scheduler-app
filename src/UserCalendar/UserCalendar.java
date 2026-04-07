@@ -1,10 +1,9 @@
 package UserCalendar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import Event.Event;
 import User.User;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserCalendar {
 	
@@ -25,6 +24,10 @@ public class UserCalendar {
 	
     public User getOwner() {
     	return owner;
+    }
+
+    public void SetOwner(User newOwner) {
+        this.owner = newOwner;
     }
     
     
