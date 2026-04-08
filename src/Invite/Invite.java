@@ -25,7 +25,7 @@ public class Invite {
     public inviteStatus getStatus() {return status;}
 
     // Setter methods
-    public void setRecipient(String recipient_username) {this.recipientUsername = recipientUsername;}
+    public void setRecipient(String recipientUsername) {this.recipientUsername = recipientUsername;}
     public void setEvent(String eventID) {this.eventID = eventID;}
     public void setInviteStatus(inviteStatus status) {this.status = status;}
 }
