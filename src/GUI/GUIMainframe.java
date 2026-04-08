@@ -146,20 +146,23 @@ public class GUIMainframe extends JFrame {
 
         // Sample events
         Event[] events = new Event[]{
-            new Event("Team Meeting", LocalDateTime.of(2026, 4, 5, 10, 0), 60,
-                    "Weekly sync with the team", null, false, new ArrayList<>()),
-            new Event("Doctor Appointment", LocalDateTime.of(2026, 4, 7, 14, 30), 30,
-                    "Annual checkup", null, false, new ArrayList<>()),
-            new Event("Project Deadline", LocalDateTime.of(2026, 4, 10, 17, 0), 120,
-                    "Submit final project deliverables", null, false, new ArrayList<>()),
-            new Event("Team Meeting", LocalDateTime.of(2026, 4, 5, 10, 0), 60,
-                    "Weekly sync with the team", null, false, new ArrayList<>()),
-            new Event("Doctor Appointment", LocalDateTime.of(2026, 4, 7, 14, 30), 30,
-                    "Annual checkup", null, false, new ArrayList<>()),
-            new Event("Project Deadline", LocalDateTime.of(2026, 4, 10, 17, 0), 120,
-                    "Submit final project deliverables", null, false, new ArrayList<>()),
-            
-        };
+        	    new Event(
+        	        "Team Meeting", 
+        	        60, 
+        	        "yappen met de bros", 
+        	        null, 
+        	        false, 
+        	        new ArrayList<>()
+        	    ),
+        	    new Event(
+        	        "Deadline", 
+        	        120, 
+        	        "strijden voor de deadline", 
+        	        null, 
+        	        false, 
+        	        new ArrayList<>()
+        	    )
+        	};
 
         JPanel eventsCardsPanel = new JPanel();
         eventsCardsPanel.setLayout(null);

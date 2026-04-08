@@ -97,7 +97,7 @@ public class AuthenticationPanel extends JPanel {
 		            if(currentUser.canAccessAdminPanel()) {
 		            	topFrame.setContentPane(new AdminPanel(repository,currentUser));
 		            } else {
-		            	topFrame.setContentPane(new UserPanel(repository,currentUser));
+		            	topFrame.setContentPane(new MainDashboardPanel2(repository,currentUser));
 		            }
 		            topFrame.revalidate();
 		            topFrame.repaint();
