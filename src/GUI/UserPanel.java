@@ -69,6 +69,11 @@ public class UserPanel extends JPanel {
 		add(btnLogout, gbc_btnLogout);
 
 		JButton btnAvailableEvents = new JButton("Available Events");
+		btnAvailableEvents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		GridBagConstraints gbc_btnAvailableEvents = new GridBagConstraints();
 		gbc_btnAvailableEvents.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAvailableEvents.insets = new Insets(0, 0, 5, 5);
@@ -92,21 +97,19 @@ public class UserPanel extends JPanel {
 		gbc_btnCreateEvent.gridy = 3;
 		add(btnCreateEvent, gbc_btnCreateEvent);
 
-		JButton btnUpdateEvent = new JButton("Update Event");
-		GridBagConstraints gbc_btnUpdateEvent = new GridBagConstraints();
-		gbc_btnUpdateEvent.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnUpdateEvent.insets = new Insets(0, 0, 5, 5);
-		gbc_btnUpdateEvent.gridx = 2;
-		gbc_btnUpdateEvent.gridy = 4;
-		add(btnUpdateEvent, gbc_btnUpdateEvent);
-
-		JButton btnDeleteEvent = new JButton("Delete Event");
-		GridBagConstraints gbc_btnDeleteEvent = new GridBagConstraints();
-		gbc_btnDeleteEvent.insets = new Insets(0, 0, 5, 5);
-		gbc_btnDeleteEvent.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDeleteEvent.gridx = 2;
-		gbc_btnDeleteEvent.gridy = 5;
-		add(btnDeleteEvent, gbc_btnDeleteEvent);
+		JButton btnManageEvent = new JButton("Manage Event");
+		btnManageEvent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				// We will have a update event and delete event button.
+			}
+		});
+		GridBagConstraints gbc_btnManageEvent = new GridBagConstraints();
+		gbc_btnManageEvent.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnManageEvent.insets = new Insets(0, 0, 5, 5);
+		gbc_btnManageEvent.gridx = 2;
+		gbc_btnManageEvent.gridy = 4;
+		add(btnManageEvent, gbc_btnManageEvent);
 				
 	}
 

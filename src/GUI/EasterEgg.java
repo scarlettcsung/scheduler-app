@@ -7,11 +7,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-
 public class EasterEgg extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -29,7 +24,7 @@ public class EasterEgg extends JPanel {
 		
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel.setIcon(new ImageIcon("/Users/gokdenizinan/Downloads/orangutan-baby-funny-face-months-old-31287963.jpg.png"));
+		lblNewLabel.setIcon(new ImageIcon(getClass().getResource("/images/admin.jpg")));
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.fill = GridBagConstraints.BOTH;
 		gbc_lblNewLabel.gridx = 0;

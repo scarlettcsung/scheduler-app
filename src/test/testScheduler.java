@@ -29,11 +29,11 @@ public class testScheduler extends TestCase {
                 ZoneId.systemDefault()
         );
         scheduler = new Scheduler(0, 23, 7, fixedClock);
-        organizer = new User("organizer", "pw", null, false);
+        organizer = new User("organizer", "pw", null);
         UserCalendar organizerCalendar = new UserCalendar(organizer, null);
         organizer.setCalendar(organizerCalendar);
 
-        invitee = new User("invitee", "pw", null, false);
+        invitee = new User("invitee", "pw", null);
         UserCalendar inviteeCalendar = new UserCalendar(invitee, null);
         invitee.setCalendar(inviteeCalendar);
     }
@@ -41,15 +41,7 @@ public class testScheduler extends TestCase {
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
         // Duration longer than the daily window should never be schedulable.
         Scheduler oneHourWindow = new Scheduler(8, 9, 3, fixedClock);
-        Event tooLong = new Event(
-                "meeting",
-                baseNow,
-                61,
-                "test meeting",
-                organizer,
-                false,
-                new ArrayList<>()
-        );
+        Event tooLong = new Event("meeting",baseNow,61,"test meeting",organizer,false,new ArrayList<>());
 
         LocalDateTime slot = oneHourWindow.findAvailableSlot(tooLong);
 
