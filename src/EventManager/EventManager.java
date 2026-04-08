@@ -6,6 +6,7 @@ import Event.Event;
 import Invite.Invite;
 import Invite.inviteStatus;
 
+
 public class EventManager {
 
     public void updateEvent(Event event, String updateAspect, String newValue) {
@@ -30,20 +31,26 @@ public class EventManager {
     }
 
     public void deleteEvent(Event event) {
-    	/*
-    	if (event.getOrganizer() != null && event.getOrganizer().getCalendar() != null) {
-    		    event.getOrganizer().getCalendar().removeEvent(event);
-    		}
+        if (event == null) {
+            return;
+        }
+
+        if (event.getOrganizer() != null && event.getOrganizer().getCalendar() != null) {
+            event.getOrganizer().getCalendar().removeEvent(event);
+        }
+
+        if (event.getInvites() != null) {
+            for (Invite invite : event.getInvites()) {
+                if (invite.getRecipient() != null && invite.getRecipient().getCalendar() != null) {
+                    invite.getRecipient().getCalendar().removeEvent(event);
+                }
+            }
+        }
     }
-    */
-		event.setEventName(null);
-		event.setEventDescription(null);
-		event.setEventTime(null);
-		event.setEventDuration(0);
-	}
 
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(inviteStatus.REJECTED);
         event.removeInvite(invite);
     }
+
 }
