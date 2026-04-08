@@ -19,7 +19,7 @@ public class UserService {
 			return false;
 		}	
 		else {
-        User newUser = new User(username, password, null, false);
+        User newUser = new User(username, password, null);
         userRepository.saveUser(newUser);
        
         return true;
