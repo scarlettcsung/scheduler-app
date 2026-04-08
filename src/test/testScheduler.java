@@ -29,11 +29,11 @@ public class testScheduler extends TestCase {
                 ZoneId.systemDefault()
         );
         scheduler = new Scheduler(0, 23, 7, fixedClock);
-        organizer = new User("organizer", "pw", null, false);
+        organizer = new User("organizer", "pw", null);
         UserCalendar organizerCalendar = new UserCalendar(organizer, null);
         organizer.setCalendar(organizerCalendar);
 
-        invitee = new User("invitee", "pw", null, false);
+        invitee = new User("invitee", "pw", null);
         UserCalendar inviteeCalendar = new UserCalendar(invitee, null);
         invitee.setCalendar(inviteeCalendar);
     }
