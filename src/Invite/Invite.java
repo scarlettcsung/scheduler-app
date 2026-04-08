@@ -19,6 +19,7 @@ public class Invite {
     public void accept() {status = inviteStatus.ACCEPTED;}
     public void reject() {
         status = inviteStatus.REJECTED;
+        event.removeInvite(this); // Removes "this" invite from event invites list
     }
 
     // Getter methods
