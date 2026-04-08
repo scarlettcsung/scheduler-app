@@ -1,36 +1,40 @@
 package test;
 
-import UserCalendar.UserCalendar;
+import User.AdminUser;
 import User.User;
+import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 
-
 public class testUser extends TestCase {
-    private User User;
+    private User normalUser;
+    private User adminUser;
     private UserCalendar myCalendar;
 
     @Override
     protected void setUp() {
-        User = new User("testUser", "testPassword", null, true);
-        myCalendar = new UserCalendar(User, null);
-        User.setCalendar(myCalendar);
+        normalUser = new User("testUser", "testPassword", null);
+        myCalendar = new UserCalendar(normalUser, null);
+        normalUser.setCalendar(myCalendar);
+        adminUser = new AdminUser("admin", "admin", null);
     }
-	
-	public void testGetUsername() {
-		
-		assertEquals("testUser", User.getUsername());
-	}
-	public void testGetPassword() {
-		
-		assertEquals("testPassword", User.getPassword());
-	}
 
-	public void testGetCalendar() {
-		
-		assertEquals(myCalendar, User.getCalendar());
-	}
-	public void testIsAdmin() {
-		
-		assertEquals(true, true);
-	}
+    public void testGetUsername() {
+        assertEquals("testUser", normalUser.getUsername());
+    }
+
+    public void testGetPassword() {
+        assertEquals("testPassword", normalUser.getPassword());
+    }
+
+    public void testGetCalendar() {
+        assertEquals(myCalendar, normalUser.getCalendar());
+    }
+
+    public void testNormalUserCannotAccessAdminPanel() {
+        assertFalse(normalUser.canAccessAdminPanel());
+    }
+
+    public void testAdminUserCanAccessAdminPanel() {
+        assertTrue(adminUser.canAccessAdminPanel());
+    }
 }
