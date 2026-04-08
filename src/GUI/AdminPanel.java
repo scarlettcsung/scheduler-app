@@ -53,6 +53,18 @@ public class AdminPanel extends JPanel {
 		JLabel label_8 = new JLabel("");
 		add(label_8, "cell 2 1,grow");
 		
+		JButton btnCreateEvent = new JButton("Create Event");
+		btnCreateEvent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
+				// chanelled right repository EO GI: 7/4/2026
+				topFrame.setContentPane(new AdminPanelCreateEvent(repository, adminUser));
+				topFrame.revalidate();
+				topFrame.repaint();
+			}
+		});
+		add(btnCreateEvent, "cell 3 1");
+		
 		JLabel label_9 = new JLabel("");
 		add(label_9, "cell 5 1,grow");
 		
@@ -71,6 +83,7 @@ public class AdminPanel extends JPanel {
 		JButton btnUpdateEvents = new JButton("Update Events");
 		btnUpdateEvents.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		add(btnUpdateEvents, "cell 3 2,grow");
@@ -91,6 +104,15 @@ public class AdminPanel extends JPanel {
 		add(label_18, "cell 1 3,grow");
 		
 		JButton btnDeleteEvents = new JButton("Delete Events");
+		btnDeleteEvents.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
+				// chanelled right repository EO GI: 7/4/2026
+				topFrame.setContentPane(new AdminPanelDeleteEvent(repository, adminUser));
+				topFrame.revalidate();
+				topFrame.repaint();
+			}
+		});
 		
 		add(btnDeleteEvents, "cell 3 3,grow");
 		
@@ -158,11 +180,7 @@ public class AdminPanel extends JPanel {
 			}
 		});
 		add(btnLogout, "flowy,cell 7 5");
-		
 		JLabel label_32 = new JLabel("");
-		add(label_32, "cell 7 5,grow");
-		
-		
+		add(label_32, "cell 7 5,grow");	
 	}
-
 }
