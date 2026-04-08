@@ -1,36 +1,35 @@
 package UserCalendar;
 
 import Event.Event;
-import User.User;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UserCalendar {
 	
-	public UserCalendar(User owner, List<Event> events) {
-		this.owner = owner;
+	public UserCalendar(String ownerUsername, List<Event> events) {
+		this.ownerUsername = ownerUsername;
 		if (events == null) {
             this.events = new ArrayList<>();
         } else {
             this.events = events;
         }
 	}
-	private User owner;
+	private String ownerUsername;
 	private List<Event> events;
 	
 	public  List<Event> getEvents() {
         return events;
     }
 	
-    public User getOwner() {
-    	return owner;
+    public String getOwner() {
+    	return ownerUsername;
     }
 
-    public void SetOwner(User newOwner) {
-        this.owner = newOwner;
+    public void SetOwner(String newOwnerUsername) {
+        this.ownerUsername = newOwnerUsername;
     }
-    
-    
+
     public void addEvent(Event event) {
         events.add(event);
     }

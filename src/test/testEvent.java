@@ -12,27 +12,27 @@ import java.util.List;
 
 public class testEvent extends TestCase {
 
-    private User example_organizer;
+    private String exampleOrganizer;
     private Event event;
     private LocalDateTime example_time;
     private Invite invite;
-    private User example_invitee;
+    private String exampleInvitee;
 
     protected void setUp() {
-        UserCalendar calendar = new UserCalendar(example_organizer,null);
-        example_organizer = new User("Charles","123456", calendar);
+        UserCalendar calendar = new UserCalendar(exampleOrganizer,null);
+        exampleOrganizer = new User("Charles","123456", calendar,false);
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new Event("testEvent", 60,"testEvent",
-                example_organizer,false,null);
-        example_invitee = new User("Joe","789012", calendar);
-        invite = new Invite(example_invitee,event);
+                exampleOrganizer,false,null);
+        exampleInvitee = new User("Joe","789012", calendar,false);
+        invite = new Invite(exampleInvitee,event.getEventID());
     }
 
     // Test Getters
     public void testEventName() {assertEquals("testEvent", event.getEventName());}
     public void testEventTime() {assertNull(event.getEventTime());}
     public void testOrganizer() {
-        assertEquals(example_organizer,event.getOrganizer());
+        assertEquals(exampleOrganizer,event.getOrganizer());
     }
     public void testDescription() {
         assertEquals("testEvent",event.getEventDescription());
