@@ -9,10 +9,12 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
 import Authentication.Authentication;
+import Event.Event;
 import UserService.UserService;
 import javax.swing.JOptionPane;
 
@@ -22,6 +24,9 @@ import java.awt.Color;
 
 import UserRepository.UserRepository;
 import User.User;
+import UserCalendar.UserCalendar;
+import EventManager.EventManager;
+import Invite.Invite;
 
 public class AuthenticationPanel extends JPanel {
 
@@ -170,14 +175,51 @@ public class AuthenticationPanel extends JPanel {
 
 	}
 
-
-
 public static void main(String[] args) {
     JFrame frame = new JFrame("Test");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(800, 600);
 
     UserRepository repository = new UserRepository();
+    EventManager eventManager = new EventManager();
+
+    // Yaratıcı bir test.
+    /*
+    User testUser1 = new User("nisa", "1234", null);
+    User testUser2 = new User("remzi", "1234", null);
+    UserCalendar testCalendar1 = new UserCalendar(testUser1, null);
+    UserCalendar testCalendar2 = new UserCalendar(testUser2, null);
+    testUser1.setCalendar(testCalendar1);
+    testUser2.setCalendar(testCalendar2);
+
+    Event dummyEvent = new Event(
+        "Dummy Event",
+        60,
+        "This is a test event for delete screen",
+        testUser1,
+        false,
+        null
+    );
+
+    dummyEvent.setEventTime(LocalDateTime.of(2026, 4, 8, 14, 0));
+    dummyEvent.addInvite(new Invite(testUser2, dummyEvent));
+
+    testCalendar1.addEvent(dummyEvent);
+    testCalendar2.addEvent(dummyEvent);
+    
+    System.out.println(testUser1.getCalendar().getEvents());
+    
+    repository.saveUser(testUser1);
+    repository.saveUser(testUser2);
+    
+    //testCalendar1.removeEvent(dummyEvent);
+    eventManager.deleteEvent(dummyEvent);
+    
+    System.out.println(testUser1.getCalendar().getEvents());
+    System.out.println(testUser2.getCalendar().getEvents());
+    */
+    
+    
     frame.setContentPane(new AuthenticationPanel(repository));
     frame.setVisible(true);
 }
