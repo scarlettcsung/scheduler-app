@@ -21,7 +21,7 @@ public class testEventManager extends TestCase {
 	User example_organizer = new User("testUser","testPass",orgCalendar,false) ; // creating a dummy user for testing
 	LocalDateTime example_date = LocalDateTime.of(2026, 4, 1, 12, 0);; // creating a dummy date for testing
 	EventManager eveupdateEvent = new EventManager();
-	Event event = new Event("osman", example_date,60,"testEvent",
+	Event event = new Event("osman",60,"testEvent",
 	example_organizer,false,null);
 	
 	public void testUpdateEventShouldChangeEventName() {

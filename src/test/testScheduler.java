@@ -41,15 +41,7 @@ public class testScheduler extends TestCase {
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
         // Duration longer than the daily window should never be schedulable.
         Scheduler oneHourWindow = new Scheduler(8, 9, 3, fixedClock);
-        Event tooLong = new Event(
-                "meeting",
-                baseNow,
-                61,
-                "test meeting",
-                organizer,
-                false,
-                new ArrayList<>()
-        );
+        Event tooLong = new Event("meeting",baseNow,61,"test meeting",organizer,false,new ArrayList<>());
 
         LocalDateTime slot = oneHourWindow.findAvailableSlot(tooLong);
 
