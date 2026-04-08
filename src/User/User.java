@@ -5,16 +5,14 @@ import UserCalendar.UserCalendar;
 
 public class User {
 	
-	public User(String username, String password, UserCalendar myCalendar, boolean isAdmin) {
+	public User(String username, String password, UserCalendar myCalendar) {
 		this.username = username;
 		this.password = password;
 		this.myCalendar = myCalendar;
-		this.isAdmin = isAdmin;
 	}
 
 	private String username;
 	private String password;
-	private boolean isAdmin;
 	private UserCalendar myCalendar;
 	
 	
@@ -34,7 +32,14 @@ public class User {
 	    this.myCalendar = calendar;
 	}
 	
-	public boolean isAdmin() {
-		return isAdmin;
+	public boolean canAccessAdminPanel() {
+		return false;
+	}
+	
+	public boolean canDeleteUser(User targetUser) {
+		if (targetUser == null) {
+			return false;
+		}
+		return username.equals(targetUser.getUsername());
 	}
 }
