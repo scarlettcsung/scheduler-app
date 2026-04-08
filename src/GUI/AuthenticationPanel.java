@@ -94,7 +94,7 @@ public class AuthenticationPanel extends JPanel {
 		            // EO GI: Transition to the admin panel or user dashboard here
 		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
 
-		            if(username.equals("admin")) {
+		            if(currentUser.canAccessAdminPanel()) {
 		            	topFrame.setContentPane(new AdminPanel(repository,currentUser));
 		            } else {
 		            	topFrame.setContentPane(new UserPanel(repository,currentUser));
