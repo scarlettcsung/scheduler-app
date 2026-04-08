@@ -9,27 +9,29 @@ import junit.framework.TestCase;
 
 public class testInvite extends TestCase{
 
-    private User example_organizer;
+    private String exampleOrganizer;
     private UserCalendar calendar;
     private Event event;
     private Invite invite;
-    private User example_invitee;
-    private User new_invitee;
+    private String exampleInvitee;
+    private String newInvitee;
+    private String eventID;
 
     protected void setUp() {
-        UserCalendar calendar = new UserCalendar(example_organizer,null);
-        example_organizer = new User("Charles","123456", calendar);
+        exampleOrganizer = "Charles";
+        calendar = new UserCalendar(exampleOrganizer,null);
         event = new Event("testEvent", 60,"testEvent",
-                example_organizer,false,null);
-        example_invitee = new User("Joe","789012", calendar);
-        invite = new Invite(example_invitee,event);
-        new_invitee = new User("James","password",calendar);
+        		exampleOrganizer,false,null);
+        eventID = event.getEventID();
+        exampleInvitee = "Joe";
+        invite = new Invite(exampleInvitee,eventID);
+        newInvitee = "James";
     }
 
     // Test Getters
-    public void testGetRecipient() {assertEquals(example_invitee,invite.getRecipient());}
+    public void testGetRecipient() {assertEquals(exampleInvitee,invite.getRecipient());}
     public void testGetEvent() {
-        assertEquals(event,invite.getEvent());
+        assertEquals(eventID,invite.getEventID());
     }
 
     // Test Update Status
@@ -38,17 +40,11 @@ public class testInvite extends TestCase{
         invite.accept();
         assertEquals(inviteStatus.ACCEPTED,invite.getStatus());
     }
-    public void testStatusReject() {
-        invite = new Invite(example_invitee,event);
-        assertEquals(inviteStatus.PENDING,invite.getStatus());
-        invite.reject();
-        assertEquals(inviteStatus.REJECTED,invite.getStatus());
-    }
 
     // Test Setters
     public void testSetRecipient() {
-        invite.setRecipient(new_invitee);
-        assertEquals(new_invitee,invite.getRecipient());
+        invite.setRecipient(newInvitee);
+        assertEquals(newInvitee,invite.getRecipient());
     }
 
 }

@@ -20,17 +20,18 @@ public class testEvent extends TestCase {
 
     protected void setUp() {
         UserCalendar calendar = new UserCalendar(exampleOrganizer,null);
-        exampleOrganizer = new User("Charles","123456", calendar,false);
+        exampleOrganizer = "Charles";
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new Event("testEvent", 60,"testEvent",
                 exampleOrganizer,false,null);
-        exampleInvitee = new User("Joe","789012", calendar,false);
+        exampleInvitee = "Joe";
         invite = new Invite(exampleInvitee,event.getEventID());
     }
 
     // Test Getters
     public void testEventName() {assertEquals("testEvent", event.getEventName());}
     public void testEventTime() {assertNull(event.getEventTime());}
+    public void testEventID() {assertNotNull(event.getEventID());}
     public void testOrganizer() {
         assertEquals(exampleOrganizer,event.getOrganizer());
     }

@@ -12,24 +12,23 @@ import UserCalendar.UserCalendar;
 
 public class testUserCalendar extends TestCase {
     
-    private LocalDateTime example_time;
+    private LocalDateTime exampleTime;
     private Event event;
-    private User example_owner;
+    private String exampleOwner;
     private UserCalendar userCalendar; // Declareer de variabele hier
     
     protected void setUp() {
         // Maak eerst de calendar aan of gebruik null als de User constructor dat toestaat
-    	example_owner = new User("Charles", "123456", userCalendar);
-    	example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
-    	event = new Event("testEvent",60,"testEvent",
-                example_owner,false,null);
-        userCalendar = new UserCalendar(example_owner, null); 
+    	exampleOwner = "Charles";
+    	exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
+    	event = new Event("testEvent",60,"testEvent",exampleOwner,false,null);
+        userCalendar = new UserCalendar(exampleOwner, null); 
         
     }
     
     public void testOwner() {
         // Gebruik de variabele userCalendar (kleine letter)
-        assertEquals(example_owner, userCalendar.getOwner());
+        assertEquals(exampleOwner, userCalendar.getOwner());
     }
     
     public void testGetEvents() {
