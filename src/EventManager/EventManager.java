@@ -3,6 +3,8 @@ package EventManager;
 import java.time.LocalDateTime;
 
 import Event.Event;
+import Invite.Invite;
+import Invite.inviteStatus;
 
 public class EventManager {
 
@@ -39,4 +41,9 @@ public class EventManager {
 		event.setEventTime(null);
 		event.setEventDuration(0);
 	}
+
+    public void rejectInvite(Invite invite, Event event) {
+        invite.setInviteStatus(inviteStatus.REJECTED);
+        event.removeInvite(invite);
+    }
 }

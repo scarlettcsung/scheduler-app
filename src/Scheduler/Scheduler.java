@@ -3,6 +3,8 @@ package Scheduler;
 import Event.Event;
 import Invite.Invite;
 import User.User;
+import UserRepository.UserRepository;
+
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,9 +17,11 @@ public class Scheduler {
     private int dayEnd;
     private int maxLookaheadDays;
     private Clock clock;
+    private UserRepository userRepository;
 
-    public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays) {
+    public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, UserRepository userRepository) {
         this(dayStart, dayEnd, maxLookaheadDays, Clock.systemDefaultZone());
+        this.userRepository = userRepository;
     }
 
     public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, Clock clock) {
@@ -48,15 +52,18 @@ public class Scheduler {
             // Merge busy entries from organizer and invitees for this specific day.
             List<Event> busyEvents = new ArrayList<>();
 
-            User organizer = event.getOrganizer();
+            String organizerUsername = event.getOrganizer();
+            User organizer = userRepository.findUsername(organizerUsername);
             if (organizer != null && organizer.getCalendar() != null) {
                 for (Event e : organizer.getCalendar().getEvents()) {
                     if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) busyEvents.add(e);
                 }
             }
 
+
             for (Invite invite : event.getInvites()) {
-                User invitee = invite.getRecipient();
+                String inviteeUsername = invite.getRecipient();
+                User invitee = userRepository.findUsername(inviteeUsername);
                 if (invitee != null && invitee.getCalendar() != null) {
                     for (Event e : invitee.getCalendar().getEvents()) {
                         if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) busyEvents.add(e);
@@ -96,15 +103,16 @@ public class Scheduler {
         if (slot == null) return false;
 
         event.setEventTime(slot);
-
-        User organizer = event.getOrganizer();
+        String organizerUsername = event.getOrganizer();
+        User organizer = userRepository.findUsername(organizerUsername);
         if (organizer != null && organizer.getCalendar() != null) {
             organizer.getCalendar().addEvent(event);
         }
 
         List<Invite> currentInvites = new ArrayList<>(event.getInvites());
         for (Invite invite : currentInvites) {
-            User invitee = invite.getRecipient();
+            String inviteeUsername = invite.getRecipient();
+            User invitee = userRepository.findUsername(inviteeUsername);
             if (invitee != null && invitee.getCalendar() != null) {
                 invitee.getCalendar().addEvent(event);
             }
@@ -112,7 +120,7 @@ public class Scheduler {
             // Recreate invites so they reset to default PENDING status.
             event.removeInvite(invite);
             if (invitee != null) {
-                event.addInvite(new Invite(invitee, event));
+                event.addInvite(new Invite(inviteeUsername, event.getEventID()));
             }
         }
         return true;

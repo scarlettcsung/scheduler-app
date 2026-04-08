@@ -1,8 +1,10 @@
 package Event;
 
-// Additional Packages
 import Invite.Invite;
-import User.User;
+
+// Additional Packages
+import java.util.Objects;
+import java.util.UUID;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,22 +15,19 @@ public class Event {
     private LocalDateTime eventTime;
     private int eventDuration;
     private String eventDescription;
-    private User organizer;
+    private final String eventID = UUID.randomUUID().toString();
+    private String organizerUsername;
     private Boolean isImported;
     private List<Invite> invites;
 
     public Event(String eventName, int eventDuration, String eventDescription,
-                 User organizer, Boolean isImported,  List<Invite> invites) {
+                 String organizerUsername, Boolean isImported,  List<Invite> invites) {
         this.eventName = eventName;
         this.eventDuration = eventDuration;
         this.eventDescription = eventDescription;
-        this.organizer = organizer;
+        this.organizerUsername = organizerUsername;
         this.isImported = isImported;
-        if (invites == null) {
-            this.invites = new ArrayList<>();
-        } else {
-            this.invites = invites;
-        }
+        this.invites = Objects.requireNonNullElseGet(invites, () -> new ArrayList<>());
     }
 
     // Setter Methods
@@ -40,11 +39,10 @@ public class Event {
     // Getter Methods
     public String getEventName() {return eventName;}
     public LocalDateTime getEventTime() {return eventTime;}
-    public User getOrganizer() {
-        return organizer;
-    }
+    public String getOrganizer() {return organizerUsername;}
     public String getEventDescription() {return eventDescription; }
-    public int getEventDuration() {return eventDuration;}
+    public int getEventDuration() {return eventDuration; }
+    public String getEventID() {return eventID; }
 
     // Invites Methods
     public  List<Invite> getInvites() {
@@ -54,7 +52,7 @@ public class Event {
         invites.add(invite);
     }
     public void removeInvite(Invite invite) {
-        invites.removeIf(n -> n == invite);
+        invites.removeIf(n -> n.equals(invite));
     }
 
 
