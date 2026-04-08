@@ -18,12 +18,12 @@ public class testInvite extends TestCase{
 
     protected void setUp() {
         UserCalendar calendar = new UserCalendar(example_organizer,null);
-        example_organizer = new User("Charles","123456", calendar,false);
+        example_organizer = new User("Charles","123456", calendar);
         event = new Event("testEvent", 60,"testEvent",
                 example_organizer,false,null);
-        example_invitee = new User("Joe","789012", calendar,false);
+        example_invitee = new User("Joe","789012", calendar);
         invite = new Invite(example_invitee,event);
-        new_invitee = new User("James","password",calendar,false);
+        new_invitee = new User("James","password",calendar);
     }
 
     // Test Getters
