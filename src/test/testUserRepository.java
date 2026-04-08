@@ -1,6 +1,7 @@
 package test;
 
 
+import User.AdminUser;
 import User.User;
 import UserRepository.UserRepository;
 import UserCalendar.UserCalendar;
@@ -14,7 +15,7 @@ public class testUserRepository extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         repository = new UserRepository();
-        testUser = new User("testUser", "pw123", null, false);
+        testUser = new User("testUser", "pw123", null);
         UserCalendar testCalendar = new UserCalendar(testUser, null);
         testUser.setCalendar(testCalendar);
     }
@@ -43,7 +44,7 @@ public class testUserRepository extends TestCase {
     public void testDeleteExistingUserAsAdmin() {
     	// We will change once we have a file to save the user list and a permanent admin
     	// Now we will just go on with a dummy admin user.
-		User adminUser = new User("admin", "admin", null, true);
+		User adminUser = new AdminUser("admin", "admin", null);
 		repository.saveUser(testUser);
 		int deleted = repository.deleteUserData("testUser", adminUser);
 		assertEquals(2, deleted);
@@ -56,7 +57,7 @@ public class testUserRepository extends TestCase {
 			}
 	
 	public void testDeleteExistingUserAsOther() {
-		User otherUser = new User("otherUser", "pw123", null, false);
+		User otherUser = new User("otherUser", "pw123", null);
 		repository.saveUser(testUser);
 		int deleted = repository.deleteUserData("testUser", otherUser);
 		assertEquals(4, deleted);

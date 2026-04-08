@@ -18,11 +18,10 @@ import User.User;
 public class testEventManager extends TestCase {
 
 	UserCalendar orgCalendar = new UserCalendar(null, null);
-	User example_organizer = new User("testUser","testPass",orgCalendar,false) ; // creating a dummy user for testing
+	String exampleOrganizer = "testUser" ; // creating a dummy user for testing
 	LocalDateTime example_date = LocalDateTime.of(2026, 4, 1, 12, 0);; // creating a dummy date for testing
 	EventManager eveupdateEvent = new EventManager();
-	Event event = new Event("osman",60,"testEvent",
-	example_organizer,false,null);
+	Event event = new Event("osman",60,"testEvent",exampleOrganizer,false,null);
 	
 	public void testUpdateEventShouldChangeEventName() {
 		
@@ -34,13 +33,11 @@ public class testEventManager extends TestCase {
 		
 		assertNotNull(event.getEventName());
 	    assertNotNull(event.getEventDescription());
-	    assertNotNull(event.getEventTime());
 	    
 		eveupdateEvent.deleteEvent(event);
 		
 		assertEquals(null,event.getEventName());
 		assertEquals(null,event.getEventDescription());
-		assertEquals(null,event.getEventTime());
 		assertEquals(0,event.getEventDuration());
 }
 

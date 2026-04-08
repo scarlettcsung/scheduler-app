@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import Event.Event;
 import Invite.Invite;
+import Invite.inviteStatus;
+
 
 public class EventManager {
 
@@ -45,4 +47,10 @@ public class EventManager {
             }
         }
     }
+
+    public void rejectInvite(Invite invite, Event event) {
+        invite.setInviteStatus(inviteStatus.REJECTED);
+        event.removeInvite(invite);
+    }
+
 }

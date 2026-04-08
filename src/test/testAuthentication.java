@@ -14,7 +14,7 @@ public class testAuthentication extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		repository = new UserRepository();
-		repository.saveUser(new User("John", "Pork", null, false));
+		repository.saveUser(new User("John", "Pork", null));
 		auth = new Authentication(repository);
 	}
 

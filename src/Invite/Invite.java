@@ -1,38 +1,31 @@
 package Invite;
 
-import Event.Event;
-import User.User;
-
 public class Invite {
 
-    private User recipient;
-    private Event event;
+    private String recipientUsername;
+    private String eventID;
     private inviteStatus status;
 
-    public Invite(User recipient, Event event) {
-        this.recipient = recipient;
-        this.event = event;
+    public Invite(String recipientUsername, String eventID) {
+        this.recipientUsername = recipientUsername;
+        this.eventID = eventID;
         this.status = inviteStatus.PENDING;
     }
 
     // Status update
     public void accept() {status = inviteStatus.ACCEPTED;}
-    public void reject() {
-        status = inviteStatus.REJECTED;
-        event.removeInvite(this); // Removes "this" invite from event invites list
-    }
+    // reject moved to EventManager to avoid circularity
+
 
     // Getter methods
-    public User getRecipient() {
-        return recipient;
-    }
-    public Event getEvent() {
-        return event;
+    public String getRecipient() {return recipientUsername;}
+    public String getEventID() {
+        return eventID;
     }
     public inviteStatus getStatus() {return status;}
 
     // Setter methods
-    public void setRecipient(User recipient) {this.recipient = recipient;}
-    public void setEvent(Event event) {this.event = event;}
+    public void setRecipient(String recipientUsername) {this.recipientUsername = recipientUsername;}
+    public void setEvent(String eventID) {this.eventID = eventID;}
     public void setInviteStatus(inviteStatus status) {this.status = status;}
 }
