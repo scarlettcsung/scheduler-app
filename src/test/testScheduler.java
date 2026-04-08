@@ -6,42 +6,47 @@ import Invite.inviteStatus;
 import Scheduler.Scheduler;
 import User.User;
 import UserCalendar.UserCalendar;
+import UserRepository.UserRepository;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
-import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 public class testScheduler extends TestCase {
 
     private Scheduler scheduler;
+    private UserRepository userRepository;
     private User organizer;
     private User invitee;
     private LocalDateTime baseNow;
-    private Clock fixedClock;
 
     protected void setUp() {
-        // Fixed clock keeps scheduling assertions deterministic.
-        baseNow = LocalDateTime.of(2026, 4, 1, 8, 0);
-        fixedClock = Clock.fixed(
-                baseNow.atZone(ZoneId.systemDefault()).toInstant(),
-                ZoneId.systemDefault()
-        );
-        scheduler = new Scheduler(0, 23, 7, fixedClock);
+        baseNow = LocalDateTime.now().withSecond(0).withNano(0);
+        userRepository = new UserRepository();
         organizer = new User("organizer", "pw", null);
-        UserCalendar organizerCalendar = new UserCalendar(organizer, null);
+        UserCalendar organizerCalendar = new UserCalendar(organizer.getUsername(), null);
         organizer.setCalendar(organizerCalendar);
+        userRepository.saveUser(organizer);
 
         invitee = new User("invitee", "pw", null);
-        UserCalendar inviteeCalendar = new UserCalendar(invitee, null);
+        UserCalendar inviteeCalendar = new UserCalendar(invitee.getUsername(), null);
         invitee.setCalendar(inviteeCalendar);
+        userRepository.saveUser(invitee);
+
+        scheduler = new Scheduler(0, 23, 7, userRepository);
     }
 
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
         // Duration longer than the daily window should never be schedulable.
-        Scheduler oneHourWindow = new Scheduler(8, 9, 3, fixedClock);
-        Event tooLong = new Event("meeting",baseNow,61,"test meeting",organizer,false,new ArrayList<>());
+        Scheduler oneHourWindow = new Scheduler(8, 9, 3, userRepository);
+        Event tooLong = new Event(
+                "meeting",
+                61,
+                "test meeting",
+                organizer.getUsername(),
+                false,
+                new ArrayList<>()
+        );
 
         LocalDateTime slot = oneHourWindow.findAvailableSlot(tooLong);
 
@@ -53,21 +58,20 @@ public class testScheduler extends TestCase {
         LocalDateTime busyStart = baseNow.plusMinutes(1);
         Event busy = new Event(
                 "busy",
-                busyStart,
                 60,
                 "busy slot",
-                organizer,
+                organizer.getUsername(),
                 false,
                 new ArrayList<>()
         );
+        busy.setEventTime(busyStart);
         organizer.getCalendar().addEvent(busy);
 
         Event toSchedule = new Event(
                 "meeting",
-                baseNow,
                 30,
                 "test meeting",
-                organizer,
+                organizer.getUsername(),
                 false,
                 new ArrayList<>()
         );
@@ -81,14 +85,13 @@ public class testScheduler extends TestCase {
         // Successful scheduling should set event time, add to calendars, and keep invites pending.
         Event event = new Event(
                 "meeting",
-                baseNow,
                 30,
                 "test meeting",
-                organizer,
+                organizer.getUsername(),
                 false,
                 new ArrayList<>()
         );
-        event.addInvite(new Invite(invitee, event));
+        event.addInvite(new Invite(invitee.getUsername(), event.getEventID()));
 
         boolean scheduled = scheduler.scheduleEvent(event);
 
@@ -97,34 +100,35 @@ public class testScheduler extends TestCase {
         assertTrue(organizer.getCalendar().getEvents().contains(event));
         assertTrue(invitee.getCalendar().getEvents().contains(event));
         assertEquals(1, event.getInvites().size());
-        assertEquals(invitee, event.getInvites().get(0).getRecipient());
+        assertEquals(invitee.getUsername(), event.getInvites().get(0).getRecipient());
         assertEquals(inviteStatus.PENDING, event.getInvites().get(0).getStatus());
     }
 
     public void testScheduleEventReturnsFalseWhenNoSlotInLookahead() {
         // If the whole lookahead window is blocked, scheduling must fail.
-        Scheduler oneDayLookahead = new Scheduler(8, 10, 1, fixedClock);
+        Scheduler oneDayLookahead = new Scheduler(8, 10, 1, userRepository);
 
         LocalDateTime dayStart = baseNow
                 .withHour(8)
-                .withMinute(0);
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
         Event block = new Event(
                 "busy",
-                dayStart,
                 120,
                 "busy slot",
-                organizer,
+                organizer.getUsername(),
                 false,
                 new ArrayList<>()
         );
+        block.setEventTime(dayStart);
         organizer.getCalendar().addEvent(block);
 
         Event toSchedule = new Event(
                 "meeting",
-                baseNow,
                 60,
                 "test meeting",
-                organizer,
+                organizer.getUsername(),
                 false,
                 new ArrayList<>()
         );
