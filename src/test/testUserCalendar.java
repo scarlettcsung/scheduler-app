@@ -21,7 +21,7 @@ public class testUserCalendar extends TestCase {
         // Maak eerst de calendar aan of gebruik null als de User constructor dat toestaat
     	example_owner = new User("Charles", "123456", userCalendar, false);
     	example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
-    	event = new Event("testEvent", example_time,60,"testEvent",
+    	event = new Event("testEvent",60,"testEvent",
                 example_owner,false,null);
         userCalendar = new UserCalendar(example_owner, null); 
         
