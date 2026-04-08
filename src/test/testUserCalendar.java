@@ -19,7 +19,7 @@ public class testUserCalendar extends TestCase {
     
     protected void setUp() {
         // Maak eerst de calendar aan of gebruik null als de User constructor dat toestaat
-    	example_owner = new User("Charles", "123456", userCalendar, false);
+    	example_owner = new User("Charles", "123456", userCalendar);
     	example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
     	event = new Event("testEvent",60,"testEvent",
                 example_owner,false,null);
