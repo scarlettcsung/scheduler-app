@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
+import Scheduler.Scheduler;
 import UserRepository.UserRepository;
 import User.User;
 
@@ -22,8 +23,9 @@ public class MainDashboardPanel2 extends JPanel {
     public static final long serialVersionUID = 1L;
     private UserRepository repository;
     private User currentUser;
-	private Event event1;
-	private Event event2;
+    private Event event1;
+    private Event event2;
+    private Scheduler scheduler;
     
     
     private javax.swing.border.Border cardBorder() {
@@ -33,9 +35,10 @@ public class MainDashboardPanel2 extends JPanel {
                 );
     }
     
-    public MainDashboardPanel2(UserRepository repository, User user) {
+    public MainDashboardPanel2(UserRepository repository, User user, Scheduler scheduler) {
         this.repository = repository;
         this.currentUser = user;
+        this.scheduler = scheduler;
         
         event1 = new Event(
     	        "Team Meeting", 
@@ -72,7 +75,7 @@ public class MainDashboardPanel2 extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Find the parent JFrame and swap back to Login
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
-                topFrame.setContentPane(new AuthenticationPanel(repository));
+                topFrame.setContentPane(new AuthenticationPanel(repository,scheduler));
                 topFrame.revalidate();
                 topFrame.repaint();
             }
@@ -173,6 +176,22 @@ public class MainDashboardPanel2 extends JPanel {
                 }
             });
             card.add(viewButton);
+
+            JButton updateButton = new JButton("Update Event");
+            updateButton.setBounds(MARGIN + 110, 100, 110, 26);
+            updateButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
+                    topFrame.setContentPane(new EventPanel(repository, currentUser, false, event, scheduler, () -> {
+                        topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
+                        topFrame.revalidate();
+                        topFrame.repaint();
+                    }));
+                    topFrame.revalidate();
+                    topFrame.repaint();
+                }
+            });
+            card.add(updateButton);
             
             eventsCardsPanel.add(card);
         }

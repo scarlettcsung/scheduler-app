@@ -12,9 +12,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
 import java.awt.Component;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -62,6 +59,7 @@ public class EventPanel extends JPanel {
 	private boolean isNewEvent;
 	private Event event;
 	private Scheduler scheduler;
+	private Runnable onSaveComplete;
 	private List<User> tempInvites = new ArrayList<>();
 
 
@@ -69,7 +67,7 @@ public class EventPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public EventPanel(UserRepository repository, User currentUser, 
-			boolean isNewEvent, Event event, Scheduler scheduler) {
+			boolean isNewEvent, Event event, Scheduler scheduler, Runnable onSaveComplete) {
 		
 		// Initialization
 		this.repository = repository;
@@ -78,6 +76,7 @@ public class EventPanel extends JPanel {
 		this.isNewEvent = isNewEvent;
 		this.event = event;
 		this.scheduler = scheduler;
+		this.onSaveComplete = onSaveComplete;
 
 		
 		// Layout
@@ -194,6 +193,34 @@ public class EventPanel extends JPanel {
 		btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int duration;
+				try {
+					duration = Integer.parseInt(txtEventDurationminutes.getText());
+				} catch (NumberFormatException ex) {
+					ex.printStackTrace();
+					return;
+				}
+
+				if (event != null) {
+					event.setEventName(txtEventName.getText());
+					event.setEventDescription(txtEventName.getText());
+					event.setEventDuration(duration);
+				} else if (isNewEvent && currentUser != null) {
+					Event newEvent = new Event(
+							txtEventName.getText(),
+							duration,
+							txtEventName.getText(),
+							currentUser.getUsername(),
+							false,
+							new ArrayList<>()
+					);
+					if (scheduler != null && scheduler.scheduleEvent(newEvent)) {
+						EventPanel.this.event = newEvent;
+					}
+				}
+				if (onSaveComplete != null) {
+					onSaveComplete.run();
+				}
 			}
 		});
 		

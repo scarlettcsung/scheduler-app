@@ -38,7 +38,7 @@ public class UserPanel extends JPanel {
 				if (confirm == JOptionPane.YES_OPTION) {
 					repository.deleteUserData(currentUser.getUsername(), currentUser);
 					JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
-					topFrame.setContentPane(new AuthenticationPanel(repository));
+					topFrame.setContentPane(new AuthenticationPanel(repository,scheduler));
 					topFrame.revalidate();
 					topFrame.repaint();
 				}

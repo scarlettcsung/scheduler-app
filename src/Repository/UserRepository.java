@@ -2,6 +2,7 @@ package Repository;
 
 import User.AdminUser;
 import User.User;
+import UserCalendar.UserCalendar;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ public class UserRepository {
 
     public UserRepository() {
         this.users = new ArrayList<>();
-        users.add(new AdminUser("admin", "admin", null));
+        AdminUser admin = new AdminUser("admin", "admin", null);
+        admin.setCalendar(new UserCalendar(admin.getUsername(), null));
+        users.add(admin);
     }
 
     public void saveUser(User user) {

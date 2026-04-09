@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
@@ -26,7 +27,11 @@ import User.User;
 import UserCalendar.UserCalendar;
 import EventManager.EventManager;
 import Invite.Invite;
-import Repository.UserRepository;
+
+import UserRepository.UserRepository;
+
+import Scheduler.Scheduler;
+
 
 public class AuthenticationPanel extends JPanel {
 
@@ -34,13 +39,14 @@ public class AuthenticationPanel extends JPanel {
 	private JTextField textInUsername;
 	private JPasswordField textInPassword;
 	private UserRepository repository;
+	private Scheduler scheduler;
 	private UserService userService;
 	private Authentication auth;
 	
 	/**
 	 * Create the panel.
 	 */
-	public AuthenticationPanel(UserRepository repository) {
+	public AuthenticationPanel(UserRepository repository, Scheduler scheduler) {
 		// Fancy Colors:))
 		
 	    setBackground(Color.decode("#00FFFF"));
@@ -94,15 +100,18 @@ public class AuthenticationPanel extends JPanel {
 		        // EO GI: 5/4/2026 23.42 currentUser upgrade
 		        User currentUser = auth.getauthenticatedUser();
 		        
-		        if (success) {
-		            JOptionPane.showMessageDialog(null, "Login successful!");
-		            // EO GI: Transition to the admin panel or user dashboard here
-		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+			        if (success) {
+			            JOptionPane.showMessageDialog(null, "Login successful!");
+			            // EO GI: Transition to the admin panel or user dashboard here
+			            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+			            if (currentUser.getCalendar() == null) {
+			            	currentUser.setCalendar(new UserCalendar(currentUser.getUsername(), new ArrayList<>()));
+			            }
 
-		            if(currentUser.canAccessAdminPanel()) {
-		            	topFrame.setContentPane(new AdminPanel(repository,currentUser));
+			            if(currentUser.canAccessAdminPanel()) {
+			            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler));
 		            } else {
-		            	topFrame.setContentPane(new MainDashboardPanel2(repository,currentUser));
+				 topFrame.setContentPane(new MainDashboardPanel2(repository,currentUser,scheduler));
 		            }
 		            topFrame.revalidate();
 		            topFrame.repaint();
@@ -168,6 +177,7 @@ public static void main(String[] args) {
 
     UserRepository repository = new UserRepository();
     EventManager eventManager = new EventManager(repository);
+    Scheduler scheduler = new Scheduler(8,23,7,repository);
 
     // Yaratıcı bir test.
     
@@ -206,7 +216,7 @@ public static void main(String[] args) {
     
     
     
-    frame.setContentPane(new AuthenticationPanel(repository));
+    frame.setContentPane(new AuthenticationPanel(repository, scheduler));
     frame.setVisible(true);
 }
 }
