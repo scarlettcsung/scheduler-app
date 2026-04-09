@@ -63,7 +63,7 @@ public class AdminPanel extends JPanel {
 				topFrame.repaint();
 			}
 		});
-		add(btnCreateEvent, "cell 3 1");
+		add(btnCreateEvent, "cell 3 1 2 1");
 		
 		JLabel label_9 = new JLabel("");
 		add(label_9, "cell 5 1,grow");
