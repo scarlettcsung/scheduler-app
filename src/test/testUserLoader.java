@@ -25,7 +25,7 @@ public static void loadUsers() {
             System.out.println("Username  : " + user.getUsername());
             System.out.println("Password  : " + user.getPassword());
             System.out.println("Calendar  : " + user.getCalendar());
-            System.out.println("Is Admin  : " + user.isAdmin());
+            System.out.println("Is Admin  : " + user.canAccessAdminPanel());
             System.out.println();
         }
 }
