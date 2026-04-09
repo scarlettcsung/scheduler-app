@@ -17,6 +17,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JScrollPane;
+
+import Scheduler.Scheduler;
+
 import javax.swing.JScrollBar;
 import UserRepository.UserRepository;
 import User.User;
@@ -30,7 +33,7 @@ public class AdminPanelDeleteUser extends JPanel {
 	 * Create the panel.
 	 */
 	// EO GI: 5/4/2026 23.36 adding currentUser as a parameter to correctly use delete_user_data method from user_repository
-	public AdminPanelDeleteUser(UserRepository repository, User adminUser) {
+	public AdminPanelDeleteUser(UserRepository repository, User adminUser, Scheduler scheduler) {
 		
 		this.repository = repository;
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -62,7 +65,7 @@ public class AdminPanelDeleteUser extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanelDeleteUser.this);
 				// chanelled right repository EO GI: 5/4/2026
-				topFrame.setContentPane(new AdminPanel(repository, adminUser));
+				topFrame.setContentPane(new AdminPanel(repository, adminUser,scheduler));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
