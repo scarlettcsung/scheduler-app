@@ -104,7 +104,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
 				// chanelled right repository EO GI: 5/4/2026
-				topFrame.setContentPane(new AdminPanelDeleteUser(repository, adminUser));
+				topFrame.setContentPane(new AdminPanelDeleteUser(repository, adminUser, scheduler));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
