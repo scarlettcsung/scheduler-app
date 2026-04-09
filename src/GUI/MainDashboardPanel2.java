@@ -11,11 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
 import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
-import Repository.UserRepository;
+import UserRepository.UserRepository;
 import User.User;
 
 public class MainDashboardPanel2 extends JPanel {
