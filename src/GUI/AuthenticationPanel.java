@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
@@ -96,15 +97,18 @@ public class AuthenticationPanel extends JPanel {
 		        // EO GI: 5/4/2026 23.42 currentUser upgrade
 		        User currentUser = auth.getauthenticatedUser();
 		        
-		        if (success) {
-		            JOptionPane.showMessageDialog(null, "Login successful!");
-		            // EO GI: Transition to the admin panel or user dashboard here
-		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+			        if (success) {
+			            JOptionPane.showMessageDialog(null, "Login successful!");
+			            // EO GI: Transition to the admin panel or user dashboard here
+			            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
+			            if (currentUser.getCalendar() == null) {
+			            	currentUser.setCalendar(new UserCalendar(currentUser.getUsername(), new ArrayList<>()));
+			            }
 
-		            if(currentUser.canAccessAdminPanel()) {
-		            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler));
+			            if(currentUser.canAccessAdminPanel()) {
+			            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler));
 		            } else {
-		            	topFrame.setContentPane(new MainDashboardPanel2(repository,currentUser,scheduler));
+				 topFrame.setContentPane(new MainDashboardPanel2(repository,currentUser,scheduler));
 		            }
 		            topFrame.revalidate();
 		            topFrame.repaint();
