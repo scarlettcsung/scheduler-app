@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JScrollPane;
 
 
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 import Scheduler.Scheduler;
 
 import javax.swing.JScrollBar;
