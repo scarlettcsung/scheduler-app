@@ -48,9 +48,6 @@ public class testIO extends TestCase {
 		//read the just written file
 		List<User> imported = input.readCalendar("src/test/resources/testFileIO.json");
 		
-		
-		
-		
 		//compare read result with repository
 		assertEquals(repository.getListUsers().size(), imported.size());
 	}
