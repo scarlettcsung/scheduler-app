@@ -8,6 +8,7 @@ import java.io.*;
 
 import Event.Event;
 import Invite.Invite;
+import User.AdminUser;
 import User.User;
 import UserRepository.UserRepository;
 import UserCalendar.UserCalendar;
@@ -30,12 +31,16 @@ public class testIO extends TestCase {
 		input = new IO();
 		calendar=new UserCalendar("John", null);
 		LocalDateTime eventTime = LocalDateTime.parse("2026-04-08T09:00:00");
-		Event fakeevent= new Event("meeting", eventTime, 2, "test event", "John", false, null);
+		Event fakeevent= new Event("meeting", 2, "test event", "John", false, null);
+		fakeevent.setEventTime(eventTime);
 		calendar.addEvent(fakeevent);
 		repository = new UserRepository();
-		repository.saveUser(new User("John", "Pork", calendar, false));
-		repository.saveUser(new User("James", "Bond", calendar, true));
+		repository.saveUser(new User("John", "Pork", calendar));
+		repository.saveUser(new AdminUser("James", "Bond", calendar));
 	}
+	
+	//(String eventName, int eventDuration, String eventDescription,
+    //String organizerUsername, Boolean isImported,  List<Invite> invites)
 	public void testreadcalendar() throws IOException {
 		//write a file
 		input.writeCalendar(repository.getListUsers(),"src/test/resources/testFileIO.json");
