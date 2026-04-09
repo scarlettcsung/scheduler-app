@@ -76,7 +76,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
 				// chanelled right repository EO GI: 5/4/2026
-				topFrame.setContentPane(new AdminPanelEvents(repository, adminUser));
+				topFrame.setContentPane(new AdminPanelEvents(repository, adminUser,scheduler));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -156,7 +156,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// EO GI: Transition back to the authentication panel
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
-				topFrame.setContentPane(new AuthenticationPanel(repository));
+				topFrame.setContentPane(new AuthenticationPanel(repository, scheduler));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
