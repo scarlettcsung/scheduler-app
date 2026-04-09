@@ -181,14 +181,14 @@ public static void main(String[] args) {
     frame.setSize(800, 600);
 
     UserRepository repository = new UserRepository();
-    EventManager eventManager = new EventManager();
+    EventManager eventManager = new EventManager(repository);
 
     // Yaratıcı bir test.
-    /*
+    
     User testUser1 = new User("nisa", "1234", null);
     User testUser2 = new User("remzi", "1234", null);
-    UserCalendar testCalendar1 = new UserCalendar(testUser1, null);
-    UserCalendar testCalendar2 = new UserCalendar(testUser2, null);
+    UserCalendar testCalendar1 = new UserCalendar(testUser1.getUsername(), null);
+    UserCalendar testCalendar2 = new UserCalendar(testUser2.getUsername(), null);
     testUser1.setCalendar(testCalendar1);
     testUser2.setCalendar(testCalendar2);
 
@@ -196,13 +196,13 @@ public static void main(String[] args) {
         "Dummy Event",
         60,
         "This is a test event for delete screen",
-        testUser1,
+        testUser1.getUsername(),
         false,
         null
     );
 
     dummyEvent.setEventTime(LocalDateTime.of(2026, 4, 8, 14, 0));
-    dummyEvent.addInvite(new Invite(testUser2, dummyEvent));
+    dummyEvent.addInvite(new Invite(testUser2.getUsername(), dummyEvent.getEventID()));
 
     testCalendar1.addEvent(dummyEvent);
     testCalendar2.addEvent(dummyEvent);
@@ -217,7 +217,7 @@ public static void main(String[] args) {
     
     System.out.println(testUser1.getCalendar().getEvents());
     System.out.println(testUser2.getCalendar().getEvents());
-    */
+    
     
     
     frame.setContentPane(new AuthenticationPanel(repository));
