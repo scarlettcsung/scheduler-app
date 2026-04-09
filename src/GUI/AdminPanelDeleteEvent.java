@@ -19,8 +19,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import Event.Event;
+import Repository.UserRepository;
 import User.User;
-import UserRepository.UserRepository;
 
 public class AdminPanelDeleteEvent extends JPanel {
 

@@ -12,8 +12,8 @@ import java.util.List;
 public class Event {
 
     private String eventName;
-    private LocalDateTime eventTime;
     private int eventDuration;
+    private LocalDateTime eventTime;
     private String eventDescription;
     private final String eventID = UUID.randomUUID().toString();
     private String organizerUsername;

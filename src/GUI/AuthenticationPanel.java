@@ -22,11 +22,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.Color;
 
-import UserRepository.UserRepository;
 import User.User;
 import UserCalendar.UserCalendar;
 import EventManager.EventManager;
 import Invite.Invite;
+import Repository.UserRepository;
 
 public class AuthenticationPanel extends JPanel {
 

@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import Repository.UserRepository;
 import User.User;
-import UserRepository.UserRepository;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

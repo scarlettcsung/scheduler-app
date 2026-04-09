@@ -8,9 +8,9 @@ import java.io.*;
 
 import Event.Event;
 import Invite.Invite;
+import Repository.UserRepository;
 import User.AdminUser;
 import User.User;
-import UserRepository.UserRepository;
 import UserCalendar.UserCalendar;
 import IO.IO;
 

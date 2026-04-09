@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import User.User;
 import UserCalendar.UserCalendar;
 import Event.Event;
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 
 public class IO {
 	List<User> userList = new ArrayList<>();

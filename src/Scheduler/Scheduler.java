@@ -2,8 +2,8 @@ package Scheduler;
 
 import Event.Event;
 import Invite.Invite;
+import Repository.UserRepository;
 import User.User;
-import UserRepository.UserRepository;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
