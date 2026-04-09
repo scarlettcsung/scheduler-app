@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -156,13 +157,26 @@ public class AdminPanelEvents extends JPanel {
 
 	    JButton deleteButton = new JButton("Delete Event");
 	    deleteButton.setFont(new Font("Arial", Font.PLAIN, 10));
-	    deleteButton.setBackground(Color.RED);
 	    deleteButton.setForeground(Color.WHITE);
 	    deleteButton.setFocusPainted(false);
 	    deleteButton.setBorderPainted(false);
 	    deleteButton.setOpaque(true);
-	    deleteButton.setBackground(new Color(220, 53, 69)); // Bootstrap red
-	    deleteButton.setBounds(MARGIN, 95, 120, 24);
+	    deleteButton.setBackground(new Color(220, 53, 69)); 
+	    deleteButton.setBounds(MARGIN + 130, 95, 120, 24);
+	    
+	    JButton updateButton = new JButton("Update Event");
+	    updateButton.setFont(new Font("Arial", Font.PLAIN, 10));
+	    updateButton.setForeground(Color.WHITE);
+	    updateButton.setFocusPainted(false);
+	    updateButton.setBorderPainted(false);
+	    updateButton.setOpaque(true);
+	    updateButton.setBackground(new Color(25, 42, 86));
+	    updateButton.setBounds(MARGIN, 95, 120, 24);
+	    		
+	    //card.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+	    card.add(deleteButton);
+	    card.add(updateButton);
 	    
 	    deleteButton.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
