@@ -27,6 +27,7 @@ import User.User;
 import UserCalendar.UserCalendar;
 import EventManager.EventManager;
 import Invite.Invite;
+import Scheduler.Scheduler;
 
 public class AuthenticationPanel extends JPanel {
 
@@ -34,13 +35,14 @@ public class AuthenticationPanel extends JPanel {
 	private JTextField textInUsername;
 	private JPasswordField textInPassword;
 	private UserRepository repository;
+	private Scheduler scheduler;
 	private UserService userService;
 	private Authentication auth;
 	
 	/**
 	 * Create the panel.
 	 */
-	public AuthenticationPanel(UserRepository repository) {
+	public AuthenticationPanel(UserRepository repository, Scheduler scheduler) {
 		// Fancy Colors:))
 		
 	    setBackground(Color.decode("#00FFFF"));
@@ -100,9 +102,9 @@ public class AuthenticationPanel extends JPanel {
 		            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
 
 		            if(currentUser.canAccessAdminPanel()) {
-		            	topFrame.setContentPane(new AdminPanel(repository,currentUser));
+		            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler));
 		            } else {
-		            	topFrame.setContentPane(new MainDashboardPanel2(repository,currentUser));
+		            	topFrame.setContentPane(new MainDashboardPanel2(repository,currentUser,scheduler));
 		            }
 		            topFrame.revalidate();
 		            topFrame.repaint();
@@ -168,6 +170,7 @@ public static void main(String[] args) {
 
     UserRepository repository = new UserRepository();
     EventManager eventManager = new EventManager(repository);
+    Scheduler scheduler = new Scheduler(8,23,7,repository);
 
     // Yaratıcı bir test.
     
@@ -206,7 +209,7 @@ public static void main(String[] args) {
     
     
     
-    frame.setContentPane(new AuthenticationPanel(repository));
+    frame.setContentPane(new AuthenticationPanel(repository, scheduler));
     frame.setVisible(true);
 }
 }
