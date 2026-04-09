@@ -3,6 +3,7 @@ package UserService;
 import User.User;
 import UserRepository.UserRepository;
 import Authentication.Authentication;
+import UserCalendar.UserCalendar;
 
 public class UserService {
     private UserRepository userRepository;
@@ -18,8 +19,9 @@ public class UserService {
 		if (userRepository.isExistingUser(username)) {
 			return false;
 		}	
-		else {
+	else {
         User newUser = new User(username, password, null);
+        newUser.setCalendar(new UserCalendar(username, null));
         userRepository.saveUser(newUser);
        
         return true;
@@ -44,4 +46,3 @@ public class UserService {
 		}
     }
 }
-
