@@ -274,7 +274,7 @@ public class EventPanel extends JPanel {
 		textAreaShowParticipants.setText("");
 		if (event != null && event.getInvites() != null) {
 			for (Invite.Invite invite : event.getInvites()) {
-				String username = invite.getRecipient().getUsername();
+				String username = invite.getRecipient();
 				textAreaShowParticipants.append(username + "\n");
 			}
 		}
