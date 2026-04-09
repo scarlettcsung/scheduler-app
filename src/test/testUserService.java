@@ -1,9 +1,9 @@
 package test;
 
 import UserService.UserService;
-import UserRepository.UserRepository; 
 import junit.framework.TestCase;
 import Authentication.Authentication;
+import Repository.UserRepository;
 
 public class testUserService extends TestCase {
 

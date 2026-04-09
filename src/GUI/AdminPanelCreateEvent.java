@@ -5,8 +5,8 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Repository.UserRepository;
 import User.User;
-import UserRepository.UserRepository;
 import net.miginfocom.swing.MigLayout;
 
 public class AdminPanelCreateEvent extends JPanel {

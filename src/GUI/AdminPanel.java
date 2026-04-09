@@ -1,6 +1,9 @@
 package GUI;
 
 import javax.swing.JPanel;
+
+import Repository.UserRepository;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,7 +14,6 @@ import java.awt.Color;
 
 import User.User;
 import net.miginfocom.swing.MigLayout;
-import UserRepository.UserRepository;
 
 public class AdminPanel extends JPanel {
 

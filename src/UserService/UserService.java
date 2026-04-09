@@ -1,8 +1,8 @@
 package UserService;
 
 import User.User;
-import UserRepository.UserRepository;
 import Authentication.Authentication;
+import Repository.UserRepository;
 
 public class UserService {
     private UserRepository userRepository;

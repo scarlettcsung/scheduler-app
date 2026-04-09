@@ -3,10 +3,10 @@ package test;
 import Event.Event;
 import Invite.Invite;
 import Invite.inviteStatus;
+import Repository.UserRepository;
 import Scheduler.Scheduler;
 import User.User;
 import UserCalendar.UserCalendar;
-import UserRepository.UserRepository;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
