@@ -23,23 +23,9 @@ public class MainDashboardPanel2 extends JPanel {
     public static final long serialVersionUID = 1L;
     private UserRepository repository;
     private User currentUser;
+	private Event event1;
+	private Event event2;
     
-    private Event event1 = new Event(
-	        "Team Meeting", 
-	        60, 
-	        "yappen met de bros", 
-	        currentUser.getUsername(), 
-	        false, 
-	        new ArrayList<>()
-	    );
-    private Event event2 = new Event(
-    		"Deadline", 
-    		120, 
-    		"strijden voor de deadline", 
-    		currentUser.getUsername(), 
-    		false, 
-    		new ArrayList<>()
-    );  
     
     private javax.swing.border.Border cardBorder() {
         return new CompoundBorder(
@@ -51,6 +37,23 @@ public class MainDashboardPanel2 extends JPanel {
     public MainDashboardPanel2(UserRepository repository, User user) {
         this.repository = repository;
         this.currentUser = user;
+        
+        event1 = new Event(
+    	        "Team Meeting", 
+    	        60, 
+    	        "yappen met de bros", 
+    	        currentUser.getUsername(), 
+    	        false, 
+    	        new ArrayList<>()
+    	    );
+        event2 = new Event(
+        		"Deadline", 
+        		120, 
+        		"strijden voor de deadline", 
+        		currentUser.getUsername(), 
+        		false, 
+        		new ArrayList<>()
+        );  
         
         // UI Setup
         setBackground(Color.CYAN);
