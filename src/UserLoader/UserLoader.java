@@ -34,7 +34,7 @@ public class UserLoader {
                 UserCalendar myCalendar = null;
                 //format user: (String username, String password, UserCalendar myCalendar, boolean isAdmin)
                 
-                User user = new User(username, password, myCalendar, isAdmin);
+                User user = new User(username, password, myCalendar);
                 users.add(user);
             }
             
