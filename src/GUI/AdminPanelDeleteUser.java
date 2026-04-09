@@ -17,8 +17,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JScrollPane;
+
+import Repository.UserRepository;
+
 import javax.swing.JScrollBar;
-import UserRepository.UserRepository;
+
 import User.User;
 
 public class AdminPanelDeleteUser extends JPanel {

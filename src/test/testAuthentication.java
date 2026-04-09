@@ -3,7 +3,7 @@ package test;
 import junit.framework.TestCase;
 import User.User;
 import Authentication.Authentication;
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 
 
 

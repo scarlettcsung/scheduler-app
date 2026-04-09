@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 import User.User;
 
 public class MainDashboardPanel2 extends JPanel {

@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import Event.Event;
 import Invite.Invite;
 import Invite.inviteStatus;
+import Repository.UserRepository;
 import User.User;
-import UserRepository.UserRepository;
 
 
 public class EventManager {

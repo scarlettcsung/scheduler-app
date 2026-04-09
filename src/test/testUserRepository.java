@@ -1,9 +1,9 @@
 package test;
 
 
+import Repository.UserRepository;
 import User.AdminUser;
 import User.User;
-import UserRepository.UserRepository;
 import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 

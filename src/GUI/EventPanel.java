@@ -28,10 +28,9 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JFormattedTextField;
 
-// Back-end related imports
-import UserRepository.UserRepository;
 import User.User;
 import Event.Event;
+import Repository.UserRepository;
 import Scheduler.Scheduler;
 import UserService.UserService;
 

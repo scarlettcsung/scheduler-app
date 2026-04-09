@@ -1,4 +1,4 @@
-package UserRepository;
+package Repository;
 
 import User.AdminUser;
 import User.User;

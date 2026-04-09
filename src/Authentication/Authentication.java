@@ -1,6 +1,6 @@
 package Authentication;
+import Repository.UserRepository;
 import User.User;
-import UserRepository.UserRepository;
 
 
 
