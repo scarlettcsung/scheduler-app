@@ -5,9 +5,21 @@ import java.time.LocalDateTime;
 import Event.Event;
 import Invite.Invite;
 import Invite.inviteStatus;
+import User.User;
+import UserRepository.UserRepository;
 
 
 public class EventManager {
+
+    private UserRepository repository;
+
+    public EventManager() {
+        this.repository = null;
+    }
+
+    public EventManager(UserRepository repository) {
+        this.repository = repository;
+    }
 
     public void updateEvent(Event event, String updateAspect, String newValue) {
     	
@@ -35,16 +47,24 @@ public class EventManager {
             return;
         }
 
-        if (event.getOrganizer() != null && event.getOrganizer().getCalendar() != null) {
-            event.getOrganizer().getCalendar().removeEvent(event);
-        }
+        if (repository != null) {
+            String organizerUsername = event.getOrganizer();
+            User organizer = organizerUsername != null ? repository.findUsername(organizerUsername) : null;
 
-        if (event.getInvites() != null) {
-            for (Invite invite : event.getInvites()) {
-                if (invite.getRecipient() != null && invite.getRecipient().getCalendar() != null) {
-                    invite.getRecipient().getCalendar().removeEvent(event);
+            if (organizer != null && organizer.getCalendar() != null) {
+                organizer.getCalendar().removeEvent(event);
+            }
+
+            if (event.getInvites() != null) {
+                for (Invite invite : event.getInvites()) {
+                    String recipientUsername = invite.getRecipient();
+                    User invitee = recipientUsername != null ? repository.findUsername(recipientUsername) : null;
+                    if (invitee != null && invitee.getCalendar() != null) {
+                        invitee.getCalendar().removeEvent(event);
+                    }
                 }
             }
+            return;
         }
     }
 
