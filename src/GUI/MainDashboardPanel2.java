@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import Event.Event;
+import EventManager.EventManager;
 import Invite.Invite;
 import UserRepository.UserRepository;
 import User.User;
@@ -180,6 +181,8 @@ public class MainDashboardPanel2 extends JPanel {
     }
 
     private void setupInvites(int W, int H, int MARGIN, javax.swing.border.Border CARD_BORDER) {
+        EventManager eventManager = new EventManager(repository);
+
         JPanel invitesPane = new JPanel();
         invitesPane.setLayout(null);
         invitesPane.setBackground(Color.WHITE);
@@ -210,6 +213,8 @@ public class MainDashboardPanel2 extends JPanel {
         
         Invite[] invites = new Invite[]{
         	    invite1,invite2};
+        Event[] inviteEvents = new Event[]{
+                event1, event2};
         
         int inviteCardHeight = 60;
         int inviteCardWidth = W/2-10/2*MARGIN;
@@ -219,7 +224,7 @@ public class MainDashboardPanel2 extends JPanel {
         
         for (int i = 0; i < invites.length; i++) {
         	Invite invite = invites[i];
-        	Event event = invite.getEvent();
+        	Event event = inviteEvents[i];
         	
             JPanel inviteCard = new JPanel();
             inviteCard.setLayout(null);
@@ -251,7 +256,7 @@ public class MainDashboardPanel2 extends JPanel {
             declineButton.setBounds(90, 30, 70, 20);
             declineButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                	invite.reject();
+                	eventManager.rejectInvite(invite, event);
                 }
             });
             inviteCard.add(declineButton);
