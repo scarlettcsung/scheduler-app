@@ -3,7 +3,7 @@ package GUI;
 import javax.swing.JPanel;
 
 
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 import Scheduler.Scheduler;
 
 import javax.swing.JLabel;
