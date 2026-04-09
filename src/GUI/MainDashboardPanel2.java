@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
+import Scheduler.Scheduler;
 import UserRepository.UserRepository;
 import User.User;
 
@@ -34,7 +35,7 @@ public class MainDashboardPanel2 extends JPanel {
                 );
     }
     
-    public MainDashboardPanel2(UserRepository repository, User user) {
+    public MainDashboardPanel2(UserRepository repository, User user, Scheduler scheduler) {
         this.repository = repository;
         this.currentUser = user;
         
@@ -73,7 +74,7 @@ public class MainDashboardPanel2 extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Find the parent JFrame and swap back to Login
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
-                topFrame.setContentPane(new AuthenticationPanel(repository));
+                topFrame.setContentPane(new AuthenticationPanel(repository,scheduler));
                 topFrame.revalidate();
                 topFrame.repaint();
             }
