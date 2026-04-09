@@ -15,7 +15,7 @@ import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
 import Scheduler.Scheduler;
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 import User.User;
 
 public class MainDashboardPanel2 extends JPanel {
