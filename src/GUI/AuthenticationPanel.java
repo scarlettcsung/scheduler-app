@@ -28,7 +28,7 @@ import UserCalendar.UserCalendar;
 import EventManager.EventManager;
 import Invite.Invite;
 
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 
 import Scheduler.Scheduler;
 
