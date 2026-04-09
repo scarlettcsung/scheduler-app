@@ -1,6 +1,9 @@
 package GUI;
 
 import javax.swing.JPanel;
+
+import Scheduler.Scheduler;
+
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,7 +23,7 @@ public class AdminPanel extends JPanel {
 
 	// existing repository instance here EO GI: 5/4/2026
 	// EO G: 5/4/2026 23.37 adminUser as a parameter
-	public AdminPanel(UserRepository repository, User adminUser) {
+	public AdminPanel(UserRepository repository, User adminUser, Scheduler scheduler) {
 		
 		this.repository = repository;
 		setBackground(Color.MAGENTA);
