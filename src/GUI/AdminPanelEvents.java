@@ -29,7 +29,7 @@ import EventManager.EventManager;
 import Invite.Invite;
 import Scheduler.Scheduler;
 import User.User;
-import UserRepository.UserRepository;
+import Repository.UserRepository;
 
 public class AdminPanelEvents extends JPanel {
 
