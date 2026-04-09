@@ -154,7 +154,7 @@ public class AdminPanelDeleteEvent extends JPanel {
 			durationLabel.setBounds(MARGIN, 53, cardWidth - 20, 16);
 			card.add(durationLabel);
 
-			String organizerName = event.getOrganizer() != null ? event.getOrganizer().getUsername() : "Unknown";
+			String organizerName = event.getOrganizer() != null ? event.getOrganizer() : "Unknown";
 			JLabel organizerLabel = new JLabel("Organizer: " + organizerName);
 			organizerLabel.setFont(new Font("Arial", Font.PLAIN, 11));
 			organizerLabel.setForeground(Color.BLACK);
