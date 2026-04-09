@@ -48,7 +48,7 @@ public class AdminPanelDeleteEvent extends JPanel {
 		btnBackToAdminPanel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanelDeleteEvent.this);
-				topFrame.setContentPane(new AdminPanel(repository, adminUser));
+				topFrame.setContentPane(new AdminPanel(repository, adminUser,scheduler);
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
