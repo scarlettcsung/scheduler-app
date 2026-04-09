@@ -27,7 +27,7 @@ public class MainDashboardPanel2 extends JPanel {
 	        "Team Meeting", 
 	        60, 
 	        "yappen met de bros", 
-	        currentUser, 
+	        currentUser.getUsername(), 
 	        false, 
 	        new ArrayList<>()
 	    );
@@ -35,7 +35,7 @@ public class MainDashboardPanel2 extends JPanel {
     		"Deadline", 
     		120, 
     		"strijden voor de deadline", 
-    		currentUser, 
+    		currentUser.getUsername(), 
     		false, 
     		new ArrayList<>()
     );  
@@ -199,13 +199,13 @@ public class MainDashboardPanel2 extends JPanel {
         invitesCardsPanel.setBackground(Color.WHITE);
         
         Invite invite1 = new Invite(
-    	    	currentUser, 
-    	    	event1
+    	    	currentUser.getUsername(), 
+    	    	event1.getEventID()
     	    	
     	    );
         Invite invite2 = new Invite(
-        	    currentUser, 
-        	    event2
+        	    currentUser.getUsername(), 
+        	    event2.getEventID()
     	    );        
         
         Invite[] invites = new Invite[]{
