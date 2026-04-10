@@ -46,5 +46,14 @@ public class testInvite extends TestCase{
         invite.setRecipient(newInvitee);
         assertEquals(newInvitee,invite.getRecipient());
     }
-
+    
+    //test setEvent
+    public void testSetEvent() {
+        String newEventID = "newEventID";
+        invite.setEvent(newEventID);
+        assertEquals(newEventID, invite.getEventID());
+    }
+    
+    //test setEventStatus
+    
 }
