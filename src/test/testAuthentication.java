@@ -18,22 +18,32 @@ public class testAuthentication extends TestCase {
 		auth = new Authentication(repository);
 	}
 
+	//test for succesfull login
 	public void testlogin() {
 	 	assertFalse(auth.login("John","password"));
 	 	assertTrue(auth.login("John","Pork"));
 	}
 
+	// test for user is not in repository
+	public void testLoginUserDoesNotExist() {
+		boolean result = auth.login("nonExistingUser", "somePassword");
+		assertFalse(result);
+	}
+	
+	//test for get autorized user
 	public void testauthorisedUser() {
 		assertTrue(auth.login("John","Pork"));
 		assertEquals("John", auth.getauthenticatedUser().getUsername());
 	}
 
+	//test logout
 	public void testlogout() {
 		assertTrue(auth.login("John","Pork"));
 		auth.logout();
 		assertNull(auth.getauthenticatedUser());
 	}
-		
+	
+	
 
 	
 
