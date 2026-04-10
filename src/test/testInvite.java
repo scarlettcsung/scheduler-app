@@ -55,5 +55,8 @@ public class testInvite extends TestCase{
     }
     
     //test setEventStatus
-    
+    public void testSetInviteStatus() {
+        invite.setInviteStatus(inviteStatus.REJECTED);
+        assertEquals(inviteStatus.REJECTED, invite.getStatus());
+    }
 }
