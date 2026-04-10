@@ -37,6 +37,7 @@ import Event.Event;
 import Scheduler.Scheduler;
 import UserService.UserService;
 import Invite.Invite;
+import javax.swing.JSplitPane;
 
 
 public class EventPanel extends JPanel {
@@ -68,6 +69,8 @@ public class EventPanel extends JPanel {
 	private JLabel lblInvite;
 	private JLabel lblParticipants;
 	private JTextField txtEventDescription;
+	private JSplitPane splitPane;
+	private JButton btnUninvite;
 
 
 	/**
@@ -94,7 +97,7 @@ public class EventPanel extends JPanel {
 		gridBagLayout.columnWidths = new int[]{0,0,0,0,0};
 		gridBagLayout.rowHeights = new int[]{50, 0,0, 0,0,0, 0, 0, 0, 30,0};
 		gridBagLayout.columnWeights = new double[]{0, 1.0, 0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 
 		JLabel lblEvent = new JLabel("Event");
@@ -110,7 +113,7 @@ public class EventPanel extends JPanel {
 
 		lblEventName = new JLabel("Event name");
 		GridBagConstraints gbc_lblEventName = new GridBagConstraints();
-		gbc_lblEventName.anchor = GridBagConstraints.WEST;
+		gbc_lblEventName.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblEventName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblEventName.gridx = 1;
 		gbc_lblEventName.gridy = 1;
@@ -118,7 +121,7 @@ public class EventPanel extends JPanel {
 
 		lblEventDuration = new JLabel("Event duration (minutes)");
 		GridBagConstraints gbc_lblEventDuration = new GridBagConstraints();
-		gbc_lblEventDuration.anchor = GridBagConstraints.WEST;
+		gbc_lblEventDuration.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblEventDuration.insets = new Insets(0, 0, 5, 5);
 		gbc_lblEventDuration.gridx = 3;
 		gbc_lblEventDuration.gridy = 1;
@@ -127,6 +130,7 @@ public class EventPanel extends JPanel {
 		txtEventName = new JTextField();
 		txtEventName.setText("Name");
 		GridBagConstraints gbc_txtEventName = new GridBagConstraints();
+		gbc_txtEventName.anchor = GridBagConstraints.NORTH;
 		gbc_txtEventName.insets = new Insets(0, 0, 5, 5);
 		gbc_txtEventName.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtEventName.gridx = 1;
@@ -138,6 +142,7 @@ public class EventPanel extends JPanel {
 		txtEventDurationminutes.setText("30");
 		txtEventDurationminutes.setColumns(10);
 		GridBagConstraints gbc_txtEventDurationminutes = new GridBagConstraints();
+		gbc_txtEventDurationminutes.anchor = GridBagConstraints.NORTH;
 		gbc_txtEventDurationminutes.insets = new Insets(0, 0, 5, 5);
 		gbc_txtEventDurationminutes.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtEventDurationminutes.gridx = 3;
@@ -146,7 +151,7 @@ public class EventPanel extends JPanel {
 
 		lblEventDescription = new JLabel("Event Description");
 		GridBagConstraints gbc_lblEventDescription = new GridBagConstraints();
-		gbc_lblEventDescription.anchor = GridBagConstraints.WEST;
+		gbc_lblEventDescription.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblEventDescription.insets = new Insets(0, 0, 5, 5);
 		gbc_lblEventDescription.gridx = 1;
 		gbc_lblEventDescription.gridy = 3;
@@ -154,7 +159,7 @@ public class EventPanel extends JPanel {
 
 		lblLatestDate = new JLabel("Latest date ");
 		GridBagConstraints gbc_lblLatestDate = new GridBagConstraints();
-		gbc_lblLatestDate.anchor = GridBagConstraints.WEST;
+		gbc_lblLatestDate.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblLatestDate.insets = new Insets(0, 0, 5, 5);
 		gbc_lblLatestDate.gridx = 3;
 		gbc_lblLatestDate.gridy = 3;
@@ -162,6 +167,7 @@ public class EventPanel extends JPanel {
 
 		txtEventDescription = new JTextField();
 		GridBagConstraints gbc_txtEventDescription = new GridBagConstraints();
+		gbc_txtEventDescription.anchor = GridBagConstraints.NORTH;
 		gbc_txtEventDescription.insets = new Insets(0, 0, 5, 5);
 		gbc_txtEventDescription.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtEventDescription.gridx = 1;
@@ -172,6 +178,7 @@ public class EventPanel extends JPanel {
 		frmtdtxtfldLatestDate = new JFormattedTextField();
 		frmtdtxtfldLatestDate.setText("2000-01-01");
 		GridBagConstraints gbc_frmtdtxtfldLatestDate = new GridBagConstraints();
+		gbc_frmtdtxtfldLatestDate.anchor = GridBagConstraints.NORTH;
 		gbc_frmtdtxtfldLatestDate.insets = new Insets(0, 0, 5, 5);
 		gbc_frmtdtxtfldLatestDate.fill = GridBagConstraints.HORIZONTAL;
 		gbc_frmtdtxtfldLatestDate.gridx = 3;
@@ -181,6 +188,7 @@ public class EventPanel extends JPanel {
 		comboBoxEarliestTime = new JComboBox();
 		comboBoxEarliestTime.setModel(new DefaultComboBoxModel(new String[] {"Select earliest time", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
 		GridBagConstraints gbc_comboBoxEarliestTime = new GridBagConstraints();
+		gbc_comboBoxEarliestTime.anchor = GridBagConstraints.NORTH;
 		gbc_comboBoxEarliestTime.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBoxEarliestTime.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBoxEarliestTime.gridx = 1;
@@ -190,6 +198,7 @@ public class EventPanel extends JPanel {
 		comboBoxLatestTime = new JComboBox();
 		comboBoxLatestTime.setModel(new DefaultComboBoxModel(new String[] {"Select earliest time", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
 		GridBagConstraints gbc_comboBoxLatestTime = new GridBagConstraints();
+		gbc_comboBoxLatestTime.anchor = GridBagConstraints.NORTH;
 		gbc_comboBoxLatestTime.insets = new Insets(0, 0, 5, 5);
 		gbc_comboBoxLatestTime.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBoxLatestTime.gridx = 3;
@@ -197,14 +206,9 @@ public class EventPanel extends JPanel {
 		add(comboBoxLatestTime, gbc_comboBoxLatestTime);
 
 		btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-
 		lblInvite = new JLabel("Invite");
 		GridBagConstraints gbc_lblInvite = new GridBagConstraints();
-		gbc_lblInvite.anchor = GridBagConstraints.WEST;
+		gbc_lblInvite.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblInvite.insets = new Insets(0, 0, 5, 5);
 		gbc_lblInvite.gridx = 1;
 		gbc_lblInvite.gridy = 6;
@@ -212,7 +216,7 @@ public class EventPanel extends JPanel {
 
 		lblParticipants = new JLabel("Participants");
 		GridBagConstraints gbc_lblParticipants = new GridBagConstraints();
-		gbc_lblParticipants.anchor = GridBagConstraints.WEST;
+		gbc_lblParticipants.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblParticipants.insets = new Insets(0, 0, 5, 5);
 		gbc_lblParticipants.gridx = 3;
 		gbc_lblParticipants.gridy = 6;
@@ -221,6 +225,7 @@ public class EventPanel extends JPanel {
 		txtInviteeUsername = new JTextField();
 		txtInviteeUsername.setText("Invitee username");
 		GridBagConstraints gbc_txtInviteeUsername = new GridBagConstraints();
+		gbc_txtInviteeUsername.anchor = GridBagConstraints.SOUTH;
 		gbc_txtInviteeUsername.insets = new Insets(0, 0, 5, 5);
 		gbc_txtInviteeUsername.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtInviteeUsername.gridx = 1;
@@ -229,6 +234,7 @@ public class EventPanel extends JPanel {
 		txtInviteeUsername.setColumns(10);
 
 		textAreaShowParticipants = new JTextArea();
+		textAreaShowParticipants.setEditable(false);
 		textAreaShowParticipants.setBackground(Color.WHITE);
 		GridBagConstraints gbc_textAreaShowParticipants = new GridBagConstraints();
 		gbc_textAreaShowParticipants.gridheight = 2;
@@ -237,14 +243,23 @@ public class EventPanel extends JPanel {
 		gbc_textAreaShowParticipants.gridx = 3;
 		gbc_textAreaShowParticipants.gridy = 7;
 		add(textAreaShowParticipants, gbc_textAreaShowParticipants);
-
-		btnInvite = new JButton("Invite");
-		GridBagConstraints gbc_btnInvite = new GridBagConstraints();
-		gbc_btnInvite.anchor = GridBagConstraints.EAST;
-		gbc_btnInvite.insets = new Insets(0, 0, 5, 5);
-		gbc_btnInvite.gridx = 1;
-		gbc_btnInvite.gridy = 8;
-		add(btnInvite, gbc_btnInvite);
+				
+				splitPane = new JSplitPane();
+				splitPane.setResizeWeight(0.5);
+				GridBagConstraints gbc_splitPane = new GridBagConstraints();
+				gbc_splitPane.anchor = GridBagConstraints.NORTH;
+				gbc_splitPane.insets = new Insets(0, 0, 5, 5);
+				gbc_splitPane.fill = GridBagConstraints.HORIZONTAL;
+				gbc_splitPane.gridx = 1;
+				gbc_splitPane.gridy = 8;
+				add(splitPane, gbc_splitPane);
+		
+				btnInvite = new JButton("Invite");
+				splitPane.setLeftComponent(btnInvite);
+				btnUninvite = new JButton("Uninvite");
+				
+				splitPane.setRightComponent(btnUninvite);
+				
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.gridwidth = 2;
 		gbc_btnSave.anchor = GridBagConstraints.SOUTHEAST;
@@ -271,10 +286,8 @@ public class EventPanel extends JPanel {
 			e.printStackTrace();
 		}
 
-
 		btnInvite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String eventName = txtEventName.getText().trim();
 				String inviteeUsername = txtInviteeUsername.getText().trim();
 
 				// Error message for empty invitee input
@@ -302,7 +315,58 @@ public class EventPanel extends JPanel {
 							"User not found.", "Error" , JOptionPane.ERROR_MESSAGE);
 				}}
 		});
+		
+		btnUninvite.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String inviteeUsername = txtInviteeUsername.getText().trim();
 
+				// Error message for empty invitee input
+				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
+					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+							"Please enter a username.");
+					return;
+				}
+				
+				boolean removed = false;
+
+				// Checks if invitee exists in repository and is not already in event
+				User invitee = repository.findUsername(inviteeUsername);
+				if (invitee != null) {
+					// if statement adds the participant to the list
+					if (tempInvites.contains(inviteeUsername)) {
+						tempInvites.remove(inviteeUsername);
+						updateParticipantList();
+						txtInviteeUsername.setText("");
+						// Clear input so user can input new username
+					} else if (event != null && event.getInvites() != null) {
+						Invite delInvite = null;
+						for (Invite invite : event.getInvites()) {
+							if (invite.getRecipient().equalsIgnoreCase(inviteeUsername)) {
+								delInvite = invite;
+								break;
+							}
+						}
+						if (delInvite != null) {
+							event.getInvites().remove(delInvite);
+							removed = true;
+						}
+						
+						if (removed) {
+							updateParticipantList();
+							txtInviteeUsername.setText("");
+							
+						}
+					} else {
+						javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+								"User is not in this event!");
+					}
+				} else {
+					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+							"User not found.", "Error" , JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String eventName = txtEventName.getText();
@@ -410,8 +474,8 @@ public class EventPanel extends JPanel {
 		// 1. Create dummy data
 		UserRepository dummyRepo = new UserRepository();
 		User testUser = new User("Charles","12345",null);
-		dummyRepo.saveUser(new User("Alice", "password123", null ));
-		dummyRepo.saveUser(new User("Bob", "pass", null)); // For testing invites
+		dummyRepo.saveUser(new User("John", "67890", null ));
+		dummyRepo.saveUser(new User("testUser", "888888", null)); // For testing invites
 
 		Scheduler mockScheduler = new Scheduler(0, 23, 7, dummyRepo);
 
