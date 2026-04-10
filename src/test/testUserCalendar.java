@@ -49,9 +49,18 @@ public class testUserCalendar extends TestCase {
         assertNotSame(example_event, userCalendar.getEvents());
     }
     
+    //forgot to test the set owner
     public void testSetOwner() {
     	userCalendar.SetOwner("NewOwner");
         assertEquals("NewOwner", userCalendar.getOwner());
+    }
+    
+    //test for loading UserCalendar with Event list already in place
+    public void testConstructorWithExistingEvents() {
+        List<Event> existingEvents = new ArrayList<>();
+        existingEvents.add(event);
+        UserCalendar calendarWithEvents = new UserCalendar(exampleOwner, existingEvents);
+        assertEquals(existingEvents, calendarWithEvents.getEvents());
     }
 
 }
