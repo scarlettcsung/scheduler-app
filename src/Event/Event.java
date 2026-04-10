@@ -35,6 +35,7 @@ public class Event {
     public void setEventTime(LocalDateTime eventTime) {this.eventTime = eventTime;}
     public void setEventDescription(String eventDescription) {this.eventDescription = eventDescription;}
     public void setEventDuration(int eventDuration) {this.eventDuration = eventDuration;}
+    public void setOrganizer(String organizerUsername) {this.organizerUsername = organizerUsername;}
 
     // Getter Methods
     public String getEventName() {return eventName;}
@@ -43,6 +44,7 @@ public class Event {
     public String getEventDescription() {return eventDescription; }
     public int getEventDuration() {return eventDuration; }
     public String getEventID() {return eventID; }
+    public Boolean getIsImported() {return isImported;}
 
     // Invites Methods
     public  List<Invite> getInvites() {
