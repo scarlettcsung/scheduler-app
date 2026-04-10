@@ -44,4 +44,71 @@ public class testIcsImporter extends TestCase {
         assertEquals(Boolean.TRUE, importedEvent.getIsImported());
     }
 
+    public void testImportCalendarCreatesCalendarAndSetsOrganizer() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(user, SIMPLE_ICS);
+
+        assertEquals(ImportStatus.Succes, status);
+        assertNotNull(user.getCalendar());
+        assertEquals(1, user.getCalendar().getEvents().size());
+
+        Event importedEvent = user.getCalendar().getEvents().get(0);
+        assertEquals("Charles", importedEvent.getOrganizer());
+        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+    }
+
+    public void testOverwriteImportedEventsKeepsManualEvents() {
+        UserCalendar calendar = new UserCalendar("Charles", new ArrayList<>());
+
+        Event manualEvent = new Event("Manual", 30, "Keep me", "Charles", false, null);
+        manualEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 8, 0));
+        calendar.addEvent(manualEvent);
+
+        Event oldImportedEvent = new Event("Old import", 45, "Replace me", "Charles", true, null);
+        oldImportedEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 9, 0));
+        calendar.addEvent(oldImportedEvent);
+
+        User user = new User("Charles", "password", calendar);
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(user, SIMPLE_ICS);
+
+        assertEquals(ImportStatus.Succes, status);
+        assertEquals(2, calendar.getEvents().size());
+        assertNotNull(findEvent(calendar.getEvents(), "Manual"));
+        assertNull(findEvent(calendar.getEvents(), "Old import"));
+
+        Event importedEvent = findEvent(calendar.getEvents(), "Simple Import");
+        assertNotNull(importedEvent);
+        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+    }
+
+    public void testImportCalendarReturnsUserNotFoundWhenUserIsNull() {
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(null, SIMPLE_ICS);
+
+        assertEquals(ImportStatus.UserNotFound, status);
+    }
+
+    public void testImportCalendarReturnsFileNotFoundWhenFileIsMissing() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(user, "src/test/resources/missing.ics");
+
+        assertEquals(ImportStatus.FileNotFound, status);
+    }
+
+    private Event findEvent(List<Event> events, String eventName) {
+        for (Event event : events) {
+            if (eventName.equals(event.getEventName())) {
+                return event;
+            }
+        }
+
+        return null;
+    }
 }
