@@ -196,7 +196,7 @@ public class EventPanel extends JPanel {
 		add(comboBoxEarliestTime, gbc_comboBoxEarliestTime);
 
 		comboBoxLatestTime = new JComboBox();
-		comboBoxLatestTime.setModel(new DefaultComboBoxModel(new String[] {"Select earliest time", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
+		comboBoxLatestTime.setModel(new DefaultComboBoxModel(new String[] {"Select latest time", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
 		GridBagConstraints gbc_comboBoxLatestTime = new GridBagConstraints();
 		gbc_comboBoxLatestTime.anchor = GridBagConstraints.NORTH;
 		gbc_comboBoxLatestTime.insets = new Insets(0, 0, 5, 5);
@@ -466,7 +466,7 @@ public class EventPanel extends JPanel {
 		}
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		javax.swing.JFrame frame = new javax.swing.JFrame("Event Panel Test");
 		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 		frame.setSize(600, 500);
@@ -490,5 +490,5 @@ public class EventPanel extends JPanel {
 
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
-	}
+	} */
 }
