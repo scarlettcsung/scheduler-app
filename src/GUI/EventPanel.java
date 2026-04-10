@@ -229,6 +229,7 @@ public class EventPanel extends JPanel {
 		txtInviteeUsername.setColumns(10);
 
 		textAreaShowParticipants = new JTextArea();
+		textAreaShowParticipants.setEditable(false);
 		textAreaShowParticipants.setBackground(Color.WHITE);
 		GridBagConstraints gbc_textAreaShowParticipants = new GridBagConstraints();
 		gbc_textAreaShowParticipants.gridheight = 2;
@@ -410,8 +411,8 @@ public class EventPanel extends JPanel {
 		// 1. Create dummy data
 		UserRepository dummyRepo = new UserRepository();
 		User testUser = new User("Charles","12345",null);
-		dummyRepo.saveUser(new User("Alice", "password123", null ));
-		dummyRepo.saveUser(new User("Bob", "pass", null)); // For testing invites
+		dummyRepo.saveUser(new User("John", "67890", null ));
+		dummyRepo.saveUser(new User("testUser", "888888", null)); // For testing invites
 
 		Scheduler mockScheduler = new Scheduler(0, 23, 7, dummyRepo);
 
