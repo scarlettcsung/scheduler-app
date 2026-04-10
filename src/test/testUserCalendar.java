@@ -42,11 +42,17 @@ public class testUserCalendar extends TestCase {
         assertEquals(example_event, userCalendar.getEvents());
     }
     
-    public void testRemoveEvent() {
+    public void testRemoveEventInCalendar() {
     	userCalendar.addEvent(event);
-		userCalendar.removeEvent(event);
-        List<Event> example_event = List.of(event);
-        assertNotSame(example_event, userCalendar.getEvents());
+        userCalendar.removeEvent(event);
+        assertTrue(userCalendar.getEvents().isEmpty());
+    }
+    
+    public void testRemoveEventNotInCalendar() {
+        Event otherEvent = new Event("otherEvent", 30, "otherDesc", exampleOwner, false, null);
+        userCalendar.addEvent(event);
+        userCalendar.removeEvent(otherEvent); // otherEvent is not in the calendar
+        assertFalse(userCalendar.getEvents().isEmpty()); // original event should still be there
     }
     
     //forgot to test the set owner
