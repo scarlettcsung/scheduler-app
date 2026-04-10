@@ -1,0 +1,114 @@
+package test;
+
+import Event.Event;
+import IcsImporter.IcsImporter;
+import IcsImporter.ImportStatus;
+import User.User;
+import UserCalendar.UserCalendar;
+import junit.framework.TestCase;
+import net.fortuna.ical4j.data.ParserException;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
+
+public class testIcsImporter extends TestCase {
+
+    private static final String SIMPLE_ICS = "src/test/resources/simpleImport.ics";
+
+    private TimeZone originalTimeZone;
+
+    protected void setUp() {
+        originalTimeZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Amsterdam"));
+    }
+
+    protected void tearDown() {
+        TimeZone.setDefault(originalTimeZone);
+    }
+
+    public void testParseICSReturnsImportedEvents() throws IOException, ParserException {
+        IcsImporter importer = new IcsImporter();
+
+        List<Event> importedEvents = importer.parseICS(SIMPLE_ICS);
+
+        assertEquals(1, importedEvents.size());
+
+        Event importedEvent = importedEvents.get(0);
+        assertEquals("Simple Import", importedEvent.getEventName());
+        assertEquals("Fixture event", importedEvent.getEventDescription());
+        assertEquals(LocalDateTime.of(2026, 4, 10, 9, 0), importedEvent.getEventTime());
+        assertEquals(60, importedEvent.getEventDuration());
+        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+    }
+
+    public void testImportCalendarCreatesCalendarAndSetsOrganizer() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(user, SIMPLE_ICS);
+
+        assertEquals(ImportStatus.Succes, status);
+        assertNotNull(user.getCalendar());
+        assertEquals(1, user.getCalendar().getEvents().size());
+
+        Event importedEvent = user.getCalendar().getEvents().get(0);
+        assertEquals("Charles", importedEvent.getOrganizer());
+        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+    }
+
+    public void testOverwriteImportedEventsKeepsManualEvents() {
+        UserCalendar calendar = new UserCalendar("Charles", new ArrayList<>());
+
+        Event manualEvent = new Event("Manual", 30, "Keep me", "Charles", false, null);
+        manualEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 8, 0));
+        calendar.addEvent(manualEvent);
+
+        Event oldImportedEvent = new Event("Old import", 45, "Replace me", "Charles", true, null);
+        oldImportedEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 9, 0));
+        calendar.addEvent(oldImportedEvent);
+
+        User user = new User("Charles", "password", calendar);
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(user, SIMPLE_ICS);
+
+        assertEquals(ImportStatus.Succes, status);
+        assertEquals(2, calendar.getEvents().size());
+        assertNotNull(findEvent(calendar.getEvents(), "Manual"));
+        assertNull(findEvent(calendar.getEvents(), "Old import"));
+
+        Event importedEvent = findEvent(calendar.getEvents(), "Simple Import");
+        assertNotNull(importedEvent);
+        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+    }
+
+    public void testImportCalendarReturnsUserNotFoundWhenUserIsNull() {
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(null, SIMPLE_ICS);
+
+        assertEquals(ImportStatus.UserNotFound, status);
+    }
+
+    public void testImportCalendarReturnsFileNotFoundWhenFileIsMissing() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(user, "src/test/resources/missing.ics");
+
+        assertEquals(ImportStatus.FileNotFound, status);
+    }
+
+    private Event findEvent(List<Event> events, String eventName) {
+        for (Event event : events) {
+            if (eventName.equals(event.getEventName())) {
+                return event;
+            }
+        }
+
+        return null;
+    }
+}

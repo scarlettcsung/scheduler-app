@@ -10,8 +10,7 @@ out/
 *.zip
 *.iml
 .settings/
-.project
-.classpath
+
 
 # for Mac users
 .DS_Store
