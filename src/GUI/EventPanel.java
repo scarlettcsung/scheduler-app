@@ -288,7 +288,6 @@ public class EventPanel extends JPanel {
 
 		btnInvite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String eventName = txtEventName.getText().trim();
 				String inviteeUsername = txtInviteeUsername.getText().trim();
 
 				// Error message for empty invitee input
@@ -319,6 +318,52 @@ public class EventPanel extends JPanel {
 		
 		btnUninvite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String inviteeUsername = txtInviteeUsername.getText().trim();
+
+				// Error message for empty invitee input
+				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
+					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+							"Please enter a username.");
+					return;
+				}
+				
+				boolean removed = false;
+
+				// Checks if invitee exists in repository and is not already in event
+				User invitee = repository.findUsername(inviteeUsername);
+				if (invitee != null) {
+					// if statement adds the participant to the list
+					if (tempInvites.contains(inviteeUsername)) {
+						tempInvites.remove(inviteeUsername);
+						updateParticipantList();
+						txtInviteeUsername.setText("");
+						// Clear input so user can input new username
+					} else if (event != null && event.getInvites() != null) {
+						Invite delInvite = null;
+						for (Invite invite : event.getInvites()) {
+							if (invite.getRecipient().equalsIgnoreCase(inviteeUsername)) {
+								delInvite = invite;
+								break;
+							}
+						}
+						if (delInvite != null) {
+							event.getInvites().remove(delInvite);
+							removed = true;
+						}
+						
+						if (removed) {
+							updateParticipantList();
+							txtInviteeUsername.setText("");
+							
+						}
+					} else {
+						javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+								"User is not in this event!");
+					}
+				} else {
+					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+							"User not found.", "Error" , JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
