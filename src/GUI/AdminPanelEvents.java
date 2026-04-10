@@ -162,11 +162,11 @@ public class AdminPanelEvents extends JPanel {
 		createEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(eventPane);
-				topFrame.setContentPane(new EventPanel(repository, adminUser, true, null, scheduler, () -> {
+				topFrame.setContentPane(new EventPanel(repository, adminUser, true, null, scheduler)); /*, () -> {
 					topFrame.setContentPane(new AdminPanelEvents(repository, adminUser, scheduler));
 					topFrame.revalidate();
 					topFrame.repaint();
-				}));
+				})); */
 				topFrame.revalidate();
 				topFrame.repaint();
 			}

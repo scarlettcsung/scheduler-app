@@ -402,7 +402,7 @@ public class EventPanel extends JPanel {
 		}
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		javax.swing.JFrame frame = new javax.swing.JFrame("Event Panel Test");
 		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 		frame.setSize(600, 500);
@@ -426,5 +426,5 @@ public class EventPanel extends JPanel {
 
 		frame.getContentPane().add(panel);
 		frame.setVisible(true);
-	}
+	} */
 }
