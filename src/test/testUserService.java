@@ -46,4 +46,12 @@ public class testUserService extends TestCase {
 
         assertEquals(false, result);
     }
+    
+ // Covers deleteUser when user exists but is not authorized (not logged in)
+    public void testDeleteUserReturnsFalseWhenNotAuthorized() {
+        userService.registerUser("testUser", "testPassword");
+        // deliberately not logging in, so authenticatedUser is null
+        boolean result = userService.deleteUser("testUser");
+        assertEquals(false, result);
+    }
 }
