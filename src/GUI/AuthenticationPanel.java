@@ -198,7 +198,7 @@ public static void main(String[] args) {
     );
 
     dummyEvent.setEventTime(LocalDateTime.of(2026, 4, 8, 14, 0));
-    dummyEvent.addInvite(new Invite(testUser2.getUsername(), dummyEvent.getEventID()));
+    dummyEvent.addInvite(new Invite(testUser2.getUsername(), dummyEvent.getEventID()), repository);
 
     testCalendar1.addEvent(dummyEvent);
     testCalendar2.addEvent(dummyEvent);
