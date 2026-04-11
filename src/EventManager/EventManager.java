@@ -68,9 +68,9 @@ public class EventManager {
         }
     }
 
-    public void rejectInvite(Invite invite, Event event) {
+    public void rejectInvite(Invite invite, Event event, UserRepository repository) {
         invite.setInviteStatus(inviteStatus.REJECTED);
-        event.removeInvite(invite);
+        event.removeInvite(invite, repository);
     }
 
 }
