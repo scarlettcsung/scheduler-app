@@ -97,10 +97,10 @@ public class testEventManager extends TestCase {
         e.getInvites().add(new Invite("ghostUser", e.getEventID()));
         
         //test
-        orgCal.addEvent(e);
-        e.getInvites().add(new Invite("ghostUser", e.getEventID()));
+        new EventManager(repo).deleteEvent(e);
+        assertFalse(orgCal.getEvents().contains(e));
     }
-    
+ 
     //test invitee has no calendar
     public void testDeleteEventInviteeHasNoCalendar() {
     	//setup event for test
@@ -146,6 +146,38 @@ public class testEventManager extends TestCase {
     // Covers the path where repository is null, hitting the final closing bracket?
     public void testDeleteEventNoRepository() {
         Event e = new Event("meeting", 60, "desc", "testUser", false, null);
-        new EventManager().deleteEvent(e);
+        new EventManager().deleteEvent(e); 
+    }
+    
+    // Test recipientUsername == null branch
+    public void testDeleteEventNullRecipientUsername() {
+    	//setup
+        UserRepository repo = new UserRepository();
+        UserCalendar orgCal = new UserCalendar("testUser", null);
+        User organizer = new User("testUser", "password", orgCal);
+        repo.saveUser(organizer);
+        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        
+        //add to calendar
+        orgCal.addEvent(e);
+        e.getInvites().add(new Invite(null, e.getEventID()));
+
+        //test
+        new EventManager(repo).deleteEvent(e);
+        assertFalse(orgCal.getEvents().contains(e));
+    }
+    
+    // Test organizerUsername == null branch
+    public void testDeleteEventNullOrganizerUsername() {
+        UserRepository repo = new UserRepository();
+        Event e = new Event("meeting", 60, "desc", null, false, null); // null organizer
+        new EventManager(repo).deleteEvent(e);
+    }
+    
+    // Covers organizer not found in repo (organizer == null) branch
+    public void testDeleteEventOrganizerNotInRepo() {
+        UserRepository repo = new UserRepository();
+        Event e = new Event("meeting", 60, "desc", "unknownUser", false, null);
+        new EventManager(repo).deleteEvent(e);
     }
 }
