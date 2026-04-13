@@ -171,6 +171,7 @@ public class UserPanel extends JPanel {
         JButton createEventButton = new JButton("+ Create Event");
         createEventButton.setBounds(170, MARGIN, 120, 24);
 
+
 	        createEventButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
@@ -183,6 +184,7 @@ public class UserPanel extends JPanel {
 					dialog.setLocationRelativeTo(topFrame);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
+
 			}
 		});
 
