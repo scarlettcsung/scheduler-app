@@ -22,7 +22,7 @@ import Scheduler.Scheduler;
 import Repository.UserRepository;
 import User.User;
 
-public class MainDashboardPanel2 extends JPanel {
+public class UserPanel extends JPanel {
     
     public static final long serialVersionUID = 1L;
     private UserRepository repository;
@@ -40,7 +40,7 @@ public class MainDashboardPanel2 extends JPanel {
                 );
     }
     
-    public MainDashboardPanel2(UserRepository repository, User user, Scheduler scheduler) {
+    public UserPanel(UserRepository repository, User user, Scheduler scheduler) {
         this.repository = repository;
         this.currentUser = user;
         this.scheduler = scheduler;
@@ -88,7 +88,7 @@ public class MainDashboardPanel2 extends JPanel {
         logoutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Find the parent JFrame and swap back to Login
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
                 topFrame.setContentPane(new AuthenticationPanel(repository,scheduler));
                 topFrame.revalidate();
                 topFrame.repaint();
@@ -173,7 +173,7 @@ public class MainDashboardPanel2 extends JPanel {
 
         createEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
+				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
 				JDialog dialog = new JDialog(topFrame, "Create Event", true);
 				dialog.setContentPane(new EventPanel(repository, currentUser, true, null, scheduler, () -> {
 				    dialog.dispose();
@@ -257,7 +257,7 @@ public class MainDashboardPanel2 extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
 				topFrame.setContentPane(new EventPanel(repository, currentUser, false, event, scheduler, () -> {
-					topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
+					topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler));
 					topFrame.revalidate();
 					topFrame.repaint();
 				}));
@@ -351,7 +351,7 @@ public class MainDashboardPanel2 extends JPanel {
 
     private void refreshEvents() {
 		JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-		topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
+		topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler));
 		topFrame.revalidate();
 		topFrame.repaint();
 	}
