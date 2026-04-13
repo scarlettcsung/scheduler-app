@@ -142,4 +142,10 @@ public class testEventManager extends TestCase {
         assertFalse(orgCal.getEvents().contains(e));
         assertFalse(inviteeCal.getEvents().contains(e));
     }
+    
+    // Covers the path where repository is null, hitting the final closing bracket?
+    public void testDeleteEventNoRepository() {
+        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        new EventManager().deleteEvent(e);
+    }
 }
