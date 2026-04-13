@@ -82,4 +82,41 @@ public class testEventManager extends TestCase {
         EventManager manager = new EventManager();
         manager.deleteEvent(null); // if the system does not crash it is correct?
     }
+    
+    //test invitee not in repository
+    public void testDeleteEventInviteeNotInRepo() {
+    	//setup Event for this test
+    	UserRepository repo = new UserRepository();
+        UserCalendar orgCal = new UserCalendar("testUser", null);
+        User organizer = new User("testUser", "password", orgCal);
+        repo.saveUser(organizer);
+        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        
+        //add event to calendar
+        orgCal.addEvent(e);
+        e.getInvites().add(new Invite("ghostUser", e.getEventID()));
+        
+        //test
+        orgCal.addEvent(e);
+        e.getInvites().add(new Invite("ghostUser", e.getEventID()));
+    }
+    
+    //test invitee has no calendar
+    public void testDeleteEventInviteeHasNoCalendar() {
+    	//setup event for test
+    	UserRepository repo = new UserRepository();
+        UserCalendar orgCal = new UserCalendar("testUser", null);
+        User organizer = new User("testUser", "password", orgCal);
+        repo.saveUser(organizer);
+        repo.saveUser(new User("inviteeUser", "password", null)); // no calendar
+        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        
+        //add event to calendar
+        orgCal.addEvent(e);
+        e.getInvites().add(new Invite("inviteeUser", e.getEventID()));
+        
+        //test
+        new EventManager(repo).deleteEvent(e);
+        assertFalse(orgCal.getEvents().contains(e));
+    }
 }
