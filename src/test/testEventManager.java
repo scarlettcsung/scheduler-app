@@ -119,4 +119,27 @@ public class testEventManager extends TestCase {
         new EventManager(repo).deleteEvent(e);
         assertFalse(orgCal.getEvents().contains(e));
     }
+    
+ // Covers invitee calendar removeEvent line
+    public void testDeleteEventWithInvites() {
+    	//setup
+        UserRepository repo = new UserRepository();
+        UserCalendar orgCal = new UserCalendar("testUser", null);
+        User organizer = new User("testUser", "password", orgCal);
+        repo.saveUser(organizer);
+        UserCalendar inviteeCal = new UserCalendar("inviteeUser", null);
+        User invitee = new User("inviteeUser", "password", inviteeCal);
+        repo.saveUser(invitee);
+        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        
+        //add to calendar
+        orgCal.addEvent(e);
+        inviteeCal.addEvent(e);
+        e.getInvites().add(new Invite("inviteeUser", e.getEventID()));
+        
+        //test
+        new EventManager(repo).deleteEvent(e);
+        assertFalse(orgCal.getEvents().contains(e));
+        assertFalse(inviteeCal.getEvents().contains(e));
+    }
 }
