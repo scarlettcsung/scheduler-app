@@ -1,7 +1,6 @@
 package Repository;
 
-import User.AdminUser;
-import User.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,5 +20,6 @@ public abstract class Repository<T> {
     	return new ArrayList<>(data);
     	
     }
+    public abstract String getRepositoryType(); 
 }
  
