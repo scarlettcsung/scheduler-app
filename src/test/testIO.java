@@ -43,13 +43,13 @@ public class testIO extends TestCase {
     //String organizerUsername, Boolean isImported,  List<Invite> invites)
 	public void testreadcalendar() throws IOException {
 		//write a file
-		input.writeCalendar(repository.getListUsers(),"src/test/resources/testFileIO.json");
+		input.writeCalendar(repository.getAll(),"src/test/resources/testFileIO.json");
 		
 		//read the just written file
 		List<User> imported = input.readCalendar("src/test/resources/testFileIO.json");
 		
 		//compare read result with repository
-		assertEquals(repository.getListUsers().size(), imported.size());
+		assertEquals(repository.getAll().size(), imported.size());
 	}
 	
 	//(String eventName, LocalDateTime eventTime, int eventDuration, String eventDescription,]
