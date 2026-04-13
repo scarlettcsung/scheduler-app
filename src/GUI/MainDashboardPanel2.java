@@ -64,6 +64,10 @@ public class MainDashboardPanel2 extends JPanel {
         		false, 
         		new ArrayList<>()
         );  
+        LocalDateTime event1Time = LocalDateTime.of(2026, 4,20,16,20);
+        LocalDateTime event2Time = LocalDateTime.of(2026, 5,11,9,30);
+        event1.setEventTime(event1Time);
+        event2.setEventTime(event2Time);
         
         // UI Setup
         setBackground(Color.CYAN);
