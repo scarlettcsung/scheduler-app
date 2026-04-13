@@ -20,6 +20,8 @@ public abstract class Repository<T> {
     	return new ArrayList<>(data);
     	
     }
-    public abstract String getRepositoryType(); 
+    public abstract String getRepositoryType();
+
+
 }
  
