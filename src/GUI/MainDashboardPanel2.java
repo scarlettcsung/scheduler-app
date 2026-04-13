@@ -11,6 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.List;
+
 import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
@@ -26,7 +30,8 @@ public class MainDashboardPanel2 extends JPanel {
     private Event event1;
     private Event event2;
     private Scheduler scheduler;
-    
+    private final JPanel invitesPane;
+    private final javax.swing.border.Border cardBorder;
     
     private javax.swing.border.Border cardBorder() {
         return new CompoundBorder(
@@ -39,7 +44,10 @@ public class MainDashboardPanel2 extends JPanel {
         this.repository = repository;
         this.currentUser = user;
         this.scheduler = scheduler;
+        this.invitesPane = new JPanel();
         
+        cardBorder = cardBorder();
+
         event1 = new Event(
     	        "Team Meeting", 
     	        60, 
@@ -65,6 +73,8 @@ public class MainDashboardPanel2 extends JPanel {
         int W = 1180;
         int H = 1150;
         int MARGIN = 10;
+        setPreferredSize(new Dimension(W, H));
+        setSize(W, H);
         
         javax.swing.border.Border CARD_BORDER = cardBorder();
         
@@ -112,8 +122,41 @@ public class MainDashboardPanel2 extends JPanel {
         
         // Run setup for Events and Invites
         setupEvents(eventPane, W, H, MARGIN, CARD_BORDER);
-        setupInvites(W, H, MARGIN, CARD_BORDER);
+        invitesPane.setLayout(null);
+        invitesPane.setBackground(Color.WHITE);
+        invitesPane.setBorder(CARD_BORDER);
+        invitesPane.setBounds(MARGIN, H/2 + 2*MARGIN, W/2 - 3*MARGIN/2, H/2 - 7*MARGIN);
+        add(invitesPane);
+
+        setupInvites();
     }
+    private List<Event> collectUniqueEvents() {
+		Set<Event> allEvents = new LinkedHashSet<>();
+		for (User user : repository.getListUsers()) {
+			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
+				continue;
+			}
+			allEvents.addAll(user.getCalendar().getEvents());
+		}
+		return new ArrayList<>(allEvents);
+	}
+
+	private List<Invite> collectUniqueInvites(List<Event> events) {
+		Set<String> seen = new LinkedHashSet<>();
+		List<Invite> invites = new ArrayList<>();
+		for (Event event : events) {
+			if (event.getInvites() == null) {
+				continue;
+			}
+			for (Invite invite : event.getInvites()) {
+				String key = invite.getRecipient() + "|" + invite.getEventID();
+				if (seen.add(key)) {
+					invites.add(invite);
+				}
+			}
+		}
+		return invites;
+	}
 
     private void setupEvents(JPanel eventPane, int W, int H, int MARGIN, javax.swing.border.Border CARD_BORDER) {
         JLabel eventPaneTitle = new JLabel("Events");
@@ -123,170 +166,192 @@ public class MainDashboardPanel2 extends JPanel {
 
         JButton createEventButton = new JButton("+ Create Event");
         createEventButton.setBounds(170, MARGIN, 120, 24);
-        eventPane.add(createEventButton);
 
-        // scrollable event area
-        JPanel eventsCardsPanel = new JPanel();
-        eventsCardsPanel.setLayout(null);
-        eventsCardsPanel.setBackground(Color.WHITE);
-           
-        
-        
-        /* Sample Events
-        
-        */
-        Event[] events = new Event[]{
-        	    event1, event2};
-
-        int cardWidth = W/2-10/2*MARGIN;
-        int cardHeight = 140;
-        int cardSpacing = 155;
-        eventsCardsPanel.setPreferredSize(new Dimension(cardWidth, events.length * cardSpacing));
-
-        for (int i = 0; i < events.length; i++) {
-        	Event event = events[i];
-        	
-            JPanel card = new JPanel();
-            card.setLayout(null);
-            card.setBorder(CARD_BORDER);
-            card.setBounds(0, i * cardSpacing, cardWidth, cardHeight);
-            
-            JLabel nameLabel = new JLabel(event.getEventName());
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 13));
-            nameLabel.setBounds(MARGIN, MARGIN, cardWidth - 20, 20);
-            card.add(nameLabel);
-
-            JLabel durationLabel = new JLabel("Duration: " + event.getEventDuration() + " min");
-            durationLabel.setFont(new Font("Arial", Font.PLAIN, 11));
-            durationLabel.setForeground(Color.BLACK);
-            durationLabel.setBounds(MARGIN, 53, cardWidth - 20, 16);
-            card.add(durationLabel);
-
-            JLabel descLabel = new JLabel(event.getEventDescription());
-            descLabel.setFont(new Font("Arial", Font.ITALIC, 11));
-            descLabel.setForeground(Color.BLACK);
-            descLabel.setBounds(MARGIN, 72, cardWidth - 20, 16);
-            card.add(descLabel);
-
-            JButton viewButton = new JButton("View Event");
-            viewButton.setBounds(MARGIN, 100, 100, 26);
-            viewButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Clicked event: " + event.getEventName());
-                }
-            });
-            card.add(viewButton);
-
-            JButton updateButton = new JButton("Update Event");
-            updateButton.setBounds(MARGIN + 110, 100, 110, 26);
-            updateButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
-                    topFrame.setContentPane(new EventPanel(repository, currentUser, false, event, scheduler, () -> {
-                        topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
-                        topFrame.revalidate();
-                        topFrame.repaint();
-                    }));
+        createEventButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
+				JDialog dialog = new JDialog(topFrame, "Create Event", true); // true = modal
+                dialog.setContentPane(new EventPanel(repository, currentUser, true, null, scheduler, () -> {
+                    dialog.dispose();
+					topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
                     topFrame.revalidate();
                     topFrame.repaint();
-                }
-            });
-            card.add(updateButton);
-            
-            eventsCardsPanel.add(card);
+                }));
+                dialog.setSize(500, 550); // adjust to your liking
+                dialog.setLocationRelativeTo(topFrame); // centers over main window
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
+			}
+		});
+
+        eventPane.add(createEventButton);
+
+        JPanel eventsCardsPanel = new JPanel();
+		eventsCardsPanel.setLayout(new javax.swing.BoxLayout(eventsCardsPanel, javax.swing.BoxLayout.Y_AXIS));
+		eventsCardsPanel.setBackground(Color.WHITE);
+		eventsCardsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		List<Event> events = collectUniqueEvents();
+		eventsCardsPanel.setPreferredSize(new Dimension(500, Math.max(1, events.size()) * 155));
+
+		for (Event event : events) {
+			JPanel card = createEventCard(event, eventsCardsPanel);
+			card.setAlignmentX(Component.LEFT_ALIGNMENT);
+			eventsCardsPanel.add(card);
+			eventsCardsPanel.add(Box.createVerticalStrut(10));
+		}
+
+		JScrollPane eventsScrollPane = new JScrollPane(
+				eventsCardsPanel,
+				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+		);
+		eventsScrollPane.setBounds(10, 45, 565, 530);
+		eventsScrollPane.getVerticalScrollBar().setUnitIncrement(12);
+		eventsScrollPane.setBorder(null);
+		eventPane.add(eventsScrollPane);
+	}
+
+    private JPanel createEventCard(Event event, JPanel eventsCardsPanel) {
+		JPanel card = new JPanel();
+		card.setLayout(null);
+		card.setBorder(cardBorder);
+		card.setBackground(Color.WHITE);
+		card.setPreferredSize(new Dimension(500, 140));
+		card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+		card.setMinimumSize(new Dimension(200, 140));
+
+		int MARGIN = 10;
+
+		JLabel nameLabel = new JLabel(event.getEventName());
+		nameLabel.setFont(new Font("Arial", Font.BOLD, 13));
+		nameLabel.setBounds(MARGIN, MARGIN, 400, 20);
+		card.add(nameLabel);
+
+		JLabel durationLabel = new JLabel("Duration: " + event.getEventDuration() + " min");
+		durationLabel.setFont(new Font("Arial", Font.PLAIN, 11));
+		durationLabel.setForeground(Color.BLACK);
+		durationLabel.setBounds(MARGIN, 53, 400, 16);
+		card.add(durationLabel);
+
+		JLabel descLabel = new JLabel(event.getEventDescription());
+		descLabel.setFont(new Font("Arial", Font.ITALIC, 11));
+		descLabel.setForeground(Color.BLACK);
+		descLabel.setBounds(MARGIN, 72, 400, 16);
+		card.add(descLabel);
+
+		JButton deleteButton = new JButton("Delete Event");
+		deleteButton.setBounds(MARGIN + 130, 95, 120, 24);
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventManager eventManager = new EventManager(repository);
+				eventManager.deleteEvent(event);
+				refreshEvents();
+			}
+		});
+
+		JButton updateButton = new JButton("Update Event");
+		updateButton.setBounds(MARGIN, 95, 120, 24);
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
+				topFrame.setContentPane(new EventPanel(repository, currentUser, false, event, scheduler, () -> {
+					topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
+					topFrame.revalidate();
+					topFrame.repaint();
+				}));
+				topFrame.revalidate();
+				topFrame.repaint();
+			}
+		});
+
+		card.add(deleteButton);
+		card.add(updateButton);
+		return card;
+	}
+
+    private void setupInvites() {
+		JLabel invitesPaneTitle = new JLabel("Invites");
+		invitesPaneTitle.setFont(new Font("Arial", Font.BOLD, 16));
+		invitesPaneTitle.setBounds(10, 10, 200, 24);
+		invitesPane.add(invitesPaneTitle);
+
+		JPanel invitesCardsPanel = new JPanel();
+		invitesCardsPanel.setLayout(null);
+		invitesCardsPanel.setBackground(Color.WHITE);
+
+		List<Event> events = collectUniqueEvents();
+		List<Invite> invites = collectUniqueInvites(events);
+		int inviteCardHeight = 60;
+		int inviteCardWidth = 560;
+		int inviteCardSpacing = 68;
+		invitesCardsPanel.setPreferredSize(new Dimension(290, Math.max(1, invites.size()) * inviteCardSpacing));
+
+		for (int i = 0; i < invites.size(); i++) {
+			Invite invite = invites.get(i);
+			Event event = findEventById(events, invite.getEventID());
+			if (event == null) {
+				continue;
+			}
+
+			JPanel inviteCard = new JPanel();
+			inviteCard.setLayout(null);
+			inviteCard.setBackground(new Color(250, 250, 250));
+			inviteCard.setBorder(cardBorder);
+			inviteCard.setBounds(0, i * inviteCardSpacing, inviteCardWidth, inviteCardHeight);
+
+			JLabel nameLabel = new JLabel(event.getEventName());
+			nameLabel.setFont(new Font("Arial", Font.BOLD, 13));
+			nameLabel.setBounds(10, 10, inviteCardWidth, 16);
+			inviteCard.add(nameLabel);
+
+			JButton acceptButton = new JButton("Accept");
+			acceptButton.setFont(new Font("Arial", Font.PLAIN, 10));
+			acceptButton.setBackground(Color.GREEN);
+			acceptButton.setForeground(Color.WHITE);
+			acceptButton.setBounds(10, 30, 70, 20);
+			acceptButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					invite.accept();
+				}
+			});
+			inviteCard.add(acceptButton);
+
+			JButton declineButton = new JButton("Decline");
+			declineButton.setFont(new Font("Arial", Font.PLAIN, 10));
+			declineButton.setBackground(Color.RED);
+			declineButton.setForeground(Color.WHITE);
+			declineButton.setBounds(90, 30, 70, 20);
+			declineButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					EventManager eventManager = new EventManager(repository);
+					eventManager.rejectInvite(invite, event);
+					refreshEvents();
+				}
+			});
+			inviteCard.add(declineButton);
+
+			invitesCardsPanel.add(inviteCard);
         }
 
-        JScrollPane eventsScrollPane = new JScrollPane(eventsCardsPanel);
-        eventsScrollPane.setBounds(MARGIN, 45, W/2-7/2*MARGIN, H/2-10*MARGIN);
-        eventPane.add(eventsScrollPane);
-    }
+		JScrollPane invitesScrollPane = new JScrollPane(invitesCardsPanel);
+		invitesScrollPane.setBounds(10, 45, 565, 530);
+		invitesPane.add(invitesScrollPane);
+	}
 
-    private void setupInvites(int W, int H, int MARGIN, javax.swing.border.Border CARD_BORDER) {
-        EventManager eventManager = new EventManager(repository);
+    private Event findEventById(List<Event> events, String eventId) {
+		for (Event event : events) {
+			if (event.getEventID().equals(eventId)) {
+				return event;
+			}
+		}
+		return null;
+	}
 
-        JPanel invitesPane = new JPanel();
-        invitesPane.setLayout(null);
-        invitesPane.setBackground(Color.WHITE);
-        invitesPane.setBorder(CARD_BORDER);
-        // Positioned at the bottom left
-        invitesPane.setBounds(MARGIN, H/2+2*MARGIN, W/2-3/2*MARGIN, H/2-7*MARGIN);
-        this.add(invitesPane);
-
-        JLabel invitesPaneTitle = new JLabel("Invites");
-        invitesPaneTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        invitesPaneTitle.setBounds(MARGIN, MARGIN, 200, 24);
-        invitesPane.add(invitesPaneTitle);
-
-        // Invite card logic
-        JPanel invitesCardsPanel = new JPanel();
-        invitesCardsPanel.setLayout(null);
-        invitesCardsPanel.setBackground(Color.WHITE);
-        
-        Invite invite1 = new Invite(
-    	    	currentUser.getUsername(), 
-    	    	event1.getEventID()
-    	    	
-    	    );
-        Invite invite2 = new Invite(
-        	    currentUser.getUsername(), 
-        	    event2.getEventID()
-    	    );        
-        
-        Invite[] invites = new Invite[]{
-        	    invite1,invite2};
-        Event[] inviteEvents = new Event[]{
-                event1, event2};
-        
-        int inviteCardHeight = 60;
-        int inviteCardWidth = W/2-10/2*MARGIN;
-        int inviteCardSpacing = 68;
-        invitesCardsPanel.setPreferredSize(new java.awt.Dimension(290, invites.length * inviteCardSpacing));
-
-        
-        for (int i = 0; i < invites.length; i++) {
-        	Invite invite = invites[i];
-        	Event event = inviteEvents[i];
-        	
-            JPanel inviteCard = new JPanel();
-            inviteCard.setLayout(null);
-            inviteCard.setBackground(new Color(250, 250, 250));
-            inviteCard.setBorder(CARD_BORDER);
-            inviteCard.setBounds(0, i * inviteCardSpacing, inviteCardWidth, inviteCardHeight);
-            
-            JLabel nameLabel = new JLabel(event.getEventName());
-            nameLabel.setFont(new Font("Arial", Font.BOLD, 13));
-            nameLabel.setBounds(MARGIN, MARGIN, inviteCardWidth, 16);
-            inviteCard.add(nameLabel);
-
-            JButton acceptButton = new JButton("Accept");
-            acceptButton.setFont(new Font("Arial", Font.PLAIN, 10));
-            acceptButton.setBackground(Color.GREEN);
-            acceptButton.setForeground(Color.WHITE);
-            acceptButton.setBounds(MARGIN, 30, 70, 20);
-            acceptButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                	invite.accept();
-                }
-            });
-            inviteCard.add(acceptButton);
-
-            JButton declineButton = new JButton("Decline");
-            declineButton.setFont(new Font("Arial", Font.PLAIN, 10));
-            declineButton.setBackground(Color.RED);
-            declineButton.setForeground(Color.WHITE);
-            declineButton.setBounds(90, 30, 70, 20);
-            declineButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                	eventManager.rejectInvite(invite, event);
-                }
-            });
-            inviteCard.add(declineButton);
-
-            invitesCardsPanel.add(inviteCard);
-        }
-        
-        JScrollPane invitesScrollPane = new JScrollPane(invitesCardsPanel);
-        invitesScrollPane.setBounds(MARGIN, 45, W/2-7/2*MARGIN, H/2-13*MARGIN);
-        invitesPane.add(invitesScrollPane);
-    }
+    private void refreshEvents() {
+		JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+		topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
+		topFrame.revalidate();
+		topFrame.repaint();
+	}
 }
