@@ -125,7 +125,7 @@ public class AdminPanelEvents extends JPanel {
 
 	private List<Event> collectUniqueEvents() {
 		Set<Event> allEvents = new LinkedHashSet<>();
-		for (User user : repository.getListUsers()) {
+		for (User user : repository.getAll()) {
 			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
 				continue;
 			}
@@ -312,7 +312,7 @@ public class AdminPanelEvents extends JPanel {
 			declineButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					EventManager eventManager = new EventManager(repository);
-					eventManager.rejectInvite(invite, event);
+					eventManager.rejectInvite(invite, event, repository);
 					refreshEvents();
 				}
 			});
