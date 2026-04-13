@@ -65,6 +65,7 @@ public class EventPanel extends JPanel {
 	private boolean isNewEvent;
 	private Event event;
 	private Scheduler scheduler;
+	private Runnable onSaveSuccess;
 	private List<String> tempInvites = new ArrayList<>();
 	private JLabel lblInvite;
 	private JLabel lblParticipants;
@@ -78,6 +79,11 @@ public class EventPanel extends JPanel {
 	 */
 	public EventPanel(UserRepository repository, User currentUser,
 					  boolean isNewEvent, Event event, Scheduler scheduler) {
+		this(repository, currentUser, isNewEvent, event, scheduler, null);
+	}
+
+	public EventPanel(UserRepository repository, User currentUser,
+					  boolean isNewEvent, Event event, Scheduler scheduler, Runnable onSaveSuccess) {
 
 		// Initialization
 		this.repository = repository;
@@ -86,6 +92,7 @@ public class EventPanel extends JPanel {
 		this.isNewEvent = isNewEvent;
 		this.event = event;
 		this.scheduler = scheduler;
+		this.onSaveSuccess = onSaveSuccess;
 
 
 		// Layout
@@ -431,6 +438,9 @@ public class EventPanel extends JPanel {
 
 				JOptionPane.showMessageDialog(EventPanel.this, "Event Saved.");
 				updateParticipantList();
+				if (onSaveSuccess != null) {
+					onSaveSuccess.run();
+				}
 
 			}
 		});
