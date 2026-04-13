@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JFormattedTextField;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 
 // Back-end related imports
 import Repository.UserRepository;
@@ -93,13 +94,15 @@ public class EventPanel extends JPanel {
 		this.event = event;
 		this.scheduler = scheduler;
 		this.onSaveSuccess = onSaveSuccess;
-
+		
 
 		// Layout
 		setBackground(Color.CYAN);
 		setOpaque(true);
 		setBorder(new javax.swing.border.EmptyBorder(20, 20, 20, 20));
 
+		// Labels
+		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0,0,0,0,0};
 		gridBagLayout.rowHeights = new int[]{50, 0,0, 0,0,0, 0, 0, 0, 30,0};
@@ -133,7 +136,8 @@ public class EventPanel extends JPanel {
 		gbc_lblEventDuration.gridx = 3;
 		gbc_lblEventDuration.gridy = 1;
 		add(lblEventDuration, gbc_lblEventDuration);
-
+		
+		// Inputs
 		txtEventName = new JTextField();
 		txtEventName.setText("Name");
 		GridBagConstraints gbc_txtEventName = new GridBagConstraints();
@@ -278,6 +282,7 @@ public class EventPanel extends JPanel {
 		if (!isNewEvent && event != null) {
 			txtEventName.setText(event.getEventName());
 			txtEventDurationminutes.setText(String.valueOf(event.getEventDuration()));
+			txtEventDescription.setText(event.getEventDescription());
 			updateParticipantList();
 		}
 
