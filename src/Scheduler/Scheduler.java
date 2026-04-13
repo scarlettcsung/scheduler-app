@@ -56,6 +56,9 @@ public class Scheduler {
             User organizer = userRepository.findUsername(organizerUsername);
             if (organizer != null && organizer.getCalendar() != null) {
                 for (Event e : organizer.getCalendar().getEvents()) {
+                    if (e == null || e == event || e.getEventTime() == null) {
+                        continue;
+                    }
                     if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) busyEvents.add(e);
                 }
             }
@@ -64,12 +67,15 @@ public class Scheduler {
             for (Invite invite : event.getInvites()) {
                 String inviteeUsername = invite.getRecipient();
                 User invitee = userRepository.findUsername(inviteeUsername);
-                if (invitee != null && invitee.getCalendar() != null) {
-                    for (Event e : invitee.getCalendar().getEvents()) {
-                        if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) busyEvents.add(e);
+            if (invitee != null && invitee.getCalendar() != null) {
+                for (Event e : invitee.getCalendar().getEvents()) {
+                    if (e == null || e == event || e.getEventTime() == null) {
+                        continue;
                     }
+                    if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) busyEvents.add(e);
                 }
             }
+        }
 
             // Scan conflicts in chronological order to find the earliest free slot.
             busyEvents.sort(Comparator.comparing(Event::getEventTime));
