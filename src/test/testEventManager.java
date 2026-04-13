@@ -67,4 +67,10 @@ public class testEventManager extends TestCase {
         assertFalse(exampleUser.getCalendar().getEvents().contains(event));
         assertEquals(inviteStatus.REJECTED,invite.getStatus());
     }
+    
+    // Test the null check at the top of deleteEvent
+    public void testDeleteNullEvent() {
+        EventManager manager = new EventManager();
+        manager.deleteEvent(null); // if the system does not crash it is correct?
+    }
 }
