@@ -56,9 +56,9 @@ public class AdminPanelDeleteUser extends JPanel {
 		DefaultListModel<String> listModel = new DefaultListModel<>();
 		
 		
-		for(int i = 0; i < repository.getListUsers().size(); i++)
+		for(int i = 0; i < repository.getAll().size(); i++)
 		{
-			listModel.addElement(repository.getListUsers().get(i).getUsername());
+			listModel.addElement(repository.getAll().get(i).getUsername());
 		}
 		JList<String> userList = new JList<>(listModel);
 		
