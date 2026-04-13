@@ -92,6 +92,13 @@ public class testEvent extends TestCase {
         assertNotSame(60,event.getEventDuration());
         assertEquals(120,event.getEventDuration());
     }
+    // Covers removeInvite when user is not found in repository
+    public void testRemoveInviteUserNotInRepo() {
+        Invite ghostInvite = new Invite("ghostUser", event.getEventID());
+        event.getInvites().add(ghostInvite); // add directly to bypass addInvite
+        event.removeInvite(ghostInvite, repository); // ghostUser not in repo
+        assertEquals(0, event.getInvites().size()); // invite still removed
+    }
 
 
 }
