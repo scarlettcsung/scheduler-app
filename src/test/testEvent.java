@@ -19,7 +19,23 @@ public class testEvent extends TestCase {
     private Invite invite;
     private String exampleInvitee;
     private UserRepository repository;
+    
+    protected void setUp() {
+        exampleOrganizer = "Charles";
+        exampleInvitee = "Joe";
 
+        UserCalendar calendar = new UserCalendar(exampleOrganizer, null);
+        repository = new UserRepository();
+        repository.saveUser(new User("Charles", "12345", calendar));
+        repository.saveUser(new User("Joe", "67890", new UserCalendar("Joe", null))); // CHANGE
+
+        example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
+        event = new Event("testEvent", 60, "testEvent", exampleOrganizer, false, null);
+        invite = new Invite(exampleInvitee, event.getEventID());
+    }
+
+    /*
+    //old code for setup
     protected void setUp() {
     	
     	UserCalendar calendar = new UserCalendar(exampleOrganizer,null);
@@ -35,7 +51,7 @@ public class testEvent extends TestCase {
                 exampleOrganizer,false,null);
         exampleInvitee = "Joe";
         invite = new Invite(exampleInvitee,event.getEventID());
-    }
+    } */
 
     // Test Getters
     public void testEventName() {assertEquals("testEvent", event.getEventName());}
@@ -60,8 +76,15 @@ public class testEvent extends TestCase {
         assertEquals(expected,event.getInvites());
         User exampleUser = repository.findUsername(exampleInvitee);
         assertTrue(exampleUser.getCalendar().getEvents().contains(event));
-        
     }
+    
+    //test duplicates in same calendar
+    public void testAddInviteDuplicate() {
+        event.addInvite(invite, repository);
+        event.addInvite(invite, repository);
+        assertEquals(1, event.getInvites().size());
+    }
+    
     public void testRemoveInvite() {
         List<Invite> expected = new ArrayList<>();
         event.addInvite(invite, repository);
@@ -106,6 +129,6 @@ public class testEvent extends TestCase {
         event.addInvite(ghostInvite, repository);
         assertEquals(1, event.getInvites().size()); 
     }
-
-
+    
+    
 }
