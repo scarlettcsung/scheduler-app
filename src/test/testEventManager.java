@@ -20,9 +20,18 @@ public class testEventManager extends TestCase {
     EventManager eveUpdateEvent = new EventManager();
     Event event = new Event("osman", 60, "testEvent", exampleOrganizer, false, null);
 
-    public void testUpdateEventShouldChangeEventName() {
+    public void testUpdateEventShouldChangeEvent() {
         eveUpdateEvent.updateEvent(event, "eventName", "abc");
         assertEquals("abc", event.getEventName());
+        
+        eveUpdateEvent.updateEvent(event, "eventDescription", "abc");
+        assertEquals("abc", event.getEventDescription());
+        
+        eveUpdateEvent.updateEvent(event, "eventTime", "2026-04-01T12:00");
+        assertEquals(LocalDateTime.of(2026, 4, 1, 12, 0), event.getEventTime());
+        
+        eveUpdateEvent.updateEvent(event, "eventDuration", "5");
+        assertEquals(5, event.getEventDuration());
     }
 
     public void testDeleteEvent() {
