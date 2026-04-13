@@ -4,6 +4,7 @@ import Event.Event;
 import Invite.Invite;
 import User.User;
 import UserCalendar.UserCalendar;
+import Repository.UserRepository;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
@@ -17,9 +18,17 @@ public class testEvent extends TestCase {
     private LocalDateTime example_time;
     private Invite invite;
     private String exampleInvitee;
+    private UserRepository repository;
 
     protected void setUp() {
-        UserCalendar calendar = new UserCalendar(exampleOrganizer,null);
+    	
+    	UserCalendar calendar = new UserCalendar(exampleOrganizer,null);
+    	// Set up repository
+    	repository = new UserRepository();
+    	repository.saveUser(new User("Charles","12345",calendar));
+    	repository.saveUser(new User("Joe","67890",calendar));
+    			
+    	// Set up other inputs
         exampleOrganizer = "Charles";
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new Event("testEvent", 60,"testEvent",
@@ -46,14 +55,20 @@ public class testEvent extends TestCase {
         assertEquals(expected,event.getInvites());
     }
     public void testAddInvite() {
-        event.addInvite(invite);
+        event.addInvite(invite,repository);
         List<Invite> expected = List.of(invite);
         assertEquals(expected,event.getInvites());
+        User exampleUser = repository.findUsername(exampleInvitee);
+        assertTrue(exampleUser.getCalendar().getEvents().contains(event));
+        
     }
     public void testRemoveInvite() {
-        List<User> expected = new ArrayList<>();
-        event.removeInvite(invite);
+        List<Invite> expected = new ArrayList<>();
+        event.addInvite(invite, repository);
+        event.removeInvite(invite,repository);
         assertEquals(expected,event.getInvites());
+        User exampleUser = repository.findUsername(exampleInvitee);
+        assertFalse(exampleUser.getCalendar().getEvents().contains(event));
     }
 
     // Test Setters

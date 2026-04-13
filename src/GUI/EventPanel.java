@@ -81,7 +81,7 @@ public class EventPanel extends JPanel {
 
 		// Initialization
 		this.repository = repository;
-		userService = new UserService(repository);
+		this.userService = new UserService(repository);
 		this.currentUser = currentUser;
 		this.isNewEvent = isNewEvent;
 		this.event = event;
@@ -327,43 +327,26 @@ public class EventPanel extends JPanel {
 					return;
 				}
 				
-				boolean removed = false;
 
-				// Checks if invitee exists in repository and is not already in event
 				User invitee = repository.findUsername(inviteeUsername);
-				if (invitee != null) {
-					// if statement adds the participant to the list
-					if (tempInvites.contains(inviteeUsername)) {
-						tempInvites.remove(inviteeUsername);
-						updateParticipantList();
-						txtInviteeUsername.setText("");
-						// Clear input so user can input new username
-					} else if (event != null && event.getInvites() != null) {
-						Invite delInvite = null;
-						for (Invite invite : event.getInvites()) {
-							if (invite.getRecipient().equalsIgnoreCase(inviteeUsername)) {
-								delInvite = invite;
-								break;
-							}
-						}
-						if (delInvite != null) {
-							event.getInvites().remove(delInvite);
-							removed = true;
-						}
-						
-						if (removed) {
-							updateParticipantList();
-							txtInviteeUsername.setText("");
-							
-						}
-					} else {
-						javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
-								"User is not in this event!");
-					}
+				if (invitee == null) {
+					javax.swing.JOptionPane.showMessageDialog(EventPanel.this, 
+							"User not found.", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if (tempInvites.contains(inviteeUsername)) {
+					tempInvites.remove(inviteeUsername);
+				} else if (!isNewEvent && event != null) {
+					event.removeInvite(new Invite(inviteeUsername, event.getEventID()), repository);			
 				} else {
 					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
-							"User not found.", "Error" , JOptionPane.ERROR_MESSAGE);
+							"User is not in this event!");
+					return;
 				}
+				
+				updateParticipantList();
+				txtInviteeUsername.setText("");
 			}
 		});
 		
@@ -378,7 +361,7 @@ public class EventPanel extends JPanel {
 				}
 
 				String eventDescription = txtEventDescription.getText();
-				if (eventName.isEmpty()) {
+				if (eventDescription == null || eventDescription.trim().isEmpty()) {
 					eventDescription = " ";
 				}
 
@@ -422,26 +405,29 @@ public class EventPanel extends JPanel {
 				int earliestHour = Integer.parseInt(earliestTime);
 				int latestHour = Integer.parseInt(latestTime);
 
-				Event currentEvent = event;
 				if (isNewEvent) {
-					currentEvent = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
+					EventPanel.this.event = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
+					Invite inviteOrganizer = new Invite(currentUser.getUsername(),EventPanel.this.event.getEventID());
+					EventPanel.this.event.addInvite(inviteOrganizer, repository);
+					
+					EventPanel.this.isNewEvent = false;
 
 				} else {
 
-					currentEvent.setEventName(eventName);
-					currentEvent.setEventDuration(duration);
-					currentEvent.setEventDescription(eventDescription);
+					EventPanel.this.event.setEventName(eventName);
+					EventPanel.this.event.setEventDuration(duration);
+					EventPanel.this.event.setEventDescription(eventDescription);
 				}
 
 				for (String username: tempInvites) {
-					Invite newInvite = new Invite(username,currentEvent.getEventID());
-					currentEvent.addInvite(newInvite);
+					Invite newInvite = new Invite(username,EventPanel.this.event.getEventID());
+					EventPanel.this.event.addInvite(newInvite,repository);
 				}
 				tempInvites.clear();
 
 
 				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository);
-				scheduler.scheduleEvent(currentEvent);
+				scheduler.scheduleEvent(EventPanel.this.event);
 
 				JOptionPane.showMessageDialog(EventPanel.this, "Event Saved.");
 				updateParticipantList();

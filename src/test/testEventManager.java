@@ -2,9 +2,13 @@ package test;
 
 import junit.framework.TestCase;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import Event.Event;
 import EventManager.EventManager;
+import Invite.Invite;
+import Invite.inviteStatus;
 import User.User;
 import UserCalendar.UserCalendar;
 import Repository.UserRepository;
@@ -44,5 +48,23 @@ public class testEventManager extends TestCase {
 
         // Verify event is removed from calendar after deletion
         assertFalse(cal.getEvents().contains(event));
+    }
+    
+    public void testInviteReject() {
+    	
+    	UserCalendar calendar = new UserCalendar(exampleOrganizer,null);
+    	// Set up repository
+    	UserRepository repository = new UserRepository();
+    	repository.saveUser(new User("Charles","12345",calendar));
+    	repository.saveUser(new User("Joe","67890",calendar));
+    	String exampleInvitee = "Joe";
+    	Invite invite = new Invite(exampleInvitee,event.getEventID());
+    	List<Invite> expected = new ArrayList<>();
+        event.addInvite(invite, repository);
+        eveUpdateEvent.rejectInvite(invite,event,repository);
+        assertEquals(expected,event.getInvites());
+        User exampleUser = repository.findUsername(exampleInvitee);
+        assertFalse(exampleUser.getCalendar().getEvents().contains(event));
+        assertEquals(inviteStatus.REJECTED,invite.getStatus());
     }
 }

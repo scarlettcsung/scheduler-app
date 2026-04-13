@@ -1,6 +1,9 @@
 package Event;
 
 import Invite.Invite;
+import User.User;
+import Repository.UserRepository;
+import UserCalendar.UserCalendar;
 
 // Additional Packages
 import java.util.Objects;
@@ -50,12 +53,29 @@ public class Event {
     public  List<Invite> getInvites() {
         return invites;
     }
-    public void addInvite(Invite invite) {
+    
+    public void addInvite(Invite invite, UserRepository repository) {
+    	for (Invite existingInvite:invites) {
+    		if (existingInvite.getRecipient().equals(invite.getRecipient())) {
+    			return;
+    		}
+    	}
+    	
         invites.add(invite);
+        String username = invite.getRecipient();
+        User user = repository.findUsername(username);
+        
+        if (user != null) {
+        	user.getCalendar().addEvent(this);
+        }
     }
-    public void removeInvite(Invite invite) {
-        invites.removeIf(n -> n.equals(invite));
+    
+    public void removeInvite(Invite invite, UserRepository repository) {
+        invites.removeIf(n -> n.getRecipient().equals(invite.getRecipient()));
+        String username = invite.getRecipient();
+        User user = repository.findUsername(username);
+        if (user != null) {
+        	user.getCalendar().removeEvent(this);
+        }
     }
-
-
 }

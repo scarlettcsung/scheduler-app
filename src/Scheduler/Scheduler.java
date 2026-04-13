@@ -118,9 +118,9 @@ public class Scheduler {
             }
 
             // Recreate invites so they reset to default PENDING status.
-            event.removeInvite(invite);
+            event.removeInvite(invite, userRepository);
             if (invitee != null) {
-                event.addInvite(new Invite(inviteeUsername, event.getEventID()));
+                event.addInvite(new Invite(inviteeUsername, event.getEventID()), userRepository);
             }
         }
         return true;

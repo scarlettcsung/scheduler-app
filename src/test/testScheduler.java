@@ -91,7 +91,7 @@ public class testScheduler extends TestCase {
                 false,
                 new ArrayList<>()
         );
-        event.addInvite(new Invite(invitee.getUsername(), event.getEventID()));
+        event.addInvite(new Invite(invitee.getUsername(), event.getEventID()),userRepository);
 
         boolean scheduled = scheduler.scheduleEvent(event);
 
