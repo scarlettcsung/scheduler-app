@@ -132,7 +132,7 @@ public class MainDashboardPanel2 extends JPanel {
     }
     private List<Event> collectUniqueEvents() {
 		Set<Event> allEvents = new LinkedHashSet<>();
-		for (User user : repository.getListUsers()) {
+		for (User user : repository.getAll()) {
 			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
 				continue;
 			}
@@ -170,17 +170,14 @@ public class MainDashboardPanel2 extends JPanel {
         createEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(MainDashboardPanel2.this);
-				JDialog dialog = new JDialog(topFrame, "Create Event", true); // true = modal
-                dialog.setContentPane(new EventPanel(repository, currentUser, true, null, scheduler, () -> {
-                    dialog.dispose();
-					topFrame.setContentPane(new MainDashboardPanel2(repository, currentUser, scheduler));
-                    topFrame.revalidate();
-                    topFrame.repaint();
-                }));
-                dialog.setSize(500, 550); // adjust to your liking
-                dialog.setLocationRelativeTo(topFrame); // centers over main window
-                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                dialog.setVisible(true);
+				JDialog dialog = new JDialog(topFrame, "Create Event", true);
+				dialog.setContentPane(new EventPanel(repository, currentUser, true, null, scheduler, () -> {
+				    dialog.dispose();
+				}));
+				dialog.setSize(500, 550);
+				dialog.setLocationRelativeTo(topFrame);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
 			}
 		});
 
@@ -325,7 +322,7 @@ public class MainDashboardPanel2 extends JPanel {
 			declineButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					EventManager eventManager = new EventManager(repository);
-					eventManager.rejectInvite(invite, event);
+					eventManager.rejectInvite(invite, event, repository);
 					refreshEvents();
 				}
 			});
