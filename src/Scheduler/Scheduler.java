@@ -4,7 +4,6 @@ import Event.Event;
 import Invite.Invite;
 import Repository.UserRepository;
 import User.User;
-
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -12,6 +11,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Finds available time slots for events and places scheduled events into the
+ * relevant user calendars.
+ *
+ * @author SN SS
+ * @version 2
+ */
 public class Scheduler {
     private int dayStart;
     private int dayEnd;
@@ -19,11 +25,28 @@ public class Scheduler {
     private Clock clock;
     private UserRepository userRepository;
 
+    /**
+     * Creates a scheduler that uses the system clock and a user repository to
+     * resolve organizer and invitee calendars.
+     *
+     * @param dayStart earliest scheduling hour, inclusive
+     * @param dayEnd latest scheduling hour, exclusive
+     * @param maxLookaheadDays number of days to search for a free slot
+     * @param userRepository repository used to inspect and update calendars
+     */
     public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, UserRepository userRepository) {
         this(dayStart, dayEnd, maxLookaheadDays, Clock.systemDefaultZone());
         this.userRepository = userRepository;
     }
 
+    /**
+     * Creates a scheduler with an explicit clock, typically for tests.
+     *
+     * @param dayStart earliest scheduling hour, inclusive
+     * @param dayEnd latest scheduling hour, exclusive
+     * @param maxLookaheadDays number of days to search for a free slot
+     * @param clock clock used to determine the current time
+     */
     public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, Clock clock) {
         this.dayStart = dayStart;
         this.dayEnd = dayEnd;
@@ -31,6 +54,13 @@ public class Scheduler {
         this.clock = clock;
     }
 
+    /**
+     * Finds the earliest available slot for an event that fits the organizer
+     * and invitee calendars within the configured scheduling window.
+     *
+     * @param event event to schedule
+     * @return first available start time, or {@code null} when none is found
+     */
     public LocalDateTime findAvailableSlot(Event event) {
         int duration = event.getEventDuration();
         int minutesInDay = (dayEnd - dayStart) * 60;
@@ -104,6 +134,13 @@ public class Scheduler {
         return null;
     }
 
+    /**
+     * Schedules an event at the first available slot and updates the organizer
+     * and invitee calendars accordingly.
+     *
+     * @param event event to schedule
+     * @return {@code true} when a slot was found and applied
+     */
     public boolean scheduleEvent(Event event) {
         LocalDateTime slot = findAvailableSlot(event);
         if (slot == null) return false;

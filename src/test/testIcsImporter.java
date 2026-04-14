@@ -14,6 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ * Unit tests for {@link IcsImporter.IcsImporter}.
+ *
+ * @author SN AA
+ * @version 2
+ */
 public class testIcsImporter extends TestCase {
 
     private static final String SIMPLE_ICS = "src/test/resources/simpleImport.ics";

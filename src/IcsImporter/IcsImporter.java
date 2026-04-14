@@ -15,11 +15,24 @@ import java.time.format.*;
 import java.time.temporal.*;
 import java.util.*;
 
+/**
+ * Imports events from ICS calendar files into the application's event model.
+ *
+ * @author AA SN
+ * @version 2
+ */
 public class IcsImporter {
 
     private static final DateTimeFormatter ICS_DATE_TIME_FORMAT =
             DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
 
+    /**
+     * Imports an ICS file into the given user's calendar.
+     *
+     * @param user user whose calendar should receive the imported events
+     * @param icsFile path to the ICS file to import
+     * @return status describing the outcome of the import attempt
+     */
     public ImportStatus importCalendar(User user, String icsFile) {
         // Return explicit status codes for the expected invalid input cases.
         if (user == null) {
@@ -52,6 +65,14 @@ public class IcsImporter {
         }
     }
 
+    /**
+     * Parses the supplied ICS file into application {@link Event} instances.
+     *
+     * @param icsFile path to the ICS file to parse
+     * @return imported events extracted from the file
+     * @throws IOException when the file cannot be read
+     * @throws ParserException when the ICS content cannot be parsed
+     */
     public List<Event> parseICS(String icsFile) throws IOException, ParserException {
         // Keep parameter parsing minimal: we only need TZID support from our test ICS files.
         CalendarBuilder calendarBuilder = new CalendarBuilder(
@@ -104,6 +125,13 @@ public class IcsImporter {
         return importedEvents;
     }
 
+    /**
+     * Replaces previously imported events in a calendar with a fresh set of
+     * imported events while preserving manually created events.
+     *
+     * @param calendar calendar to update
+     * @param importedEvents events produced by the latest import
+     */
     public void overwriteImportedEvents(UserCalendar calendar, List<Event> importedEvents) {
         // Only remove events that came from a previous import.
         calendar.getEvents().removeIf(event -> Boolean.TRUE.equals(event.getIsImported()));

@@ -5,6 +5,12 @@ import junit.framework.TestCase;
 import Authentication.Authentication;
 import Repository.UserRepository;
 
+/**
+ * Unit tests for {@link UserService.UserService}.
+ *
+ * @author SN GI
+ * @version 1
+ */
 public class testUserService extends TestCase {
 
     private UserService userService;

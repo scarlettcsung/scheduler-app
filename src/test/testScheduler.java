@@ -12,6 +12,12 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+/**
+ * Unit tests for {@link Scheduler.Scheduler}.
+ *
+ * @author SN SS
+ * @version 2
+ */
 public class testScheduler extends TestCase {
 
     private Scheduler scheduler;
