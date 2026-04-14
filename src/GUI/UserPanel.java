@@ -75,7 +75,7 @@ public class UserPanel extends JPanel {
         
         // Fixed dimensions based on mainframe design
         int W = 1180;
-        int H = 1150;
+        int H = 760;
         int MARGIN = 10;
         setPreferredSize(new Dimension(W, H));
         setSize(W, H);
@@ -102,7 +102,7 @@ public class UserPanel extends JPanel {
         calendarCard.setLayout(null);
         calendarCard.setBackground(Color.yellow);
         calendarCard.setBorder(CARD_BORDER);
-        calendarCard.setBounds(W/2+MARGIN/2, MARGIN, W/2-MARGIN*6/2, H/2-MARGIN*6/2);
+        calendarCard.setBounds(W/2+MARGIN/2, MARGIN, W/2-MARGIN*6/2, 340);
         add(calendarCard);
         
         JLabel calendarTitle = new JLabel("Calendar (Welcome " + currentUser.getUsername() + ")");
@@ -119,7 +119,7 @@ public class UserPanel extends JPanel {
         eventPane.setLayout(null);
         eventPane.setBackground(Color.WHITE);
         eventPane.setBorder(CARD_BORDER);
-        eventPane.setBounds(MARGIN, 2*MARGIN+40, W/2-3/2*MARGIN, H/2-3*MARGIN);
+        eventPane.setBounds(MARGIN, 70, W/2-3/2*MARGIN, 300);
         add(eventPane);
 
         
@@ -129,18 +129,33 @@ public class UserPanel extends JPanel {
         invitesPane.setLayout(null);
         invitesPane.setBackground(Color.WHITE);
         invitesPane.setBorder(CARD_BORDER);
-        invitesPane.setBounds(MARGIN, H/2 + 2*MARGIN, W/2 - 3*MARGIN/2, H/2 - 7*MARGIN);
+        invitesPane.setBounds(MARGIN, 380, W/2 - 3*MARGIN/2, 300);
         add(invitesPane);
 
         setupInvites();
     }
-    private List<Event> collectUniqueEvents() {
+    private List<Event> collectAllUniqueEvents() {
 		Set<Event> allEvents = new LinkedHashSet<>();
 		for (User user : repository.getAll()) {
 			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
 				continue;
 			}
 			allEvents.addAll(user.getCalendar().getEvents());
+		}
+		return new ArrayList<>(allEvents);
+	}
+
+    private List<Event> collectVisibleEvents() {
+		Set<Event> allEvents = new LinkedHashSet<>();
+		for (User user : repository.getAll()) {
+			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
+				continue;
+			}
+			for (Event event : user.getCalendar().getEvents()) {
+				if (currentUser.getUsername().equals(event.getOrganizer())) {
+					allEvents.add(event);
+				}
+			}
 		}
 		return new ArrayList<>(allEvents);
 	}
@@ -153,6 +168,9 @@ public class UserPanel extends JPanel {
 				continue;
 			}
 			for (Invite invite : event.getInvites()) {
+				if (!currentUser.getUsername().equals(invite.getRecipient())) {
+					continue;
+				}
 				String key = invite.getRecipient() + "|" + invite.getEventID();
 				if (seen.add(key)) {
 					invites.add(invite);
@@ -163,13 +181,13 @@ public class UserPanel extends JPanel {
 	}
 
     private void setupEvents(JPanel eventPane, int W, int H, int MARGIN, javax.swing.border.Border CARD_BORDER) {
-        JLabel eventPaneTitle = new JLabel("Events");
-        eventPaneTitle.setFont(new Font("Arial", Font.BOLD, 16));
-        eventPaneTitle.setBounds(MARGIN, MARGIN, 160, 24);
-        eventPane.add(eventPaneTitle);
+		JLabel eventPaneTitle = new JLabel("Events");
+		eventPaneTitle.setFont(new Font("Arial", Font.BOLD, 16));
+		eventPaneTitle.setBounds(MARGIN, MARGIN, 160, 24);
+		eventPane.add(eventPaneTitle);
 
-        JButton createEventButton = new JButton("+ Create Event");
-        createEventButton.setBounds(170, MARGIN, 120, 24);
+		JButton createEventButton = new JButton("+ Create Event");
+		createEventButton.setBounds(170, MARGIN, 120, 24);
 
 
 	        createEventButton.addActionListener(new ActionListener() {
@@ -190,13 +208,13 @@ public class UserPanel extends JPanel {
 
         eventPane.add(createEventButton);
 
-        JPanel eventsCardsPanel = new JPanel();
+		JPanel eventsCardsPanel = new JPanel();
 		eventsCardsPanel.setLayout(new javax.swing.BoxLayout(eventsCardsPanel, javax.swing.BoxLayout.Y_AXIS));
 		eventsCardsPanel.setBackground(Color.WHITE);
 		eventsCardsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		List<Event> events = collectUniqueEvents();
-		eventsCardsPanel.setPreferredSize(new Dimension(500, Math.max(1, events.size()) * 155));
+		List<Event> events = collectVisibleEvents();
+		eventsCardsPanel.setPreferredSize(new Dimension(500, Math.max(1, events.size()) * 118));
 
 		for (Event event : events) {
 			JPanel card = createEventCard(event, eventsCardsPanel);
@@ -210,7 +228,7 @@ public class UserPanel extends JPanel {
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
 		);
-		eventsScrollPane.setBounds(10, 45, 565, 530);
+		eventsScrollPane.setBounds(10, 45, 565, 235);
 		eventsScrollPane.getVerticalScrollBar().setUnitIncrement(12);
 		eventsScrollPane.setBorder(null);
 		eventPane.add(eventsScrollPane);
@@ -221,9 +239,9 @@ public class UserPanel extends JPanel {
 		card.setLayout(null);
 		card.setBorder(cardBorder);
 		card.setBackground(Color.WHITE);
-		card.setPreferredSize(new Dimension(500, 140));
-		card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
-		card.setMinimumSize(new Dimension(200, 140));
+		card.setPreferredSize(new Dimension(500, 108));
+		card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 108));
+		card.setMinimumSize(new Dimension(200, 108));
 
 		int MARGIN = 10;
 
@@ -232,20 +250,20 @@ public class UserPanel extends JPanel {
 		nameLabel.setBounds(MARGIN, MARGIN, 400, 20);
 		card.add(nameLabel);
 
-		JLabel durationLabel = new JLabel("Duration: " + event.getEventDuration() + " min");
-		durationLabel.setFont(new Font("Arial", Font.PLAIN, 11));
-		durationLabel.setForeground(Color.BLACK);
-		durationLabel.setBounds(MARGIN, 53, 400, 16);
-		card.add(durationLabel);
+		JLabel metaLabel = new JLabel("Duration: " + event.getEventDuration() + " min  |  Organizer: " + event.getOrganizer());
+		metaLabel.setFont(new Font("Arial", Font.PLAIN, 11));
+		metaLabel.setForeground(Color.BLACK);
+		metaLabel.setBounds(MARGIN, 36, 440, 16);
+		card.add(metaLabel);
 
 		JLabel descLabel = new JLabel(event.getEventDescription());
 		descLabel.setFont(new Font("Arial", Font.ITALIC, 11));
 		descLabel.setForeground(Color.BLACK);
-		descLabel.setBounds(MARGIN, 72, 400, 16);
+		descLabel.setBounds(MARGIN, 55, 440, 16);
 		card.add(descLabel);
 
 		JButton deleteButton = new JButton("Delete Event");
-		deleteButton.setBounds(MARGIN + 130, 95, 120, 24);
+		deleteButton.setBounds(MARGIN + 130, 72, 120, 22);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventManager eventManager = new EventManager(repository);
@@ -255,7 +273,7 @@ public class UserPanel extends JPanel {
 		});
 
 		JButton updateButton = new JButton("Update Event");
-		updateButton.setBounds(MARGIN, 95, 120, 24);
+		updateButton.setBounds(MARGIN, 72, 120, 22);
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
@@ -284,16 +302,16 @@ public class UserPanel extends JPanel {
 		invitesCardsPanel.setLayout(null);
 		invitesCardsPanel.setBackground(Color.WHITE);
 
-		List<Event> events = collectUniqueEvents();
-		List<Invite> invites = collectUniqueInvites(events);
-		int inviteCardHeight = 60;
+		List<Event> allEvents = collectAllUniqueEvents();
+		List<Invite> invites = collectUniqueInvites(allEvents);
+		int inviteCardHeight = 50;
 		int inviteCardWidth = 560;
-		int inviteCardSpacing = 68;
+		int inviteCardSpacing = 58;
 		invitesCardsPanel.setPreferredSize(new Dimension(290, Math.max(1, invites.size()) * inviteCardSpacing));
 
 		for (int i = 0; i < invites.size(); i++) {
 			Invite invite = invites.get(i);
-			Event event = findEventById(events, invite.getEventID());
+			Event event = findEventById(allEvents, invite.getEventID());
 			if (event == null) {
 				continue;
 			}
@@ -306,14 +324,20 @@ public class UserPanel extends JPanel {
 
 			JLabel nameLabel = new JLabel(event.getEventName());
 			nameLabel.setFont(new Font("Arial", Font.BOLD, 13));
-			nameLabel.setBounds(10, 10, inviteCardWidth, 16);
+			nameLabel.setBounds(10, 8, inviteCardWidth, 16);
 			inviteCard.add(nameLabel);
+
+			JLabel detailLabel = new JLabel("From: " + event.getOrganizer() + " | Status: " + invite.getStatus());
+			detailLabel.setFont(new Font("Arial", Font.PLAIN, 10));
+			detailLabel.setForeground(Color.DARK_GRAY);
+			detailLabel.setBounds(10, 23, inviteCardWidth, 14);
+			inviteCard.add(detailLabel);
 
 			JButton acceptButton = new JButton("Accept");
 			acceptButton.setFont(new Font("Arial", Font.PLAIN, 10));
 			acceptButton.setBackground(Color.GREEN);
 			acceptButton.setForeground(Color.WHITE);
-			acceptButton.setBounds(10, 30, 70, 20);
+			acceptButton.setBounds(10, 34, 70, 16);
 			acceptButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					invite.accept();
@@ -325,7 +349,7 @@ public class UserPanel extends JPanel {
 			declineButton.setFont(new Font("Arial", Font.PLAIN, 10));
 			declineButton.setBackground(Color.RED);
 			declineButton.setForeground(Color.WHITE);
-			declineButton.setBounds(90, 30, 70, 20);
+			declineButton.setBounds(90, 34, 70, 16);
 			declineButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					EventManager eventManager = new EventManager(repository);
@@ -339,7 +363,7 @@ public class UserPanel extends JPanel {
         }
 
 		JScrollPane invitesScrollPane = new JScrollPane(invitesCardsPanel);
-		invitesScrollPane.setBounds(10, 45, 565, 530);
+		invitesScrollPane.setBounds(10, 45, 565, 235);
 		invitesPane.add(invitesScrollPane);
 	}
 
