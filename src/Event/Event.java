@@ -12,6 +12,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a schedulable event together with its organizer and invitees.
+ *
+ * @author NS SS
+ * @version 1
+ */
+
 public class Event {
 
     private String eventName;
