@@ -24,7 +24,6 @@ import User.User;
 
 public class UserPanel extends JPanel {
     
-    public static final long serialVersionUID = 1L;
     private UserRepository repository;
     private User currentUser;
     private Event event1;
