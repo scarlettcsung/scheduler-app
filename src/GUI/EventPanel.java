@@ -430,9 +430,6 @@ public class EventPanel extends JPanel {
 
 				if (isNewEvent) {
 					EventPanel.this.event = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
-					Invite inviteOrganizer = new Invite(currentUser.getUsername(),EventPanel.this.event.getEventID());
-					EventPanel.this.event.addInvite(inviteOrganizer, repository);
-					
 					EventPanel.this.isNewEvent = false;
 
 				} else {
