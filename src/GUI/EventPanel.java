@@ -308,12 +308,18 @@ public class EventPanel extends JPanel {
 							"Please enter a username.");
 					return;
 				}
+				
+				if (inviteeUsername.equals(currentUser.getUsername())) {
+					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+							"Event organizer already invited to this event.");
+					return;
+				}
 
 				// Checks if invitee exists in repository and is not already in event
 				User invitee = repository.findUsername(inviteeUsername);
 				if (invitee != null) {
 					// if statement adds the participant to the list
-					if (!tempInvites.contains(inviteeUsername)) {
+					if (!tempInvites.contains(inviteeUsername) || !event.getParticipants().contains(inviteeUsername)) {
 						tempInvites.add(inviteeUsername);
 						updateParticipantList();
 						txtInviteeUsername.setText("");
@@ -336,6 +342,11 @@ public class EventPanel extends JPanel {
 				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
 					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
 							"Please enter a username.");
+					return;
+				}
+				if (inviteeUsername.equals(currentUser.getUsername())) {
+					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+							"You cannot uninvite the organizer.");
 					return;
 				}
 				
