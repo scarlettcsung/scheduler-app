@@ -22,6 +22,7 @@ public class Event {
     private String organizerUsername;
     private Boolean isImported;
     private List<Invite> invites;
+    private List<String> participantUsernames;
 
     public Event(String eventName, int eventDuration, String eventDescription,
                  String organizerUsername, Boolean isImported,  List<Invite> invites) {
@@ -31,6 +32,7 @@ public class Event {
         this.organizerUsername = organizerUsername;
         this.isImported = isImported;
         this.invites = Objects.requireNonNullElseGet(invites, () -> new ArrayList<>());
+        this.participantUsernames = new ArrayList<>();
     }
 
     // Setter Methods
@@ -50,9 +52,19 @@ public class Event {
     public Boolean getIsImported() {return isImported;}
 
     // Invites Methods
+    
     public  List<Invite> getInvites() {
         return invites;
     }
+    
+    public List<String> getParticipants() {
+    	for (Invite invite:invites) {
+    		String participantUsername = invite.getRecipient();
+    		participantUsernames.add(participantUsername);
+    	}
+    	return participantUsernames;
+    }
+    
     
     public void addInvite(Invite invite, UserRepository repository) {
     	for (Invite existingInvite:invites) {
