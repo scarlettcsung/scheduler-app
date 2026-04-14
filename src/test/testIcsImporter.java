@@ -111,4 +111,14 @@ public class testIcsImporter extends TestCase {
 
         return null;
     }
+    
+    //test for ics file = null
+    public void testImportCalendarReturnsFileNotFoundWhenFileIsNull() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+
+        ImportStatus status = importer.importCalendar(user, null);
+
+        assertEquals(ImportStatus.FileNotFound, status);
+    }
 }

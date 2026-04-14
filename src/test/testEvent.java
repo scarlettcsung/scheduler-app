@@ -71,12 +71,13 @@ public class testEvent extends TestCase {
         assertEquals(expected,event.getInvites());
     }
     public void testAddInvite() {
+    	event.setEventTime(example_time);
         event.addInvite(invite,repository);
         List<Invite> expected = List.of(invite);
         assertEquals(expected,event.getInvites());
         User exampleUser = repository.findUsername(exampleInvitee);
         assertTrue(exampleUser.getCalendar().getEvents().contains(event));
-    }
+    } //fix this???
     
     //test duplicates in same calendar
     public void testAddInviteDuplicate() {
