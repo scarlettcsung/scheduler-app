@@ -73,6 +73,7 @@ public class EventManagePanel extends JPanel {
 	private JTextField txtEventDescription;
 	private JSplitPane splitPane;
 	private JButton btnUninvite;
+	private JButton btnBack;
 
 
 	/**
@@ -273,6 +274,14 @@ public class EventManagePanel extends JPanel {
 				btnUninvite = new JButton("Uninvite");
 				
 				splitPane.setRightComponent(btnUninvite);
+		
+		btnBack = new JButton("Back");
+		GridBagConstraints gbc_btnBack = new GridBagConstraints();
+		gbc_btnBack.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_btnBack.insets = new Insets(0, 0, 0, 5);
+		gbc_btnBack.gridx = 1;
+		gbc_btnBack.gridy = 9;
+		add(btnBack, gbc_btnBack);
 				
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.gridwidth = 2;
@@ -373,6 +382,12 @@ public class EventManagePanel extends JPanel {
 				
 				updateParticipantList();
 				txtInviteeUsername.setText("");
+			}
+		});
+		
+		btnBack.addActionListener(e -> {
+			if (onSaveSuccess != null) {
+				onSaveSuccess.run();
 			}
 		});
 		
