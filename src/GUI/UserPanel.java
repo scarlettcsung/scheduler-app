@@ -194,7 +194,7 @@ public class UserPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
 					JDialog dialog = new JDialog(topFrame, "Create Event", true);
-					dialog.setContentPane(new EventPanel(repository, currentUser, true, null, scheduler, () -> {
+					dialog.setContentPane(new EventManagePanel(repository, currentUser, true, null, scheduler, () -> {
 					    dialog.dispose();
 					    refreshEvents();
 					}));
@@ -277,7 +277,7 @@ public class UserPanel extends JPanel {
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
-				topFrame.setContentPane(new EventPanel(repository, currentUser, false, event, scheduler, () -> {
+				topFrame.setContentPane(new EventManagePanel(repository, currentUser, false, event, scheduler, () -> {
 					topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler));
 					topFrame.revalidate();
 					topFrame.repaint();
