@@ -7,6 +7,12 @@ import User.User;
 import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for {@link Repository.UserRepository}.
+ *
+ * @author NJ
+ * @version 1
+ */
 public class testUserRepository extends TestCase {
     
     private UserRepository repository;

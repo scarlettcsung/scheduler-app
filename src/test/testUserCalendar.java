@@ -10,6 +10,12 @@ import Event.Event;
 import User.User;
 import UserCalendar.UserCalendar;
 
+/**
+ * Unit tests for {@link UserCalendar.UserCalendar}.
+ *
+ * @author NJ
+ * @version 1
+ */
 public class testUserCalendar extends TestCase {
     
     private LocalDateTime exampleTime;

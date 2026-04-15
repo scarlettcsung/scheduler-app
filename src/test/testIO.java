@@ -15,7 +15,12 @@ import UserCalendar.UserCalendar;
 import IO.IO;
 
 
-
+/**
+ * Unit tests for {@link IO.IO}.
+ *
+ * @author AA NJ
+ * @version 2
+ */
 public class testIO extends TestCase {
 	private UserRepository repository;
 	private UserCalendar calendar;

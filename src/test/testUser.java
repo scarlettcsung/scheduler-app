@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 /**
  * Unit tests for {@link User.User} and {@link User.AdminUser}.
  *
- * @author SN GI
+ * @author SN GI NJ
  * @version 1
  */
 public class testUser extends TestCase {
