@@ -75,4 +75,12 @@ public class testUserRepository extends TestCase {
         testUser = null;
         super.tearDown();
     }
+    
+    //test getrepository type
+    public void testGetRepositoryType() {
+        String type = repository.getRepositoryType();
+        assertEquals("user Repository", type);
+    }
+    
+    
 }
