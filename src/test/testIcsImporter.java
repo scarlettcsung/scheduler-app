@@ -127,4 +127,19 @@ public class testIcsImporter extends TestCase {
 
         assertEquals(ImportStatus.FileNotFound, status);
     }
+    
+    //test end with Z function
+    public void testParseICSHandlesZuluTime() throws IOException, ParserException {
+        IcsImporter importer = new IcsImporter();
+
+        List<Event> events = importer.parseICS("src/test/resources/utcImport.ics");
+
+        assertEquals(1, events.size());
+
+        Event event = events.get(0);
+
+        // "Z" should be stripped, so it parses as local time
+        assertEquals(LocalDateTime.of(2026, 4, 10, 9, 0), event.getEventTime());
+        assertEquals("UTC Event", event.getEventName());
+    }
 }
