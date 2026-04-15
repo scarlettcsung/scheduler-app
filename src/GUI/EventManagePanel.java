@@ -41,7 +41,7 @@ import Invite.Invite;
 import javax.swing.JSplitPane;
 
 
-public class EventPanel extends JPanel {
+public class EventManagePanel extends JPanel {
 
 	// UI items
 	private static final long serialVersionUID = 1L;
@@ -78,12 +78,15 @@ public class EventPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public EventPanel(UserRepository repository, User currentUser,
+	public EventManagePanel(UserRepository repository, User currentUser,
 					  boolean isNewEvent, Event event, Scheduler scheduler) {
 		this(repository, currentUser, isNewEvent, event, scheduler, null);
 	}
 
-	public EventPanel(UserRepository repository, User currentUser,
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public EventManagePanel(UserRepository repository, User currentUser,
 					  boolean isNewEvent, Event event, Scheduler scheduler, Runnable onSaveSuccess) {
 
 		// Initialization
@@ -304,13 +307,13 @@ public class EventPanel extends JPanel {
 
 				// Error message for empty invitee input
 				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Please enter a username.");
 					return;
 				}
 				
 				if (inviteeUsername.equals(currentUser.getUsername())) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Event organizer already invited to this event.");
 					return;
 				}
@@ -325,11 +328,11 @@ public class EventPanel extends JPanel {
 						txtInviteeUsername.setText("");
 						// Clear input so user can input new username
 					} else {
-						javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+						javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 								"User is already invited to this event!");
 					}
 				} else {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"User not found.", "Error" , JOptionPane.ERROR_MESSAGE);
 				}}
 		});
@@ -340,12 +343,12 @@ public class EventPanel extends JPanel {
 
 				// Error message for empty invitee input
 				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Please enter a username.");
 					return;
 				}
 				if (inviteeUsername.equals(currentUser.getUsername())) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"You cannot uninvite the organizer.");
 					return;
 				}
@@ -353,7 +356,7 @@ public class EventPanel extends JPanel {
 
 				User invitee = repository.findUsername(inviteeUsername);
 				if (invitee == null) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this, 
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this, 
 							"User not found.", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -363,7 +366,7 @@ public class EventPanel extends JPanel {
 				} else if (!isNewEvent && event != null) {
 					event.removeInvite(new Invite(inviteeUsername, event.getEventID()), repository);			
 				} else {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"User is not in this event!");
 					return;
 				}
@@ -377,7 +380,7 @@ public class EventPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String eventName = txtEventName.getText();
 				if (eventName.isEmpty() || eventName.equalsIgnoreCase("Name")) {
-					JOptionPane.showMessageDialog(EventPanel.this,
+					JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Please input an Event Name.");
 
 					return;
@@ -393,7 +396,7 @@ public class EventPanel extends JPanel {
 				try {
 					duration = Integer.parseInt(txtEventDurationminutes.getText());
 				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please input integer number for Event Duration in minutes.");
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please input integer number for Event Duration in minutes.");
 					return;
 				}
 
@@ -404,7 +407,7 @@ public class EventPanel extends JPanel {
 					String latestDate = frmtdtxtfldLatestDate.getText();
 					ldLatest = java.time.LocalDate.parse(latestDate);
 				} catch (java.time.format.DateTimeParseException ex) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please input Latest Date in YYYY-MM-DD format.");
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please input Latest Date in YYYY-MM-DD format.");
 					return;
 				}
 
@@ -415,11 +418,11 @@ public class EventPanel extends JPanel {
 				Object selectedEarliestHour = comboBoxEarliestTime.getSelectedItem();
 				Object selectedLatestHour = comboBoxLatestTime.getSelectedItem();
 				if (selectedEarliestHour == null || selectedEarliestHour.equals("Select earliest time")) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please select the earliest time boundary.");
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please select the earliest time boundary.");
 					return;
 				}
 				if (selectedLatestHour == null || selectedLatestHour.equals("Select latest time")) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please select the latest time boundary.");
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please select the latest time boundary.");
 					return;
 				}
 
@@ -429,27 +432,27 @@ public class EventPanel extends JPanel {
 				int latestHour = Integer.parseInt(latestTime);
 
 				if (isNewEvent) {
-					EventPanel.this.event = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
-					EventPanel.this.isNewEvent = false;
+					EventManagePanel.this.event = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
+					EventManagePanel.this.isNewEvent = false;
 
 				} else {
 
-					EventPanel.this.event.setEventName(eventName);
-					EventPanel.this.event.setEventDuration(duration);
-					EventPanel.this.event.setEventDescription(eventDescription);
+					EventManagePanel.this.event.setEventName(eventName);
+					EventManagePanel.this.event.setEventDuration(duration);
+					EventManagePanel.this.event.setEventDescription(eventDescription);
 				}
 
 				for (String username: tempInvites) {
-					Invite newInvite = new Invite(username,EventPanel.this.event.getEventID());
-					EventPanel.this.event.addInvite(newInvite,repository);
+					Invite newInvite = new Invite(username,EventManagePanel.this.event.getEventID());
+					EventManagePanel.this.event.addInvite(newInvite,repository);
 				}
 				tempInvites.clear();
 
 
 				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository);
-				scheduler.scheduleEvent(EventPanel.this.event);
+				scheduler.scheduleEvent(EventManagePanel.this.event);
 
-				JOptionPane.showMessageDialog(EventPanel.this, "Event Saved.");
+				JOptionPane.showMessageDialog(EventManagePanel.this, "Event Saved.");
 				updateParticipantList();
 				if (onSaveSuccess != null) {
 					onSaveSuccess.run();
@@ -489,7 +492,7 @@ public class EventPanel extends JPanel {
 		Scheduler mockScheduler = new Scheduler(0, 23, 7, dummyRepo);
 
 		// 2. Initialize the panel (Testing "New Event" mode)
-		EventPanel panel = new EventPanel(
+		EventManagePanel panel = new EventManagePanel(
 				dummyRepo,
 				testUser,
 				true,  // isNewEvent
