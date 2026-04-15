@@ -8,7 +8,7 @@ import Repository.UserRepository;
 /**
  * Unit tests for {@link UserService.UserService}.
  *
- * @author SN GI
+ * @author SN GI NJ
  * @version 1
  */
 public class testUserService extends TestCase {

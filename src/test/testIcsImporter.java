@@ -17,7 +17,7 @@ import java.util.TimeZone;
 /**
  * Unit tests for {@link IcsImporter.IcsImporter}.
  *
- * @author SN AA
+ * @author SN AA NJ
  * @version 2
  */
 public class testIcsImporter extends TestCase {

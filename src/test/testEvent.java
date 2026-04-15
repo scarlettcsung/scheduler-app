@@ -11,6 +11,12 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Unit tests for {@link Event.Event}.
+ *
+ * @author NJ
+ * @version TODO
+ */
 public class testEvent extends TestCase {
 
     private String exampleOrganizer;

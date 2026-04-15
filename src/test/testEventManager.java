@@ -13,6 +13,12 @@ import User.User;
 import UserCalendar.UserCalendar;
 import Repository.UserRepository;
 
+/**
+ * Unit tests for {@link EventManager.EventManager}.
+ *
+ * @author NJ
+ * @version TODO
+ */
 public class testEventManager extends TestCase {
 
     String exampleOrganizer = "testUser";
