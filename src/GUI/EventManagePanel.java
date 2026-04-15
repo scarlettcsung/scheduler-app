@@ -463,19 +463,28 @@ public class EventManagePanel extends JPanel {
 	}
 
 	public void updateParticipantList() {
-		textAreaShowParticipants.setText("");
-		if (event != null && event.getInvites() != null) {
-			for (Invite invite : event.getInvites()) {
-				String username = invite.getRecipient();
-				textAreaShowParticipants.append(username + "\n");
-			}
-		}
+	    textAreaShowParticipants.setText("");
+	    appendExistingInvites();
+	    appendTemporaryInvites();
+	}
+	private void appendExistingInvites() {
+	    if (event == null || event.getInvites() == null) {
+	        return;
+	    }
 
-		if (tempInvites != null) {
-			for (String username: tempInvites) {
-				textAreaShowParticipants.append(username + "(New) \n");
-			}
-		}
+	    for (Invite invite : event.getInvites()) {
+	        textAreaShowParticipants.append(invite.getRecipient() + "\n");
+	    }
+	}
+
+	private void appendTemporaryInvites() {
+	    if (tempInvites == null) {
+	        return;
+	    }
+
+	    for (String username : tempInvites) {
+	        textAreaShowParticipants.append(username + " (New)\n");
+	    }
 	}
 
 	/*public static void main(String[] args) {
