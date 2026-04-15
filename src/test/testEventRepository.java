@@ -5,6 +5,12 @@ import Repository.EventRepository;
 import Event.Event;
 import java.util.List;
 
+/**
+ * Unit tests for {@link Repository.EventRepository}.
+ *
+ * @author CR EO
+ * @version 3 and 4
+ */
 public class testEventRepository extends TestCase {
 
     private EventRepository eventRepo;

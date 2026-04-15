@@ -1,5 +1,11 @@
 package IcsImporter;
 
+/**
+ * Result codes returned when importing events from an ICS file.
+ *
+ * @author AA SN
+ * @version 2
+ */
 public enum ImportStatus {
     Succes,
     FileNotFound,

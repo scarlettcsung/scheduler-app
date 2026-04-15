@@ -14,6 +14,12 @@ import UserCalendar.UserCalendar;
 import Event.Event;
 import Repository.UserRepository;
 
+/**
+ * Handles JSON-based persistence for users and their calendars.
+ *
+ * @author AA NJ
+ * @version 2
+ */
 public class IO {
 	List<User> userList = new ArrayList<>();
 /*	
@@ -68,6 +74,13 @@ public class IO {
     } 
 */
     // Reads calendar data for all users from files (example: each user has a calendar file)
+    /**
+     * Reads a list of users and calendar data from a JSON file.
+     *
+     * @param filePath path to the JSON file
+     * @return users loaded from the file
+     * @throws IOException when the file cannot be read
+     */
     public List<User> readCalendar(String filePath) throws IOException{
     	Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) 
@@ -83,6 +96,13 @@ public class IO {
     }
 
     // Writes calendar data for all users to files
+    /**
+     * Writes user and calendar data to a JSON file.
+     *
+     * @param userList users to persist
+     * @param filePath destination file path
+     * @throws IOException when the file cannot be written
+     */
     public void writeCalendar(List<User> userList, String filePath) throws IOException {
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class,(JsonSerializer<LocalDateTime>)
         		(src,type,context)->new JsonPrimitive(src.toString())).create();
