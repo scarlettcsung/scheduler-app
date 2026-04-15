@@ -65,6 +65,8 @@ public class Event {
     }
     
     public List<String> getParticipants() {
+    	participantUsernames.clear();
+    	
     	for (Invite invite:invites) {
     		String participantUsername = invite.getRecipient();
     		participantUsernames.add(participantUsername);
