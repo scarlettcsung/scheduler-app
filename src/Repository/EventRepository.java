@@ -2,13 +2,28 @@ package Repository;
 
 import Event.Event;
 
+/**
+ * In-memory repository for {@link Event} instances.
+ *
+ * @author CR EO
+ * @version 3 and 4
+ */
 public class EventRepository extends Repository<Event> {
 	
+	/**
+	 * Creates an empty event repository.
+	 */
 	public EventRepository() {
 		super();
 		
 	}
 	
+	/**
+	 * Finds an event by its identifier.
+	 *
+	 * @param eventID identifier to search for
+	 * @return matching event, or {@code null} when not found
+	 */
 	public Event findByEventID(String eventID) {
         for (Event e : data) {
             if (e.getEventID().equals(eventID)) {
@@ -18,10 +33,21 @@ public class EventRepository extends Repository<Event> {
         return null;
     }
 	
+	/**
+	 * Deletes an event by its identifier.
+	 *
+	 * @param eventID identifier of the event to remove
+	 * @return {@code true} when an event was removed
+	 */
 	public boolean deleteEvent(String eventID) {
         return data.removeIf(e -> e.getEventID().equals(eventID));
     }
 
+    /**
+     * Returns the repository type label.
+     *
+     * @return repository type name
+     */
 	@Override
     public String getRepositoryType() {
         return "Event Repository";
