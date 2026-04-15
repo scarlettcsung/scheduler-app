@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
@@ -15,8 +16,10 @@ import javax.swing.border.LineBorder;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -210,10 +213,25 @@ public class AdminPanelEvents extends JPanel {
 
 		int MARGIN = 10;
 
-		JLabel nameLabel = new JLabel(event.getEventName());
-		nameLabel.setFont(new Font("Arial", Font.BOLD, 13));
-		nameLabel.setBounds(MARGIN, MARGIN, 400, 20);
-		card.add(nameLabel);
+		JButton nameButton = new JButton(event.getEventName());
+		nameButton.setFont(new Font("Arial", Font.BOLD, 13));
+		nameButton.setBounds(MARGIN, MARGIN, 400, 20);
+		nameButton.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		nameButton.setMargin(new Insets(0,0,0,0));
+		nameButton.setBorderPainted(false);
+		nameButton.setContentAreaFilled(false);
+		nameButton.setFocusPainted(false);
+		nameButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		nameButton.addActionListener(e -> {
+			ViewEventDialog dialog = new ViewEventDialog(event);
+			dialog.setModal(true);
+			dialog.setLocationRelativeTo(card);
+			dialog.setVisible(true);
+		});
+		
+		card.add(nameButton);
 
 		JLabel metaLabel = new JLabel("Duration: " + event.getEventDuration() + " min  |  Organizer: " + event.getOrganizer());
 		metaLabel.setFont(new Font("Arial", Font.PLAIN, 11));
