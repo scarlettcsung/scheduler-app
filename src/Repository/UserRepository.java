@@ -67,7 +67,7 @@ public class UserRepository extends Repository<User> {
 
         boolean removed = data.removeIf(u -> u.getUsername().equals(username));
         if (!removed) {
-            return 4;
+            return 4;		//untestable???
         }
 
         if (currentUser.canAccessAdminPanel()) {
