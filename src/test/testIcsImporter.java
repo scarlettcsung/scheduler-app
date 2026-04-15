@@ -142,4 +142,17 @@ public class testIcsImporter extends TestCase {
         assertEquals(LocalDateTime.of(2026, 4, 10, 9, 0), event.getEventTime());
         assertEquals("UTC Event", event.getEventName());
     }
+    
+    public void testImportCalendarThrowsIllegalStateOnInvalidICS() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+
+        try {
+            importer.importCalendar(user, "src/test/resources/invalid.ics");
+            fail("Expected IllegalStateException to be thrown");
+        } catch (IllegalStateException e) {
+            assertEquals("Calendar import failed", e.getMessage());
+            assertTrue(e.getCause() instanceof ParserException);
+        }
+    }
 }
