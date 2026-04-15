@@ -16,7 +16,7 @@ import Repository.UserRepository;
 /**
  * Unit tests for {@link EventManager.EventManager}.
  *
- * @author NJ
+ * @author GI NJ
  * @version TODO
  */
 public class testEventManager extends TestCase {
