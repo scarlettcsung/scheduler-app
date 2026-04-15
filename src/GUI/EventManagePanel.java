@@ -171,7 +171,7 @@ public class EventManagePanel extends JPanel {
 		gbc_lblEventDescription.gridy = 3;
 		add(lblEventDescription, gbc_lblEventDescription);
 
-		lblLatestDate = new JLabel("Latest date ");
+		lblLatestDate = new JLabel("Latest date (YYYY-MM-DD)");
 		GridBagConstraints gbc_lblLatestDate = new GridBagConstraints();
 		gbc_lblLatestDate.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblLatestDate.insets = new Insets(0, 0, 5, 5);
