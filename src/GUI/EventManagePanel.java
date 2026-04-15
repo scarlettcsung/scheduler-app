@@ -30,6 +30,7 @@ import java.awt.Color;
 import javax.swing.JFormattedTextField;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import com.github.lgooddatepicker.components.DatePicker;
 
 // Back-end related imports
 import Repository.UserRepository;
@@ -57,7 +58,7 @@ public class EventManagePanel extends JPanel {
 	private JLabel lblEventDuration;
 	private JLabel lblEventDescription;
 	private JLabel lblLatestDate;
-	private JFormattedTextField frmtdtxtfldLatestDate;
+	private DatePicker datePickerLatest;
 
 	// Back-end items
 	private UserRepository repository;
@@ -172,7 +173,7 @@ public class EventManagePanel extends JPanel {
 		gbc_lblEventDescription.gridy = 3;
 		add(lblEventDescription, gbc_lblEventDescription);
 
-		lblLatestDate = new JLabel("Latest date (YYYY-MM-DD)");
+		lblLatestDate = new JLabel("Latest date (DD Month YYYY)");
 		GridBagConstraints gbc_lblLatestDate = new GridBagConstraints();
 		gbc_lblLatestDate.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblLatestDate.insets = new Insets(0, 0, 5, 5);
@@ -190,15 +191,14 @@ public class EventManagePanel extends JPanel {
 		add(txtEventDescription, gbc_txtEventDescription);
 		txtEventDescription.setColumns(10);
 
-		frmtdtxtfldLatestDate = new JFormattedTextField();
-		frmtdtxtfldLatestDate.setText("2000-01-01");
-		GridBagConstraints gbc_frmtdtxtfldLatestDate = new GridBagConstraints();
-		gbc_frmtdtxtfldLatestDate.anchor = GridBagConstraints.NORTH;
-		gbc_frmtdtxtfldLatestDate.insets = new Insets(0, 0, 5, 5);
-		gbc_frmtdtxtfldLatestDate.fill = GridBagConstraints.HORIZONTAL;
-		gbc_frmtdtxtfldLatestDate.gridx = 3;
-		gbc_frmtdtxtfldLatestDate.gridy = 4;
-		add(frmtdtxtfldLatestDate, gbc_frmtdtxtfldLatestDate);
+		datePickerLatest = new DatePicker();
+		GridBagConstraints gbc_datePickerLatest = new GridBagConstraints();
+		gbc_datePickerLatest.anchor = GridBagConstraints.NORTH;
+		gbc_datePickerLatest.insets = new Insets(0, 0, 5, 5);
+		gbc_datePickerLatest.fill = GridBagConstraints.HORIZONTAL;
+		gbc_datePickerLatest.gridx = 3;
+		gbc_datePickerLatest.gridy = 4;
+		add(datePickerLatest, gbc_datePickerLatest);
 
 		comboBoxEarliestTime = new JComboBox();
 		comboBoxEarliestTime.setModel(new DefaultComboBoxModel(new String[] {"Select earliest time", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
@@ -296,18 +296,6 @@ public class EventManagePanel extends JPanel {
 			txtEventDurationminutes.setText(String.valueOf(event.getEventDuration()));
 			txtEventDescription.setText(event.getEventDescription());
 			updateParticipantList();
-		}
-
-
-		// Dates must be in YYYY-MM-DD
-		try {
-			javax.swing.text.MaskFormatter dateMask = new javax.swing.text.MaskFormatter("####-##-##");
-			dateMask.setPlaceholderCharacter('_');
-			dateMask.setValidCharacters("0123456789-");
-			dateMask.install(frmtdtxtfldLatestDate);
-
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
 		}
 
 		btnInvite.addActionListener(new ActionListener() {
@@ -416,14 +404,16 @@ public class EventManagePanel extends JPanel {
 				}
 
 				// Date inputs should be in YYYY-MM-DD
-				java.time.LocalDate ldLatest = null;
-
-				try {
-					String latestDate = frmtdtxtfldLatestDate.getText();
-					ldLatest = java.time.LocalDate.parse(latestDate);
-				} catch (java.time.format.DateTimeParseException ex) {
-					JOptionPane.showMessageDialog(EventManagePanel.this, "Please input Latest Date in YYYY-MM-DD format.");
+				java.time.LocalDate ldLatest = datePickerLatest.getDate();
+				
+				if (ldLatest == null) {
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please select the latest date.");
 					return;
+				}
+				
+				if (ldLatest.isBefore(java.time.LocalDate.now())) {
+				    JOptionPane.showMessageDialog(EventManagePanel.this, "The latest date cannot be in the past.");
+				    return;
 				}
 
 				java.time.LocalDate today = java.time.LocalDate.now();
