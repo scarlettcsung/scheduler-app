@@ -306,6 +306,7 @@ public class AdminPanelEvents extends JPanel {
 			acceptButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					invite.accept();
+					refreshEvents();
 				}
 			});
 			inviteCard.add(acceptButton);

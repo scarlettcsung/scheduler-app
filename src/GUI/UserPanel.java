@@ -160,25 +160,33 @@ public class UserPanel extends JPanel {
 		return new ArrayList<>(allEvents);
 	}
 
-	private List<Invite> collectUniqueInvites(List<Event> events) {
-		Set<String> seen = new LinkedHashSet<>();
-		List<Invite> invites = new ArrayList<>();
-		for (Event event : events) {
-			if (event.getInvites() == null) {
-				continue;
-			}
-			for (Invite invite : event.getInvites()) {
-				if (!currentUser.getUsername().equals(invite.getRecipient())) {
-					continue;
-				}
-				String key = invite.getRecipient() + "|" + invite.getEventID();
-				if (seen.add(key)) {
-					invites.add(invite);
-				}
-			}
-		}
-		return invites;
-	}
+    private List<Invite> collectUniqueInvites(List<Event> events) {
+    	Set<String> seen = new LinkedHashSet<>();
+    	List<Invite> invites = new ArrayList<>();
+
+    	for (Event event : events) {
+    		if (event.getInvites() == null) {
+    			continue;
+    		}
+
+    		for (Invite invite : event.getInvites()) {
+    			if (invite.getRecipient() == null) {
+    				continue;
+    			}
+
+    			if (!invite.getRecipient().equals(currentUser.getUsername())) {
+    				continue;
+    			}
+
+    			String key = invite.getRecipient() + "|" + invite.getEventID();
+    			if (seen.add(key)) {
+    				invites.add(invite);
+    			}
+    		}
+    	}
+
+    	return invites;
+   	}
 
     private void setupEvents(JPanel eventPane, int W, int H, int MARGIN, javax.swing.border.Border CARD_BORDER) {
 		JLabel eventPaneTitle = new JLabel("Events");
@@ -341,6 +349,7 @@ public class UserPanel extends JPanel {
 			acceptButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					invite.accept();
+					refreshEvents();
 				}
 			});
 			inviteCard.add(acceptButton);
