@@ -425,6 +425,10 @@ public class EventManagePanel extends JPanel {
 					JOptionPane.showMessageDialog(EventManagePanel.this, "Please select the latest time boundary.");
 					return;
 				}
+				if (Integer.parseInt(selectedEarliestHour.toString()) >= Integer.parseInt(selectedLatestHour.toString())) {
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Latest time must be later than earliest time.");
+					return;
+				}
 
 				String earliestTime = selectedEarliestHour.toString();
 				String latestTime = selectedLatestHour.toString();
