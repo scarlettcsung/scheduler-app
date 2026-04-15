@@ -8,7 +8,7 @@ import UserCalendar.UserCalendar;
  * In-memory repository for {@link User} instances.
  *
  * @author CR EO NJ
- * @version 1, 3 and 4
+ * @version 1 and 3
  */
 public class UserRepository extends Repository<User> {
 

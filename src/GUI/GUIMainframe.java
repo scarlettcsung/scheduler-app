@@ -16,20 +16,39 @@ import javax.swing.border.CompoundBorder;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import Event.Event;
 
+/**
+ * GUIMainframe serves as the primary dashboard for the application.
+ * It provides a graphical interface for users to view their calendar, 
+ * manage upcoming events, and respond to invitations.
+ * * <p>The layout is divided into three main sections:
+ * <ul>
+ * <li><b>Calendar:</b> Interactive date selection using LGoodDatePicker.</li>
+ * <li><b>Events:</b> A scrollable list of scheduled events with detailed metadata.</li>
+ * <li><b>Invites:</b> A section to accept or decline pending event invitations.</li>
+ * </ul>
+ * * @author CR NS
+ * @version 2
+ */
 public class GUIMainframe extends JFrame {
 
+    /** Serial Version UID for serialization compatibility. */
     private static final long serialVersionUID = 1L;
+    
+    /** The main container panel for all GUI components. */
     private JPanel contentPane;
     
+    /**
+     * Creates a standardized compound border for UI "cards."
+     * Consists of a rounded gray line border and internal padding.
+     * * @return A {@link javax.swing.border.Border} object used for layout consistency.
+     */
     private static javax.swing.border.Border cardBorder() {
         return new CompoundBorder(
             new LineBorder(Color.GRAY, 1, true),
@@ -37,6 +56,11 @@ public class GUIMainframe extends JFrame {
         );
     }
 
+    /**
+     * Application entry point. Launches the GUI on the Event Dispatch Thread (EDT)
+     * to ensure thread safety with Swing components.
+     * * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -50,14 +74,21 @@ public class GUIMainframe extends JFrame {
         });
     }
 
+    /**
+     * Constructs a new GUIMainframe.
+     * Initialises the window properties, sets up the layout, and populates
+     * the dashboard with the Calendar, Event list, and Invites panel.
+     * * <p>Note: This constructor currently uses a null layout for absolute 
+     * positioning based on the initial frame dimensions.</p>
+     */
     public GUIMainframe() {
-    	
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1200, 1200);
         
         // Grab actual size after setBounds
-        int W 				= getWidth();
-        int H				= getHeight();
+        int W                 = getWidth();
+        int H                = getHeight();
         int MARGIN          = 10;
 
         // Reusable border
@@ -72,21 +103,21 @@ public class GUIMainframe extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        // ── Logout button ────────────────────────────────────────────
+        // Logout button
         JButton logoutButton = new JButton("Logout");
         logoutButton.setFont(new Font("Arial", Font.PLAIN, 11));
         logoutButton.setForeground(Color.BLACK);
         logoutButton.setBackground(Color.WHITE);
         logoutButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	
+                // Logic for logging out goes here
             }
         });
         logoutButton.setBounds(MARGIN, MARGIN, W/5, H/30);
         
         contentPane.add(logoutButton);
 
-        // ── Calendar card ────────────────────────────────────────────
+        // Calendar card
         JPanel calendarCard = new JPanel();
         calendarCard.setLayout(null);
         calendarCard.setBackground(Color.WHITE);
@@ -113,7 +144,7 @@ public class GUIMainframe extends JFrame {
         });
         calendarCard.add(calendarPanel);
 
-        // ── Event pane ───────────────────────────────────────────────
+        // Event pane
         JPanel eventPane = new JPanel();
         eventPane.setLayout(null);
         eventPane.setBackground(Color.WHITE);
@@ -126,7 +157,6 @@ public class GUIMainframe extends JFrame {
         eventPaneTitle.setBounds(MARGIN, MARGIN, 160, 24);
         eventPane.add(eventPaneTitle);
 
-        // Create event button next to title
         JButton createEventButton = new JButton("+ Create Event");
         createEventButton.setFont(new Font("Arial", Font.PLAIN, 11));
         createEventButton.setBackground(new Color(0, 120, 215));
@@ -146,23 +176,9 @@ public class GUIMainframe extends JFrame {
 
         // Sample events
         Event[] events = new Event[]{
-        	    new Event(
-        	        "Team Meeting", 
-        	        60, 
-        	        "yappen met de bros", 
-        	        null, 
-        	        false, 
-        	        new ArrayList<>()
-        	    ),
-        	    new Event(
-        	        "Deadline", 
-        	        120, 
-        	        "strijden voor de deadline", 
-        	        null, 
-        	        false, 
-        	        new ArrayList<>()
-        	    )
-        	};
+                new Event("Team Meeting", 60, "yappen met de bros", null, false, new ArrayList<>()),
+                new Event("Deadline", 120, "strijden voor de deadline", null, false, new ArrayList<>())
+            };
 
         JPanel eventsCardsPanel = new JPanel();
         eventsCardsPanel.setLayout(null);
@@ -222,7 +238,7 @@ public class GUIMainframe extends JFrame {
         eventsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
         eventPane.add(eventsScrollPane);
 
-        // ── Invites pane ─────────────────────────────────────────────
+        // Invites pane
         JPanel invitesPane = new JPanel();
         invitesPane.setLayout(null);
         invitesPane.setBackground(Color.WHITE);
@@ -240,12 +256,10 @@ public class GUIMainframe extends JFrame {
         invitesDivider.setBounds(MARGIN, 36, W/2-7/2*MARGIN, 1);
         invitesPane.add(invitesDivider);
 
-        // Sample invite cards panel
         JPanel invitesCardsPanel = new JPanel();
         invitesCardsPanel.setLayout(null);
         invitesCardsPanel.setBackground(Color.WHITE);
 
-        // Placeholder invite cards
         String[] invites = {"Invite from Alice — Team Lunch", "Invite from Bob — Sprint Review"};
         int inviteCardHeight = 60;
         int inviteCardWidth = W/2-10/2*MARGIN;

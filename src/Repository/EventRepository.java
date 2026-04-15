@@ -6,7 +6,7 @@ import Event.Event;
  * In-memory repository for {@link Event} instances.
  *
  * @author CR EO
- * @version 3 and 4
+ * @version 3
  */
 public class EventRepository extends Repository<Event> {
 	

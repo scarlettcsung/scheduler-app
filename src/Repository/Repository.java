@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @param <T> type of item stored by the repository
  * @author CR EO
- * @version 3 and 4
+ * @version 3
  */
 public abstract class Repository<T> {
     protected List<T> data;

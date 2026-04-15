@@ -9,7 +9,7 @@ import java.util.List;
  * Unit tests for {@link Repository.EventRepository}.
  *
  * @author CR EO
- * @version 3 and 4
+ * @version 3
  */
 public class testEventRepository extends TestCase {
 
