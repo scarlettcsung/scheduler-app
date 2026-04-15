@@ -109,7 +109,7 @@ public class AuthenticationPanel extends JPanel {
 			            }
 
 			            if(currentUser.canAccessAdminPanel()) {
-			            	topFrame.setContentPane(new AdminPanelEvents(repository,currentUser, scheduler));
+			            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler));
 			            } else {
 				 topFrame.setContentPane(new UserPanel(repository,currentUser,scheduler));
 			            }
