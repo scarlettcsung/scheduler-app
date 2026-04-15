@@ -7,6 +7,12 @@ import User.User;
 import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for {@link Invite.Invite}.
+ *
+ * @author NJ
+ * @version TODO
+ */
 public class testInvite extends TestCase{
 
     private String exampleOrganizer;

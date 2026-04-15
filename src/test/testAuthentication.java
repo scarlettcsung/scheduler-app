@@ -5,8 +5,12 @@ import User.User;
 import Authentication.Authentication;
 import Repository.UserRepository;
 
-
-
+/**
+ * Unit tests for {@link Authentication.Authentication}.
+ *
+ * @author NJ
+ * @version TODO
+ */
 public class testAuthentication extends TestCase {
 	public Authentication auth;
 	private UserRepository repository;

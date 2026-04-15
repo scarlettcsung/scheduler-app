@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 /**
  * Unit tests for {@link Repository.UserRepository}.
  *
- * @author CR EO
+ * @author CR EO NJ
  * @version 3 and 4
  */
 public class testUserRepository extends TestCase {
