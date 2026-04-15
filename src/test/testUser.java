@@ -5,6 +5,12 @@ import User.User;
 import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for {@link User.User} and {@link User.AdminUser}.
+ *
+ * @author SN GI
+ * @version 1
+ */
 public class testUser extends TestCase {
     private User normalUser;
     private User adminUser;

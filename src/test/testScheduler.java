@@ -12,6 +12,12 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+/**
+ * Unit tests for {@link Scheduler.Scheduler}.
+ *
+ * @author SN SS
+ * @version 2
+ */
 public class testScheduler extends TestCase {
 
     private Scheduler scheduler;
@@ -137,4 +143,19 @@ public class testScheduler extends TestCase {
         assertFalse(scheduled);
         assertFalse(organizer.getCalendar().getEvents().contains(toSchedule));
     }
+    
+    public void testFindAvailableSlot_ignoresNullTimeEvent_andStillFindsSlot() {
+    	//setup null event
+        Event nullTimeEvent = new Event("ghost", 30, "no time set",
+                organizer.getUsername(), false, new ArrayList<>());
+        organizer.getCalendar().addEvent(nullTimeEvent);  // bad data in calendar
+        
+        //to schedule event
+        Event toSchedule = new Event("meeting", 30, "test meeting",
+                organizer.getUsername(), false, new ArrayList<>());
+        
+        //run the find available slot
+        LocalDateTime slot = scheduler.findAvailableSlot(toSchedule);
+    }
+    
 }
