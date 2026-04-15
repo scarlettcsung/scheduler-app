@@ -8,6 +8,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.ObjectInputFilter.Status;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import Invite.Invite;
 import Scheduler.Scheduler;
 import Repository.UserRepository;
 import User.User;
+import Invite.inviteStatus;
 
 public class UserPanel extends JPanel {
     
@@ -152,9 +154,22 @@ public class UserPanel extends JPanel {
 				continue;
 			}
 			for (Event event : user.getCalendar().getEvents()) {
-				if (currentUser.getUsername().equals(event.getOrganizer())) {
-					allEvents.add(event);
+				boolean accepted = false;
+
+				if (event.getInvites() != null) {
+				    for (Invite invite : event.getInvites()) {
+				        if (currentUser.getUsername().equals(invite.getRecipient())
+				                && invite.getStatus() == inviteStatus.ACCEPTED) {
+				            accepted = true;
+				            break;
+				        }
+				    }
 				}
+
+				if (currentUser.getUsername().equals(event.getOrganizer()) || accepted) {
+				    allEvents.add(event);
+				}
+
 			}
 		}
 		return new ArrayList<>(allEvents);
