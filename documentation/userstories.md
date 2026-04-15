@@ -10,6 +10,8 @@
 |  |     |              |              | delete event | user | delete my event | if the event is no longer happening I can remove it from everyone's schedule |  | 1.0 | S |  | 1 |
 | FALSE |     | NS CR        |              | scrollbar | user | scroll up and down/left and right on larger pages | I can see the whole page  |  | 1.0 | S |  | 1 |
 |  |     | NS CR        |              | calendar view | user | see and edit my calendar in a neat way | conveniently know when I need to be somewhere or change things where necessary |  | 2.5 | C | 1.0 | 1.5 |
+| TRUE |3| EO SS | --- | Back button | user | leave event manage screen without saving | it's easy to leave if I no longer need to create or update event | --- | 0.5 | C | 0.5 | 0 |
+| TRUE |3| EO SS | --- | Date picker | user | pick a date using a calendar | I don't need to type the date in manually | --- | 0.5 | C | 0.5 | 0 |
 |  |     |              |               | external integration | user | integrate my calendar from external sources, like my Google Calendar, Outlook, or Apple Calendar | conveniently link my calendars and have them be updated live |  | 5.0 | W |  | 5 |
 |  |     |              |               |  |  |  |  | SUM =  | 34.5 |  | 20.5 |  |
 
