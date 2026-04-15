@@ -82,5 +82,12 @@ public class testUserRepository extends TestCase {
         assertEquals("user Repository", type);
     }
     
-    
+    //test delete user that is not in repository
+    public void testDeleteNonExistingUser() {
+        User someUser = new User("someone", "pw", null);
+
+        int result = repository.deleteUserData("ghostUser", someUser);
+
+        assertEquals(4, result);
+    }
 }

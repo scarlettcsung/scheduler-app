@@ -65,16 +65,14 @@ public class UserRepository extends Repository<User> {
             return 4;
         }
 
-        boolean removed = data.removeIf(u -> u.getUsername().equals(username));
-        if (!removed) {
-            return 4;
-        }
+        data.removeIf(u -> u.getUsername().equals(username));
 
+       
         if (currentUser.canAccessAdminPanel()) {
-            return 2;
+            return 2; 
         }
 
-        return 3;
+        return 3; 
     }
 
     /**
