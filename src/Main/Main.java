@@ -34,7 +34,7 @@ public class Main {
 
         // 2. Load Data
         try {
-            users = ioHandler.readCalendar(filePath);
+            users = ioHandler.readUsers(filePath);
             for (User user : users) {
                 repository.saveUser(user);
                 System.out.println("Data loaded successfully.");
@@ -60,7 +60,7 @@ public class Main {
                         System.out.println("Saving data...");
                         // Get the latest list from repository to ensure all changes are saved
                         List<User> usersToSave = repository.getAll(); 
-                        ioHandler.writeCalendar(usersToSave, filePath);
+                        ioHandler.writeUsers(usersToSave, filePath);
                         System.out.println("Save successful.");
                     } catch (IOException ex) {
                         System.err.println("Failed to save data: " + ex.getMessage());
