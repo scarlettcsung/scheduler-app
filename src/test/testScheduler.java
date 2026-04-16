@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 /**
  * Unit tests for {@link Scheduler.Scheduler}.
  *
- * @author SN SS
+ * @author SN SS NJ
  * @version 2
  */
 public class testScheduler extends TestCase {

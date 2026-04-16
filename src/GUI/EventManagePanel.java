@@ -30,6 +30,7 @@ import java.awt.Color;
 import javax.swing.JFormattedTextField;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import com.github.lgooddatepicker.components.DatePicker;
 
 // Back-end related imports
 import Repository.UserRepository;
@@ -41,7 +42,7 @@ import Invite.Invite;
 import javax.swing.JSplitPane;
 
 
-public class EventPanel extends JPanel {
+public class EventManagePanel extends JPanel {
 
 	// UI items
 	private static final long serialVersionUID = 1L;
@@ -57,7 +58,7 @@ public class EventPanel extends JPanel {
 	private JLabel lblEventDuration;
 	private JLabel lblEventDescription;
 	private JLabel lblLatestDate;
-	private JFormattedTextField frmtdtxtfldLatestDate;
+	private DatePicker datePickerLatest;
 
 	// Back-end items
 	private UserRepository repository;
@@ -73,17 +74,21 @@ public class EventPanel extends JPanel {
 	private JTextField txtEventDescription;
 	private JSplitPane splitPane;
 	private JButton btnUninvite;
+	private JButton btnBack;
 
 
 	/**
 	 * Create the panel.
 	 */
-	public EventPanel(UserRepository repository, User currentUser,
+	public EventManagePanel(UserRepository repository, User currentUser,
 					  boolean isNewEvent, Event event, Scheduler scheduler) {
 		this(repository, currentUser, isNewEvent, event, scheduler, null);
 	}
 
-	public EventPanel(UserRepository repository, User currentUser,
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public EventManagePanel(UserRepository repository, User currentUser,
 					  boolean isNewEvent, Event event, Scheduler scheduler, Runnable onSaveSuccess) {
 
 		// Initialization
@@ -168,7 +173,7 @@ public class EventPanel extends JPanel {
 		gbc_lblEventDescription.gridy = 3;
 		add(lblEventDescription, gbc_lblEventDescription);
 
-		lblLatestDate = new JLabel("Latest date ");
+		lblLatestDate = new JLabel("Latest date (DD Month YYYY)");
 		GridBagConstraints gbc_lblLatestDate = new GridBagConstraints();
 		gbc_lblLatestDate.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_lblLatestDate.insets = new Insets(0, 0, 5, 5);
@@ -186,15 +191,14 @@ public class EventPanel extends JPanel {
 		add(txtEventDescription, gbc_txtEventDescription);
 		txtEventDescription.setColumns(10);
 
-		frmtdtxtfldLatestDate = new JFormattedTextField();
-		frmtdtxtfldLatestDate.setText("2000-01-01");
-		GridBagConstraints gbc_frmtdtxtfldLatestDate = new GridBagConstraints();
-		gbc_frmtdtxtfldLatestDate.anchor = GridBagConstraints.NORTH;
-		gbc_frmtdtxtfldLatestDate.insets = new Insets(0, 0, 5, 5);
-		gbc_frmtdtxtfldLatestDate.fill = GridBagConstraints.HORIZONTAL;
-		gbc_frmtdtxtfldLatestDate.gridx = 3;
-		gbc_frmtdtxtfldLatestDate.gridy = 4;
-		add(frmtdtxtfldLatestDate, gbc_frmtdtxtfldLatestDate);
+		datePickerLatest = new DatePicker();
+		GridBagConstraints gbc_datePickerLatest = new GridBagConstraints();
+		gbc_datePickerLatest.anchor = GridBagConstraints.NORTH;
+		gbc_datePickerLatest.insets = new Insets(0, 0, 5, 5);
+		gbc_datePickerLatest.fill = GridBagConstraints.HORIZONTAL;
+		gbc_datePickerLatest.gridx = 3;
+		gbc_datePickerLatest.gridy = 4;
+		add(datePickerLatest, gbc_datePickerLatest);
 
 		comboBoxEarliestTime = new JComboBox();
 		comboBoxEarliestTime.setModel(new DefaultComboBoxModel(new String[] {"Select earliest time", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"}));
@@ -270,6 +274,14 @@ public class EventPanel extends JPanel {
 				btnUninvite = new JButton("Uninvite");
 				
 				splitPane.setRightComponent(btnUninvite);
+		
+		btnBack = new JButton("Back");
+		GridBagConstraints gbc_btnBack = new GridBagConstraints();
+		gbc_btnBack.anchor = GridBagConstraints.SOUTHWEST;
+		gbc_btnBack.insets = new Insets(0, 0, 0, 5);
+		gbc_btnBack.gridx = 1;
+		gbc_btnBack.gridy = 9;
+		add(btnBack, gbc_btnBack);
 				
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.gridwidth = 2;
@@ -286,31 +298,19 @@ public class EventPanel extends JPanel {
 			updateParticipantList();
 		}
 
-
-		// Dates must be in YYYY-MM-DD
-		try {
-			javax.swing.text.MaskFormatter dateMask = new javax.swing.text.MaskFormatter("####-##-##");
-			dateMask.setPlaceholderCharacter('_');
-			dateMask.setValidCharacters("0123456789-");
-			dateMask.install(frmtdtxtfldLatestDate);
-
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
-		}
-
 		btnInvite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String inviteeUsername = txtInviteeUsername.getText().trim();
 
 				// Error message for empty invitee input
 				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Please enter a username.");
 					return;
 				}
 				
 				if (inviteeUsername.equals(currentUser.getUsername())) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Event organizer already invited to this event.");
 					return;
 				}
@@ -325,11 +325,11 @@ public class EventPanel extends JPanel {
 						txtInviteeUsername.setText("");
 						// Clear input so user can input new username
 					} else {
-						javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+						javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 								"User is already invited to this event!");
 					}
 				} else {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"User not found.", "Error" , JOptionPane.ERROR_MESSAGE);
 				}}
 		});
@@ -340,12 +340,12 @@ public class EventPanel extends JPanel {
 
 				// Error message for empty invitee input
 				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Please enter a username.");
 					return;
 				}
 				if (inviteeUsername.equals(currentUser.getUsername())) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"You cannot uninvite the organizer.");
 					return;
 				}
@@ -353,7 +353,7 @@ public class EventPanel extends JPanel {
 
 				User invitee = repository.findUsername(inviteeUsername);
 				if (invitee == null) {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this, 
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this, 
 							"User not found.", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -363,7 +363,7 @@ public class EventPanel extends JPanel {
 				} else if (!isNewEvent && event != null) {
 					event.removeInvite(new Invite(inviteeUsername, event.getEventID()), repository);			
 				} else {
-					javax.swing.JOptionPane.showMessageDialog(EventPanel.this,
+					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"User is not in this event!");
 					return;
 				}
@@ -373,11 +373,17 @@ public class EventPanel extends JPanel {
 			}
 		});
 		
+		btnBack.addActionListener(e -> {
+			if (onSaveSuccess != null) {
+				onSaveSuccess.run();
+			}
+		});
+		
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String eventName = txtEventName.getText();
 				if (eventName.isEmpty() || eventName.equalsIgnoreCase("Name")) {
-					JOptionPane.showMessageDialog(EventPanel.this,
+					JOptionPane.showMessageDialog(EventManagePanel.this,
 							"Please input an Event Name.");
 
 					return;
@@ -393,19 +399,21 @@ public class EventPanel extends JPanel {
 				try {
 					duration = Integer.parseInt(txtEventDurationminutes.getText());
 				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please input integer number for Event Duration in minutes.");
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please input integer number for Event Duration in minutes.");
 					return;
 				}
 
 				// Date inputs should be in YYYY-MM-DD
-				java.time.LocalDate ldLatest = null;
-
-				try {
-					String latestDate = frmtdtxtfldLatestDate.getText();
-					ldLatest = java.time.LocalDate.parse(latestDate);
-				} catch (java.time.format.DateTimeParseException ex) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please input Latest Date in YYYY-MM-DD format.");
+				java.time.LocalDate ldLatest = datePickerLatest.getDate();
+				
+				if (ldLatest == null) {
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please select the latest date.");
 					return;
+				}
+				
+				if (ldLatest.isBefore(java.time.LocalDate.now())) {
+				    JOptionPane.showMessageDialog(EventManagePanel.this, "The latest date cannot be in the past.");
+				    return;
 				}
 
 				java.time.LocalDate today = java.time.LocalDate.now();
@@ -415,11 +423,15 @@ public class EventPanel extends JPanel {
 				Object selectedEarliestHour = comboBoxEarliestTime.getSelectedItem();
 				Object selectedLatestHour = comboBoxLatestTime.getSelectedItem();
 				if (selectedEarliestHour == null || selectedEarliestHour.equals("Select earliest time")) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please select the earliest time boundary.");
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please select the earliest time boundary.");
 					return;
 				}
 				if (selectedLatestHour == null || selectedLatestHour.equals("Select latest time")) {
-					JOptionPane.showMessageDialog(EventPanel.this, "Please select the latest time boundary.");
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Please select the latest time boundary.");
+					return;
+				}
+				if (Integer.parseInt(selectedEarliestHour.toString()) >= Integer.parseInt(selectedLatestHour.toString())) {
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Latest time must be later than earliest time.");
 					return;
 				}
 
@@ -429,27 +441,27 @@ public class EventPanel extends JPanel {
 				int latestHour = Integer.parseInt(latestTime);
 
 				if (isNewEvent) {
-					EventPanel.this.event = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
-					EventPanel.this.isNewEvent = false;
+					EventManagePanel.this.event = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
+					EventManagePanel.this.isNewEvent = false;
 
 				} else {
 
-					EventPanel.this.event.setEventName(eventName);
-					EventPanel.this.event.setEventDuration(duration);
-					EventPanel.this.event.setEventDescription(eventDescription);
+					EventManagePanel.this.event.setEventName(eventName);
+					EventManagePanel.this.event.setEventDuration(duration);
+					EventManagePanel.this.event.setEventDescription(eventDescription);
 				}
 
 				for (String username: tempInvites) {
-					Invite newInvite = new Invite(username,EventPanel.this.event.getEventID());
-					EventPanel.this.event.addInvite(newInvite,repository);
+					Invite newInvite = new Invite(username,EventManagePanel.this.event.getEventID());
+					EventManagePanel.this.event.addInvite(newInvite,repository);
 				}
 				tempInvites.clear();
 
 
 				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository);
-				scheduler.scheduleEvent(EventPanel.this.event);
+				scheduler.scheduleEvent(EventManagePanel.this.event);
 
-				JOptionPane.showMessageDialog(EventPanel.this, "Event Saved.");
+				JOptionPane.showMessageDialog(EventManagePanel.this, "Event Saved.");
 				updateParticipantList();
 				if (onSaveSuccess != null) {
 					onSaveSuccess.run();
@@ -460,19 +472,28 @@ public class EventPanel extends JPanel {
 	}
 
 	public void updateParticipantList() {
-		textAreaShowParticipants.setText("");
-		if (event != null && event.getInvites() != null) {
-			for (Invite invite : event.getInvites()) {
-				String username = invite.getRecipient();
-				textAreaShowParticipants.append(username + "\n");
-			}
-		}
+	    textAreaShowParticipants.setText("");
+	    appendExistingInvites();
+	    appendTemporaryInvites();
+	}
+	private void appendExistingInvites() {
+	    if (event == null || event.getInvites() == null) {
+	        return;
+	    }
 
-		if (tempInvites != null) {
-			for (String username: tempInvites) {
-				textAreaShowParticipants.append(username + "(New) \n");
-			}
-		}
+	    for (Invite invite : event.getInvites()) {
+	        textAreaShowParticipants.append(invite.getRecipient() + "\n");
+	    }
+	}
+
+	private void appendTemporaryInvites() {
+	    if (tempInvites == null) {
+	        return;
+	    }
+
+	    for (String username : tempInvites) {
+	        textAreaShowParticipants.append(username + " (New)\n");
+	    }
 	}
 
 	/*public static void main(String[] args) {
@@ -489,7 +510,7 @@ public class EventPanel extends JPanel {
 		Scheduler mockScheduler = new Scheduler(0, 23, 7, dummyRepo);
 
 		// 2. Initialize the panel (Testing "New Event" mode)
-		EventPanel panel = new EventPanel(
+		EventManagePanel panel = new EventManagePanel(
 				dummyRepo,
 				testUser,
 				true,  // isNewEvent

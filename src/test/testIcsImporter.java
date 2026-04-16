@@ -17,7 +17,7 @@ import java.util.TimeZone;
 /**
  * Unit tests for {@link IcsImporter.IcsImporter}.
  *
- * @author SN AA
+ * @author SN AA NJ
  * @version 2
  */
 public class testIcsImporter extends TestCase {
@@ -126,5 +126,34 @@ public class testIcsImporter extends TestCase {
         ImportStatus status = importer.importCalendar(user, null);
 
         assertEquals(ImportStatus.FileNotFound, status);
+    }
+    
+    //test end with Z function
+    public void testParseICSHandlesZuluTime() throws IOException, ParserException {
+        IcsImporter importer = new IcsImporter();
+
+        List<Event> events = importer.parseICS("src/test/resources/utcImport.ics");
+
+        assertEquals(1, events.size());
+
+        Event event = events.get(0);
+
+        // "Z" should be stripped, so it parses as local time
+        assertEquals(LocalDateTime.of(2026, 4, 10, 9, 0), event.getEventTime());
+        assertEquals("UTC Event", event.getEventName());
+    }
+    
+    public void testImportCalendarThrowsIllegalStateOnInvalidICS() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+
+        try {
+        	//these two lines below are red in the test but without them the test is not testing dont know why
+            importer.importCalendar(user, "src/test/resources/invalid.ics");
+            fail("Expected IllegalStateException to be thrown");
+        } catch (IllegalStateException e) {
+            assertEquals("Calendar import failed", e.getMessage());
+            assertTrue(e.getCause() instanceof ParserException);
+        }
     }
 }

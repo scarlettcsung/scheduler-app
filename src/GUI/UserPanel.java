@@ -8,6 +8,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.ObjectInputFilter.Status;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import Invite.Invite;
 import Scheduler.Scheduler;
 import Repository.UserRepository;
 import User.User;
+import Invite.inviteStatus;
 
 public class UserPanel extends JPanel {
     
@@ -151,33 +153,54 @@ public class UserPanel extends JPanel {
 				continue;
 			}
 			for (Event event : user.getCalendar().getEvents()) {
-				if (currentUser.getUsername().equals(event.getOrganizer())) {
-					allEvents.add(event);
+				boolean accepted = false;
+
+				if (event.getInvites() != null) {
+				    for (Invite invite : event.getInvites()) {
+				        if (currentUser.getUsername().equals(invite.getRecipient())
+				                && invite.getStatus() == inviteStatus.ACCEPTED) {
+				            accepted = true;
+				            break;
+				        }
+				    }
 				}
+
+				if (currentUser.getUsername().equals(event.getOrganizer()) || accepted) {
+				    allEvents.add(event);
+				}
+
 			}
 		}
 		return new ArrayList<>(allEvents);
 	}
 
-	private List<Invite> collectUniqueInvites(List<Event> events) {
-		Set<String> seen = new LinkedHashSet<>();
-		List<Invite> invites = new ArrayList<>();
-		for (Event event : events) {
-			if (event.getInvites() == null) {
-				continue;
-			}
-			for (Invite invite : event.getInvites()) {
-				if (!currentUser.getUsername().equals(invite.getRecipient())) {
-					continue;
-				}
-				String key = invite.getRecipient() + "|" + invite.getEventID();
-				if (seen.add(key)) {
-					invites.add(invite);
-				}
-			}
-		}
-		return invites;
-	}
+    private List<Invite> collectUniqueInvites(List<Event> events) {
+    	Set<String> seen = new LinkedHashSet<>();
+    	List<Invite> invites = new ArrayList<>();
+
+    	for (Event event : events) {
+    		if (event.getInvites() == null) {
+    			continue;
+    		}
+
+    		for (Invite invite : event.getInvites()) {
+    			if (invite.getRecipient() == null) {
+    				continue;
+    			}
+
+    			if (!invite.getRecipient().equals(currentUser.getUsername())) {
+    				continue;
+    			}
+
+    			String key = invite.getRecipient() + "|" + invite.getEventID();
+    			if (seen.add(key)) {
+    				invites.add(invite);
+    			}
+    		}
+    	}
+
+    	return invites;
+   	}
 
     private void setupEvents(JPanel eventPane, int W, int H, int MARGIN, javax.swing.border.Border CARD_BORDER) {
 		JLabel eventPaneTitle = new JLabel("Events");
@@ -193,7 +216,7 @@ public class UserPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
 					JDialog dialog = new JDialog(topFrame, "Create Event", true);
-					dialog.setContentPane(new EventPanel(repository, currentUser, true, null, scheduler, () -> {
+					dialog.setContentPane(new EventManagePanel(repository, currentUser, true, null, scheduler, () -> {
 					    dialog.dispose();
 					    refreshEvents();
 					}));
@@ -244,10 +267,25 @@ public class UserPanel extends JPanel {
 
 		int MARGIN = 10;
 
-		JLabel nameLabel = new JLabel(event.getEventName());
-		nameLabel.setFont(new Font("Arial", Font.BOLD, 13));
-		nameLabel.setBounds(MARGIN, MARGIN, 400, 20);
-		card.add(nameLabel);
+		JButton nameButton = new JButton(event.getEventName());
+		nameButton.setFont(new Font("Arial", Font.BOLD, 13));
+		nameButton.setBounds(MARGIN, MARGIN, 400, 20);
+		nameButton.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		nameButton.setMargin(new Insets(0,0,0,0));
+		nameButton.setBorderPainted(false);
+		nameButton.setContentAreaFilled(false);
+		nameButton.setFocusPainted(false);
+		nameButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		nameButton.addActionListener(e -> {
+			ViewEventDialog dialog = new ViewEventDialog(event);
+			dialog.setModal(true);
+			dialog.setLocationRelativeTo(card);
+			dialog.setVisible(true);
+		});
+		
+		card.add(nameButton);
 
 		JLabel metaLabel = new JLabel("Duration: " + event.getEventDuration() + " min  |  Organizer: " + event.getOrganizer());
 		metaLabel.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -276,7 +314,7 @@ public class UserPanel extends JPanel {
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
-				topFrame.setContentPane(new EventPanel(repository, currentUser, false, event, scheduler, () -> {
+				topFrame.setContentPane(new EventManagePanel(repository, currentUser, false, event, scheduler, () -> {
 					topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler));
 					topFrame.revalidate();
 					topFrame.repaint();
@@ -340,6 +378,7 @@ public class UserPanel extends JPanel {
 			acceptButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					invite.accept();
+					refreshEvents();
 				}
 			});
 			inviteCard.add(acceptButton);

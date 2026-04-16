@@ -9,18 +9,41 @@ import Repository.UserRepository;
 import User.User;
 
 
+/**
+ * Applies event mutations such as updates, deletion, and invite rejection.
+ *
+ * @author EO GI
+ * @version TODO
+ */
 public class EventManager {
 
     private UserRepository repository;
 
+    /**
+     * Creates an event manager without repository-backed delete behaviour.
+     */
     public EventManager() {
         this.repository = null;
     }
 
+    /**
+     * Creates an event manager backed by a user repository.
+     *
+     * @param repository repository used to update user calendars
+     */
     public EventManager(UserRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Updates a single property on an event.
+     *
+     * @param event event to mutate
+     * @param updateAspect property name to update; supported values are
+     *        {@code eventName}, {@code eventDescription}, {@code eventTime},
+     *        and {@code eventDuration}
+     * @param newValue new value represented as text
+     */
     public void updateEvent(Event event, String updateAspect, String newValue) {
     	
     	// You should type enter eventName for example as a parameter to updateAspect part.
@@ -42,6 +65,12 @@ public class EventManager {
         }
     }
 
+    /**
+     * Removes an event from the organizer and invitee calendars when the
+     * manager was constructed with a repository.
+     *
+     * @param event event to delete
+     */
     public void deleteEvent(Event event) {
         if (event == null) {
             return;
@@ -68,6 +97,14 @@ public class EventManager {
         }
     }
 
+    /**
+     * Marks an invite as rejected and removes the event from the invitee's
+     * calendar.
+     *
+     * @param invite invite to reject
+     * @param event event associated with the invite
+     * @param repository repository used to update calendars
+     */
     public void rejectInvite(Invite invite, Event event, UserRepository repository) {
         invite.setInviteStatus(inviteStatus.REJECTED);
         event.removeInvite(invite, repository);

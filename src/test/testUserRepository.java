@@ -7,6 +7,12 @@ import User.User;
 import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for {@link Repository.UserRepository}.
+ *
+ * @author CR EO NJ
+ * @version 3 and 4
+ */
 public class testUserRepository extends TestCase {
     
     private UserRepository repository;
@@ -68,5 +74,20 @@ public class testUserRepository extends TestCase {
         repository = null;
         testUser = null;
         super.tearDown();
+    }
+    
+    //test getrepository type
+    public void testGetRepositoryType() {
+        String type = repository.getRepositoryType();
+        assertEquals("user Repository", type);
+    }
+    
+    //test delete user that is not in repository
+    public void testDeleteNonExistingUser() {
+        User someUser = new User("someone", "pw", null);
+
+        int result = repository.deleteUserData("ghostUser", someUser);
+
+        assertEquals(4, result);
     }
 }
