@@ -37,41 +37,14 @@ public class Main {
             users = ioHandler.readCalendar(filePath);
             for (User user : users) {
                 repository.saveUser(user);
+                System.out.println("Data loaded successfully.");
             }
-            System.out.println("Data loaded successfully.");
+            
         } catch (Exception e) {
             System.err.println("Error loading file: " + e.getMessage());
         }
 
-        User testUser1 = new User("nisa", "1234", null);
-        User testUser2 = new User("remzi", "1234", null);
-        UserCalendar testCalendar1 = new UserCalendar(testUser1.getUsername(), null);
-        UserCalendar testCalendar2 = new UserCalendar(testUser2.getUsername(), null);
-        testUser1.setCalendar(testCalendar1);
-        testUser2.setCalendar(testCalendar2);
-
-        Event dummyEvent = new Event(
-            "Dummy Event",
-            60,
-            "This is a test event for delete screen",
-            testUser1.getUsername(),
-            false,
-            null
-        );
-
-        dummyEvent.setEventTime(LocalDateTime.of(2026, 4, 8, 14, 0));
-        dummyEvent.addInvite(new Invite(testUser2.getUsername(), dummyEvent.getEventID()), repository);
-
-        testCalendar1.addEvent(dummyEvent);
-        testCalendar2.addEvent(dummyEvent);
-        
-        System.out.println(testUser1.getCalendar().getEvents());
-        
-        repository.deleteUserData(testUser1.getUsername(), testUser1);
-        repository.deleteUserData(testUser2.getUsername(), testUser2);
-        repository.saveUser(testUser1);
-        repository.saveUser(testUser2);
-        
+       
         // 3. Launch the UI
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Schedule System");
