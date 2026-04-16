@@ -69,6 +69,11 @@ public class UserRepository extends Repository<User> {
         if (!currentUser.canDeleteUser(targetUser)) {
             return notPermitted;
         }
+        
+        if (targetUser.getUsername() == "admin") {
+            return notPermitted;
+        }
+
 
         data.removeIf(u -> u.getUsername().equals(username));
 
