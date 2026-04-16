@@ -66,13 +66,17 @@ public class UserService {
      * @return {@code true} when the account was deleted
      */
     public boolean deleteUser(String username) {
+    	
+    	int adminDelete = 2;
+    	int selfDelete = 3;
+    	
 		if (!userRepository.isExistingUser(username)) {
 			return false;
 		}
 		// Finally, it differentiates the current user
 		User currentUser = authentication.getauthenticatedUser();
 		int deleteStatus = userRepository.deleteUserData(username, currentUser);
-		if (deleteStatus == 2 || deleteStatus == 3) { // 2->admin deleted, 3->self deleted
+		if (deleteStatus == adminDelete || deleteStatus == selfDelete) { // 2->admin deleted, 3->self deleted
 			return true;
 		} else {
 			return false;
