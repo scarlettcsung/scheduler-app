@@ -27,7 +27,7 @@ public class Main2 {
         IO input = new IO();
 
         try {
-            users = input.readCalendar("src/test/resources/testFileIO.json");
+            users = input.readUsers("src/test/resources/testFileIO.json");
             System.out.println("Data loaded successfully.");
         } catch (Exception e) {
             System.err.println("Error loading file: " + e.getMessage());

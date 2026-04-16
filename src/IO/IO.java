@@ -81,7 +81,7 @@ public class IO {
      * @return users loaded from the file
      * @throws IOException when the file cannot be read
      */
-    public List<User> readCalendar(String filePath) throws IOException{
+    public List<User> readUsers(String filePath) throws IOException{
     	Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) 
                 (json, type, context) -> LocalDateTime.parse(json.getAsString()))
@@ -103,7 +103,7 @@ public class IO {
      * @param filePath destination file path
      * @throws IOException when the file cannot be written
      */
-    public void writeCalendar(List<User> userList, String filePath) throws IOException {
+    public void writeUsers(List<User> userList, String filePath) throws IOException {
         Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class,(JsonSerializer<LocalDateTime>)
         		(src,type,context)->new JsonPrimitive(src.toString())).create();
         FileWriter writer = new FileWriter(filePath);
