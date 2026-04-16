@@ -51,28 +51,33 @@ public class UserRepository extends Repository<User> {
      *         {@code 4} when deletion was not permitted or the user was missing
      */
     public int deleteUserData(String username, User currentUser) {
+    	
+    	int notAuthenticated = 1;
+    	int adminDeletion = 2;
+    	int deleteItself = 3;
+    	int notPermitted = 4;
 
         if (currentUser == null) {
-            return 1;
+            return notAuthenticated;
         }
 
         User targetUser = findUsername(username);
         if (targetUser == null) {
-            return 4;
+            return notPermitted;
         }
 
         if (!currentUser.canDeleteUser(targetUser)) {
-            return 4;
+            return notPermitted;
         }
 
         data.removeIf(u -> u.getUsername().equals(username));
 
        
         if (currentUser.canAccessAdminPanel()) {
-            return 2; 
+            return adminDeletion; 
         }
 
-        return 3; 
+        return deleteItself;
     }
 
     /**
