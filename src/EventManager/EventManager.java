@@ -7,6 +7,7 @@ import Invite.Invite;
 import Invite.inviteStatus;
 import Repository.UserRepository;
 import User.User;
+import UserCalendar.UserCalendar;
 
 
 /**
@@ -44,6 +45,7 @@ public class EventManager {
      *        and {@code eventDuration}
      * @param newValue new value represented as text
      */
+
     public void updateEvent(Event event, String updateAspect, String newValue) {
     	
     	// You should type enter eventName for example as a parameter to updateAspect part.
@@ -97,17 +99,50 @@ public class EventManager {
         }
     }
 
+    public void addInvite(Event event, User recipient) {
+        Invite invite = new Invite(recipient.getUsername(),event.getEventID());
+        for (Invite existingInvite:event.getInvites()) {
+            if (existingInvite.getRecipient().equals(invite.getRecipient())) {
+                return;
+            }
+        }
+        event.addInvite(invite);
+        if (recipient.getCalendar() != null) {
+            recipient.getCalendar().addEvent(event);
+        }
+    }
+
+    public void removeInvite(Event event, User recipient) {
+        event.removeInvite(recipient.getUsername());
+        if (recipient.getCalendar() != null) {
+            recipient.getCalendar().removeEvent(event);
+        }
+    }
+
+
     /**
      * Marks an invite as rejected and removes the event from the invitee's
      * calendar.
      *
      * @param invite invite to reject
      * @param event event associated with the invite
-     * @param repository repository used to update calendars
      */
-    public void rejectInvite(Invite invite, Event event, UserRepository repository) {
+    public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(inviteStatus.REJECTED);
-        event.removeInvite(invite, repository);
+        event.removeInvite(invite.getRecipient());
     }
 
+    public void setOrganizer(Event event, User organizer) {
+        event.setOrganizer(organizer.getUsername());
+
+        if (organizer.getCalendar() == null) {
+            organizer.setCalendar(new UserCalendar(organizer.getUsername(), null));
+        }
+        organizer.getCalendar().addEvent(event);
+    }
+
+    public User getOrganizer(Event event) {
+        String organizerUsername = event.getOrganizer();
+        return repository.findUsername(organizerUsername);
+    }
 }

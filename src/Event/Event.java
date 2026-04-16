@@ -75,32 +75,11 @@ public class Event {
     }
     
     
-    public void addInvite(Invite invite, UserRepository repository) {
-    	for (Invite existingInvite:invites) {
-    		if (existingInvite.getRecipient().equals(invite.getRecipient())) {
-    			return;
-    		}
-    	}
-    	
+    public void addInvite(Invite invite) {
         invites.add(invite);
-        if (eventTime != null) {
-            String username = invite.getRecipient();
-            User user = repository.findUsername(username);
-            
-            if (user != null && user.getCalendar() != null) {
-            	user.getCalendar().addEvent(this);
-            }
         }
-    }
     
-    public void removeInvite(Invite invite, UserRepository repository) {
-        invites.removeIf(n -> n.getRecipient().equals(invite.getRecipient()));
-        if (eventTime != null) {
-            String username = invite.getRecipient();
-            User user = repository.findUsername(username);
-            if (user != null && user.getCalendar() != null) {
-            	user.getCalendar().removeEvent(this);
-            }
-        }
+    public void removeInvite(String recipientUsername) {
+        invites.removeIf(invite -> invite.getRecipient().equals(recipientUsername));
     }
 }
