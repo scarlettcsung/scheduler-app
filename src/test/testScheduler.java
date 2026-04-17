@@ -1,6 +1,7 @@
 package test;
 
 import Event.Event;
+import EventManager.EventManager;
 import Invite.Invite;
 import Invite.inviteStatus;
 import Repository.UserRepository;
@@ -25,6 +26,7 @@ public class testScheduler extends TestCase {
     private User organizer;
     private User invitee;
     private LocalDateTime baseNow;
+    private EventManager eventManager;
 
     protected void setUp() {
         baseNow = LocalDateTime.now().withSecond(0).withNano(0);
@@ -40,6 +42,8 @@ public class testScheduler extends TestCase {
         userRepository.saveUser(invitee);
 
         scheduler = new Scheduler(0, 23, 7, userRepository);
+        
+        eventManager = new EventManager(userRepository);
     }
 
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
@@ -89,7 +93,7 @@ public class testScheduler extends TestCase {
 
     public void testScheduleEventSetsDateAndAddsToAllCalendars() {
         // Successful scheduling should set event time, add to calendars, and keep invites pending.
-        Event event = new Event(
+    	Event event = new Event(
                 "meeting",
                 30,
                 "test meeting",
@@ -97,7 +101,8 @@ public class testScheduler extends TestCase {
                 false,
                 new ArrayList<>()
         );
-        event.addInvite(new Invite(invitee.getUsername(), event.getEventID()),userRepository);
+    	
+        eventManager.addInvite(event, invitee);
 
         boolean scheduled = scheduler.scheduleEvent(event);
 

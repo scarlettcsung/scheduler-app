@@ -2,6 +2,7 @@ package Scheduler;
 
 import Event.Event;
 import Invite.Invite;
+import EventManager.EventManager;
 import Repository.UserRepository;
 import User.User;
 import java.time.Clock;
@@ -24,6 +25,7 @@ public class Scheduler {
     private int maxLookaheadDays;
     private Clock clock;
     private UserRepository userRepository;
+    private EventManager eventManager;
 
     /**
      * Creates a scheduler that uses the system clock and a user repository to
@@ -37,6 +39,7 @@ public class Scheduler {
     public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, UserRepository userRepository) {
         this(dayStart, dayEnd, maxLookaheadDays, Clock.systemDefaultZone());
         this.userRepository = userRepository;
+        this.eventManager = new EventManager(userRepository);
     }
 
     /**
@@ -161,9 +164,9 @@ public class Scheduler {
             }
 
             // Recreate invites so they reset to default PENDING status.
-            event.removeInvite(invite, userRepository);
+            eventManager.removeInvite(event, invitee);
             if (invitee != null) {
-                event.addInvite(new Invite(inviteeUsername, event.getEventID()), userRepository);
+                eventManager.addInvite(event, invitee);
             }
         }
         return true;
