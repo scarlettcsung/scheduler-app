@@ -1,8 +1,7 @@
 package Authentication;
+
 import Repository.UserRepository;
 import User.User;
-
-
 
 public class Authentication {
 	//Authenticated User, the User that will have their details presented

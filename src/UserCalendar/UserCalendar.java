@@ -4,7 +4,6 @@ import Event.Event;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class UserCalendar {
 	
 	public UserCalendar(String ownerUsername, List<Event> events) {

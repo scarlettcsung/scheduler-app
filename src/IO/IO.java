@@ -3,16 +3,16 @@ package IO;
 // readCalender(userList): void, writeCalender(userList):void.
 import java.util.*;
 import java.io.*;
-import java.time.LocalDateTime;
-import java.lang.reflect.Type;
-
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-
 import User.User;
 import UserCalendar.UserCalendar;
 import Event.Event;
 import Repository.UserRepository;
+
+//Additional Packages
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Handles JSON-based persistence for users and their calendars.

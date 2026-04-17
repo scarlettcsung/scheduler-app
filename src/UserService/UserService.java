@@ -5,7 +5,6 @@ import Repository.UserRepository;
 import User.User;
 import UserCalendar.UserCalendar;
 
-
 /**
  * Coordinates user-facing operations such as registration, login, and account
  * deletion.
