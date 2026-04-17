@@ -58,27 +58,5 @@ public class UserService {
 		return authentication.login(username, password);
 	}
 
-    /**
-     * Deletes the named user when the authenticated user is permitted to do so.
-     *
-     * @param username username of the account to delete
-     * @return {@code true} when the account was deleted
-     */
-    public boolean deleteUser(String username) {
-    	
-    	int adminDelete = 2;
-    	int selfDelete = 3;
-    	
-		if (!userRepository.isExistingUser(username)) {
-			return false;
-		}
-		// Finally, it differentiates the current user
-		User currentUser = authentication.getauthenticatedUser();
-		int deleteStatus = userRepository.deleteUserData(username, currentUser);
-		if (deleteStatus == adminDelete || deleteStatus == selfDelete) { // 2->admin deleted, 3->self deleted
-			return true;
-		} else {
-			return false;
-		}
-    }
+
 }

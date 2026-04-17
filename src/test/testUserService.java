@@ -38,26 +38,6 @@ public class testUserService extends TestCase {
         assertEquals(false, result);
     }
 
-    public void testDeleteUser() {
-        userService.registerUser("testUser", "testPassword");
-        userService.login("testUser", "testPassword"); // Log in as the user to be deleted
-        boolean result = userService.deleteUser("testUser");
 
-        assertEquals(true, result);
-    }
-
-    public void testDeleteUserReturnsFalseWhenUserDoesNotExist() {
-        // Again, no need to manually delete first!
-        boolean result = userService.deleteUser("missingUser");
-
-        assertEquals(false, result);
-    }
-    
- // Covers deleteUser when user exists but is not authorized (not logged in)
-    public void testDeleteUserReturnsFalseWhenNotAuthorized() {
-        userService.registerUser("testUser", "testPassword");
-        // deliberately not logging in, so authenticatedUser is null
-        boolean result = userService.deleteUser("testUser");
-        assertEquals(false, result);
-    }
+ 
 }
