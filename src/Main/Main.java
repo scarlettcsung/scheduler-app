@@ -37,7 +37,7 @@ public class Main {
      * A temporary list holding users loaded from the data source before they are 
      * registered into the repository.
      */
-    private static List<User> users = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
     
     /**
      * Main method that launches the application.
@@ -50,7 +50,7 @@ public class Main {
      * </ol>
      * * @param args Command line arguments.
      */
-    public static void main(String[] args) {
+    public void main(String[] args) {
         // 1. Setup the Backend
         UserRepository repository = new UserRepository();
         Scheduler scheduler = new Scheduler(8, 23, 7, repository);
