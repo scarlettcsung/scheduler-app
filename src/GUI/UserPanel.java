@@ -132,6 +132,19 @@ public class UserPanel extends JPanel {
         invitesPane.setBorder(CARD_BORDER);
         invitesPane.setBounds(MARGIN, 380, W/2 - 3*MARGIN/2, 300);
         add(invitesPane);
+        
+        JButton btnDeleteAccount = new JButton("Delete Account");
+        btnDeleteAccount.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		repository.deleteUserData(currentUser.getUsername(), user);
+        		JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
+        		topFrame.setContentPane(new AuthenticationPanel(repository, scheduler));
+        		topFrame.revalidate();
+        		topFrame.repaint();
+        	}
+        });
+        btnDeleteAccount.setBounds(821, 403, 156, 29);
+        add(btnDeleteAccount);
 
         setupInvites();
     }
