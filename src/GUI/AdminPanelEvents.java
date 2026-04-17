@@ -337,7 +337,7 @@ public class AdminPanelEvents extends JPanel {
 			declineButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					EventManager eventManager = new EventManager(repository);
-					eventManager.rejectInvite(invite, event, repository);
+					eventManager.rejectInvite(invite,event);
 					refreshEvents();
 				}
 			});

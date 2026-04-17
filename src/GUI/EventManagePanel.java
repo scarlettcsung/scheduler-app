@@ -39,6 +39,7 @@ import Event.Event;
 import Scheduler.Scheduler;
 import UserService.UserService;
 import Invite.Invite;
+import EventManager.EventManager;
 import javax.swing.JSplitPane;
 
 
@@ -67,6 +68,7 @@ public class EventManagePanel extends JPanel {
 	private boolean isNewEvent;
 	private Event event;
 	private Scheduler scheduler;
+	private EventManager eventManager;
 	private Runnable onSaveSuccess;
 	private List<String> tempInvites = new ArrayList<>();
 	private JLabel lblInvite;
@@ -99,6 +101,7 @@ public class EventManagePanel extends JPanel {
 		this.event = event;
 		this.scheduler = scheduler;
 		this.onSaveSuccess = onSaveSuccess;
+		this.eventManager = new EventManager(repository);
 		
 
 		// Layout
@@ -361,7 +364,7 @@ public class EventManagePanel extends JPanel {
 				if (tempInvites.contains(inviteeUsername)) {
 					tempInvites.remove(inviteeUsername);
 				} else if (!isNewEvent && event != null) {
-					event.removeInvite(new Invite(inviteeUsername, event.getEventID()), repository);			
+					eventManager.removeInvite(event,invitee);			
 				} else {
 					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
 							"User is not in this event!");
@@ -453,7 +456,7 @@ public class EventManagePanel extends JPanel {
 
 				for (String username: tempInvites) {
 					Invite newInvite = new Invite(username,EventManagePanel.this.event.getEventID());
-					EventManagePanel.this.event.addInvite(newInvite,repository);
+					EventManagePanel.this.eventManager.addInvite(event,repository.findUsername(username));
 				}
 				tempInvites.clear();
 
