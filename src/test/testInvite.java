@@ -25,7 +25,7 @@ public class testInvite extends TestCase{
 
     protected void setUp() {
         exampleOrganizer = "Charles";
-        calendar = new UserCalendar(exampleOrganizer,null);
+        calendar = new UserCalendar(null);
         event = new Event("testEvent", 60,"testEvent",
         		exampleOrganizer,false,null);
         eventID = event.getEventID();

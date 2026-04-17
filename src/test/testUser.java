@@ -19,7 +19,7 @@ public class testUser extends TestCase {
     @Override
     protected void setUp() {
         normalUser = new User("testUser", "testPassword", null);
-        myCalendar = new UserCalendar(normalUser.getUsername(), null);
+        myCalendar = new UserCalendar(null);
         normalUser.setCalendar(myCalendar);
         adminUser = new AdminUser("admin", "admin", null);
     }

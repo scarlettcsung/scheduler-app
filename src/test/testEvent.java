@@ -30,10 +30,10 @@ public class testEvent extends TestCase {
         exampleOrganizer = "Charles";
         exampleInvitee = "Joe";
 
-        UserCalendar calendar = new UserCalendar(exampleOrganizer, null);
+        UserCalendar calendar = new UserCalendar(null);
         repository = new UserRepository();
         repository.saveUser(new User("Charles", "12345", calendar));
-        repository.saveUser(new User("Joe", "67890", new UserCalendar("Joe", null))); // CHANGE
+        repository.saveUser(new User("Joe", "67890", new UserCalendar(null))); // CHANGE
 
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new Event("testEvent", 60, "testEvent", exampleOrganizer, false, null);
