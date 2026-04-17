@@ -16,12 +16,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.List;
 
-import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
 import Scheduler.Scheduler;
 import Repository.UserRepository;
 import User.User;
+import event.Event;
 import Invite.inviteStatus;
 
 public class UserPanel extends JPanel {

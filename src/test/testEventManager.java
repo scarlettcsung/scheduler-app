@@ -5,16 +5,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
 import Invite.inviteStatus;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 import Repository.UserRepository;
 
 /**
- * Unit tests for {@link EventManager.EventManager}.
+ * Unit tests for {@link event.EventManager}.
  *
  * @author GI NJ
  * @version TODO

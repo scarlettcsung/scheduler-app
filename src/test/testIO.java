@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.io.*;
 
-import Event.Event;
 import Invite.Invite;
 import Repository.UserRepository;
 import User.AdminUser;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 import IO.IO;
 
 

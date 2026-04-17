@@ -1,9 +1,9 @@
 package Repository;
 
-import Event.Event;
+import event.Event;
 
 /**
- * In-memory repository for {@link Event} instances.
+ * In-memory repository for {@link event} instances.
  *
  * @author CR EO
  * @version 3

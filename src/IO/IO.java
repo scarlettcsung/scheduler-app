@@ -5,7 +5,7 @@ import java.util.*;
 import java.io.*;
 import User.User;
 import UserCalendar.UserCalendar;
-import Event.Event;
+import event.Event;
 import Repository.UserRepository;
 
 //Additional Packages

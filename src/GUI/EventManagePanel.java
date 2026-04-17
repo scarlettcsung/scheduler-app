@@ -35,9 +35,9 @@ import com.github.lgooddatepicker.components.DatePicker;
 // Back-end related imports
 import Repository.UserRepository;
 import User.User;
-import Event.Event;
 import Scheduler.Scheduler;
 import UserService.UserService;
+import event.Event;
 import Invite.Invite;
 import EventManager.EventManager;
 import javax.swing.JSplitPane;

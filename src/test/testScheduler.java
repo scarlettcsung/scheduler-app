@@ -1,6 +1,5 @@
 package test;
 
-import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
 import Invite.inviteStatus;
@@ -8,6 +7,7 @@ import Repository.UserRepository;
 import Scheduler.Scheduler;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;

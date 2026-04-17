@@ -15,8 +15,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
 import Authentication.Authentication;
-import Event.Event;
 import UserService.UserService;
+import event.Event;
+
 import javax.swing.JOptionPane;
 
 

@@ -1,10 +1,10 @@
 package test;
 
-import Event.Event;
 import Invite.Invite;
 import Invite.inviteStatus;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 import junit.framework.TestCase;
 
 /**

@@ -1,10 +1,10 @@
 package test;
 
-import Event.Event;
 import IcsImporter.IcsImporter;
 import IcsImporter.ImportStatus;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.ParserException;
 

@@ -1,8 +1,9 @@
 package UserCalendar;
 
-import Event.Event;
 import java.util.ArrayList;
 import java.util.List;
+
+import event.Event;
 
 public class UserCalendar {
 	

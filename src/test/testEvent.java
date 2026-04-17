@@ -1,10 +1,10 @@
 package test;
 
-import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 import Repository.UserRepository;
 import junit.framework.TestCase;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Unit tests for {@link Event.Event}.
+ * Unit tests for {@link event.Event}.
  *
  * @author NJ
  * @version TODO

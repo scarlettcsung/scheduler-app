@@ -1,10 +1,11 @@
 package Scheduler;
 
-import Event.Event;
 import Invite.Invite;
 import EventManager.EventManager;
 import Repository.UserRepository;
 import User.User;
+import event.Event;
+
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

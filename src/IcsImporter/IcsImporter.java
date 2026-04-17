@@ -1,8 +1,9 @@
 package IcsImporter;
 
-import Event.*;
 import User.*;
 import UserCalendar.*;
+import event.*;
+
 import java.io.*;
 import java.time.*;
 import java.time.format.*;

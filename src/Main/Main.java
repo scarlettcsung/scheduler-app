@@ -3,8 +3,6 @@ package Main;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import Event.Event;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -17,6 +15,7 @@ import Repository.UserRepository;
 import Scheduler.Scheduler;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 import IO.IO;
 import Invite.Invite;
 import User.AdminUser;

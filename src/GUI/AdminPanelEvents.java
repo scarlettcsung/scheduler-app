@@ -27,11 +27,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import Event.Event;
 import EventManager.EventManager;
 import Invite.Invite;
 import Scheduler.Scheduler;
 import User.User;
+import event.Event;
 import Repository.UserRepository;
 
 public class AdminPanelEvents extends JPanel {

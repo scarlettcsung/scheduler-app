@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import Event.Event;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 
 /**
  * Unit tests for {@link UserCalendar.UserCalendar}.
