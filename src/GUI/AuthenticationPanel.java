@@ -105,7 +105,7 @@ public class AuthenticationPanel extends JPanel {
 			            // EO GI: Transition to the admin panel or user dashboard here
 			            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
 			            if (currentUser.getCalendar() == null) {
-			            	currentUser.setCalendar(new UserCalendar(currentUser.getUsername(), new ArrayList<>()));
+			            	currentUser.setCalendar(new UserCalendar(new ArrayList<>()));
 			            }
 
 			            if(currentUser.canAccessAdminPanel()) {
@@ -183,8 +183,8 @@ public static void main(String[] args) {
     
     User testUser1 = new User("nisa", "1234", null);
     User testUser2 = new User("remzi", "1234", null);
-    UserCalendar testCalendar1 = new UserCalendar(testUser1.getUsername(), null);
-    UserCalendar testCalendar2 = new UserCalendar(testUser2.getUsername(), null);
+    UserCalendar testCalendar1 = new UserCalendar(null);
+    UserCalendar testCalendar2 = new UserCalendar(null);
     testUser1.setCalendar(testCalendar1);
     testUser2.setCalendar(testCalendar2);
 

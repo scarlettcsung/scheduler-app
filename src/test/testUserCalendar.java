@@ -28,7 +28,7 @@ public class testUserCalendar extends TestCase {
     	exampleOwner = "Charles";
     	exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
     	event = new Event("testEvent",60,"testEvent",exampleOwner,false,null);
-        userCalendar = new UserCalendar(exampleOwner, null); 
+        userCalendar = new UserCalendar(null); 
         
     }
     
@@ -71,7 +71,7 @@ public class testUserCalendar extends TestCase {
     public void testConstructorWithExistingEvents() {
         List<Event> existingEvents = new ArrayList<>();
         existingEvents.add(event);
-        UserCalendar calendarWithEvents = new UserCalendar(exampleOwner, existingEvents);
+        UserCalendar calendarWithEvents = new UserCalendar(existingEvents);
         assertEquals(existingEvents, calendarWithEvents.getEvents());
     }
 

@@ -66,7 +66,7 @@ public class testIcsImporter extends TestCase {
     }
 
     public void testOverwriteImportedEventsKeepsManualEvents() {
-        UserCalendar calendar = new UserCalendar("Charles", new ArrayList<>());
+        UserCalendar calendar = new UserCalendar(new ArrayList<>());
 
         Event manualEvent = new Event("Manual", 30, "Keep me", "Charles", false, null);
         manualEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 8, 0));

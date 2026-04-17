@@ -30,12 +30,12 @@ public class testScheduler extends TestCase {
         baseNow = LocalDateTime.now().withSecond(0).withNano(0);
         userRepository = new UserRepository();
         organizer = new User("organizer", "pw", null);
-        UserCalendar organizerCalendar = new UserCalendar(organizer.getUsername(), null);
+        UserCalendar organizerCalendar = new UserCalendar(null);
         organizer.setCalendar(organizerCalendar);
         userRepository.saveUser(organizer);
 
         invitee = new User("invitee", "pw", null);
-        UserCalendar inviteeCalendar = new UserCalendar(invitee.getUsername(), null);
+        UserCalendar inviteeCalendar = new UserCalendar(null);
         invitee.setCalendar(inviteeCalendar);
         userRepository.saveUser(invitee);
 

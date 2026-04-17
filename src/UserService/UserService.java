@@ -40,7 +40,7 @@ public class UserService {
 		}	
 	else {
         User newUser = new User(username, password, null);
-        newUser.setCalendar(new UserCalendar(username, null));
+        newUser.setCalendar(new UserCalendar(null));
         userRepository.saveUser(newUser);
        
         return true;

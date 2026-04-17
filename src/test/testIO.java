@@ -34,7 +34,7 @@ public class testIO extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		input = new IO();
-		calendar=new UserCalendar("John", null);
+		calendar=new UserCalendar(null);
 		LocalDateTime eventTime = LocalDateTime.parse("2026-04-08T09:00:00");
 		Event fakeevent= new Event("meeting", 2, "test event", "John", false, null);
 		fakeevent.setEventTime(eventTime);

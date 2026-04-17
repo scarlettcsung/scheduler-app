@@ -18,7 +18,7 @@ public class UserRepository extends Repository<User> {
     public UserRepository() {
         super();
         AdminUser admin = new AdminUser("admin", "admin", null);
-        admin.setCalendar(new UserCalendar(admin.getUsername(), null));
+        admin.setCalendar(new UserCalendar(null));
         data.add(admin);
     }
     

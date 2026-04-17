@@ -22,7 +22,7 @@ public class testUserRepository extends TestCase {
         super.setUp();
         repository = new UserRepository();
         testUser = new User("testUser", "pw123", null);
-        UserCalendar testCalendar = new UserCalendar(testUser.getUsername(), null);
+        UserCalendar testCalendar = new UserCalendar(null);
         testUser.setCalendar(testCalendar);
     }
 

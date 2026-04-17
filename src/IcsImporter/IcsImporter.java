@@ -46,7 +46,7 @@ public class IcsImporter {
         try {
             // Create a calendar on first import so imported events always have a target list.
             if (user.getCalendar() == null) {
-                user.setCalendar(new UserCalendar(user.getUsername(), null));
+                user.setCalendar(new UserCalendar(null));
             }
 
             List<Event> importedEvents = parseICS(icsFile);

@@ -44,7 +44,6 @@ public class Main {
             System.err.println("Error loading file: " + e.getMessage());
         }
 
-       
         // 3. Launch the UI
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Schedule System");
