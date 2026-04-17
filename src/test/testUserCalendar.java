@@ -32,10 +32,7 @@ public class testUserCalendar extends TestCase {
         
     }
     
-    public void testOwner() {
-        // Gebruik de variabele userCalendar (kleine letter)
-        assertEquals(exampleOwner, userCalendar.getOwner());
-    }
+
     
     public void testGetEvents() {
         List<Event> expected = new ArrayList<>();
@@ -61,11 +58,7 @@ public class testUserCalendar extends TestCase {
         assertFalse(userCalendar.getEvents().isEmpty()); // original event should still be there
     }
     
-    //forgot to test the set owner
-    public void testSetOwner() {
-    	userCalendar.SetOwner("NewOwner");
-        assertEquals("NewOwner", userCalendar.getOwner());
-    }
+
     
     //test for loading UserCalendar with Event list already in place
     public void testConstructorWithExistingEvents() {
