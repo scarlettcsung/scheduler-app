@@ -11,16 +11,6 @@ import UserCalendar.UserCalendar;
  * @version 1 and 3
  */
 public class UserRepository extends Repository<User> {
-
-    /**
-     * Creates a repository pre-populated with the default admin account.
-     */
-    public UserRepository() {
-        super();
-        AdminUser admin = new AdminUser("admin", "admin", null);
-        admin.setCalendar(new UserCalendar(null));
-        data.add(admin);
-    }
     
     /**
      * Returns the repository type label.

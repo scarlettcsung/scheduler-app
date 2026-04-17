@@ -178,43 +178,6 @@ public static void main(String[] args) {
     UserRepository repository = new UserRepository();
     EventManager eventManager = new EventManager(repository);
     Scheduler scheduler = new Scheduler(8,23,7,repository);
-
-    // Yaratıcı bir test.
-    
-    User testUser1 = new User("nisa", "1234", null);
-    User testUser2 = new User("remzi", "1234", null);
-    UserCalendar testCalendar1 = new UserCalendar(null);
-    UserCalendar testCalendar2 = new UserCalendar(null);
-    testUser1.setCalendar(testCalendar1);
-    testUser2.setCalendar(testCalendar2);
-
-    Event dummyEvent = new Event(
-        "Dummy Event",
-        60,
-        "This is a test event for delete screen",
-        testUser1.getUsername(),
-        false,
-        null
-    );
-
-    dummyEvent.setEventTime(LocalDateTime.of(2026, 4, 8, 14, 0));
-    dummyEvent.addInvite(new Invite(testUser2.getUsername(), dummyEvent.getEventID()), repository);
-
-    testCalendar1.addEvent(dummyEvent);
-    testCalendar2.addEvent(dummyEvent);
-    
-    System.out.println(testUser1.getCalendar().getEvents());
-    
-    repository.saveUser(testUser1);
-    repository.saveUser(testUser2);
-    
-    //testCalendar1.removeEvent(dummyEvent);
-    eventManager.deleteEvent(dummyEvent);
-    
-    System.out.println(testUser1.getCalendar().getEvents());
-    System.out.println(testUser2.getCalendar().getEvents());
-    
-    
     
     frame.setContentPane(new AuthenticationPanel(repository, scheduler));
     frame.setVisible(true);
