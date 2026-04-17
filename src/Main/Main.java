@@ -19,6 +19,7 @@ import User.User;
 import UserCalendar.UserCalendar;
 import IO.IO;
 import Invite.Invite;
+import User.AdminUser;
 
 /**
  * The entry point for the SmartCalendar application.
@@ -59,12 +60,23 @@ public class Main {
 
         // 2. Load Data
         try {
-            users = ioHandler.readUsers(filePath);
-            for (User user : users) {
-                repository.saveUser(user);
-                System.out.println("Data loaded successfully.");
+            List<User> loadedUsers = ioHandler.readUsers(filePath);
+            List<User> updatedUsers = new ArrayList<>();
+
+            for (User user : loadedUsers) {
+            	if (user.getUsername().equals("admin")) {
+                    AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
+                    updatedUsers.add(adminUser);
+                    repository.saveUser(adminUser);
+                } else {
+                    updatedUsers.add(user);
+                    repository.saveUser(user);
+                }
             }
-            
+
+            users = updatedUsers;
+            System.out.println("Data loaded successfully.");
+
         } catch (Exception e) {
             System.err.println("Error loading file: " + e.getMessage());
         }

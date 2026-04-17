@@ -11,7 +11,16 @@ import UserCalendar.UserCalendar;
  * @version 1 and 3
  */
 public class UserRepository extends Repository<User> {
-    
+	
+	//hard coded admin
+	/*
+	public UserRepository() {
+        super();
+        AdminUser admin = new AdminUser("admin", "admin", null);
+        admin.setCalendar(new UserCalendar(null));
+        data.add(admin);
+    }
+    */
     /**
      * Returns the repository type label.
      *
