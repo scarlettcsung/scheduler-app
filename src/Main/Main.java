@@ -20,15 +20,40 @@ import UserCalendar.UserCalendar;
 import IO.IO;
 import Invite.Invite;
 
+/**
+ * The entry point for the SmartCalendar application.
+ * <p>
+ * This class is responsible for initializing the backend components (Repository, Scheduler, IO),
+ * loading existing user data from storage, and launching the graphical interface.
+ * It also puts data in storage to use for the next start of the program.
+ * </p>
+ * * @NS CR 
+ * @version 3
+ */
 public class Main {
     
+    /**
+     * A temporary list holding users loaded from the data source before they are 
+     * registered into the repository.
+     */
     private static List<User> users = new ArrayList<>();
     
+    /**
+     * Main method that launches the application.
+     * * <ol>
+     * <li>Initializes core services: {@link UserRepository}, {@link Scheduler}, and {@link IO}.</li>
+     * <li>Loads user data from a predefined JSON file path.</li>
+     * <li>Sets up the main {@link JFrame} and attaches a {@link WindowAdapter} to handle 
+     * data persistence upon closing.</li>
+     * <li>Displays the {@link AuthenticationPanel} to the user.</li>
+     * </ol>
+     * * @param args Command line arguments.
+     */
     public static void main(String[] args) {
         // 1. Setup the Backend
         UserRepository repository = new UserRepository();
         Scheduler scheduler = new Scheduler(8, 23, 7, repository);
-        IO ioHandler = new IO(); // Renamed for clarity as it handles both In/Out
+        IO ioHandler = new IO(); 
 
         String filePath = "src/test/resources/testFileIO.json";
 
@@ -47,12 +72,17 @@ public class Main {
         // 3. Launch the UI
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Schedule System");
-            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Change this!
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             frame.setSize(800, 600);
             frame.setLocationRelativeTo(null);
 
             // 4. Add Window Listener for the "X" button
             frame.addWindowListener(new WindowAdapter() {
+                /**
+                 * Intercepts the window closing event to save current repository data
+                 * to the JSON file before exiting.
+                 * * @param e The window event.
+                 */
                 @Override
                 public void windowClosing(WindowEvent e) {
                     try {
