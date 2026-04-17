@@ -9,6 +9,7 @@ import UserCalendar.UserCalendar;
 
 //Additional Packages
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 
 /**
@@ -107,14 +108,15 @@ public class EventManager {
                 return;
             }
         }
-        event.addInvite(invite);
+        event.getInvites().add(invite);
         if (recipient.getCalendar() != null) {
             recipient.getCalendar().addEvent(event);
         }
     }
 
     public void removeInvite(Event event, User recipient) {
-        event.removeInvite(recipient.getUsername());
+        String username = recipient.getUsername();
+        event.getInvites().removeIf(i -> i.getRecipient().equals(username));
         if (recipient.getCalendar() != null) {
             recipient.getCalendar().removeEvent(event);
         }
@@ -130,14 +132,22 @@ public class EventManager {
      */
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(inviteStatus.REJECTED);
-        event.removeInvite(invite.getRecipient());
+        if (this.repository != null) {
+        	User invitee = repository.findUsername(invite.getRecipient());
+        	
+        	if (invitee != null) {
+        		this.removeInvite(event, invitee);
+        	}
+        }
     }
 
     public void setOrganizer(Event event, User organizer) {
         event.setOrganizer(organizer.getUsername());
+        
+        UserCalendar calendar = new UserCalendar(null);
 
         if (organizer.getCalendar() == null) {
-            organizer.setCalendar(new UserCalendar(organizer.getUsername(), null));
+            organizer.setCalendar(calendar);
         }
         organizer.getCalendar().addEvent(event);
     }

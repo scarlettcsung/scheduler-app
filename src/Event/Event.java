@@ -74,12 +74,4 @@ public class Event {
     	return participantUsernames;
     }
     
-    
-    public void addInvite(Invite invite) {
-        invites.add(invite);
-        }
-    
-    public void removeInvite(String recipientUsername) {
-        invites.removeIf(invite -> invite.getRecipient().equals(recipientUsername));
-    }
 }

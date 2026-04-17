@@ -20,12 +20,30 @@ import Repository.UserRepository;
  * @version TODO
  */
 public class testEventManager extends TestCase {
+	
+	private UserRepository repository;
+	private EventManager eveUpdateEvent;
+	private UserCalendar calendar;
 
     String exampleOrganizer = "testUser";
     LocalDateTime example_date = LocalDateTime.of(2026, 4, 1, 12, 0);
-    EventManager eveUpdateEvent = new EventManager();
     Event event = new Event("osman", 60, "testEvent", exampleOrganizer, false, null);
-
+    LocalDateTime example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
+    
+	// Set up repository
+	User exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
+	User exampleNewOrganizer = new User("Jennifer","1234", new UserCalendar(null));
+	Invite invite = new Invite(exampleInvitee.getUsername(),event.getEventID());
+	
+	public void setUp() {
+		repository = new UserRepository();
+		eveUpdateEvent = new EventManager(repository);
+		repository.saveUser(new User("Charles","12345",calendar));
+		repository.saveUser(exampleInvitee);
+		repository.saveUser(exampleNewOrganizer);
+		calendar = new UserCalendar(null);
+	}
+	
     public void testUpdateEventShouldChangeEvent() {
         eveUpdateEvent.updateEvent(event, "eventName", "abc");
         assertEquals("abc", event.getEventName());
@@ -66,20 +84,10 @@ public class testEventManager extends TestCase {
     }
     
     public void testInviteReject() {
-    	
-    	UserCalendar calendar = new UserCalendar(null);
-    	// Set up repository
-    	UserRepository repository = new UserRepository();
-    	repository.saveUser(new User("Charles","12345",calendar));
-    	repository.saveUser(new User("Joe","67890",calendar));
-    	String exampleInvitee = "Joe";
-    	Invite invite = new Invite(exampleInvitee,event.getEventID());
-    	List<Invite> expected = new ArrayList<>();
-        event.addInvite(invite, repository);
-        eveUpdateEvent.rejectInvite(invite,event,repository);
-        assertEquals(expected,event.getInvites());
-        User exampleUser = repository.findUsername(exampleInvitee);
-        assertFalse(exampleUser.getCalendar().getEvents().contains(event));
+    	eveUpdateEvent.addInvite(event,exampleInvitee);
+        eveUpdateEvent.rejectInvite(invite,event);
+        assertEquals(0, event.getInvites().size());
+        assertFalse(exampleInvitee.getCalendar().getEvents().contains(event));
         assertEquals(inviteStatus.REJECTED,invite.getStatus());
     }
     
@@ -186,4 +194,69 @@ public class testEventManager extends TestCase {
         Event e = new Event("meeting", 60, "desc", "unknownUser", false, null);
         new EventManager(repo).deleteEvent(e);
     }
+    
+ // Test Invite Methods
+    public void testInvites() {
+        List<User> expected = new ArrayList<>();
+        assertEquals(expected,event.getInvites());
+    }
+    public void testAddInvite() {
+    	
+    	event.setEventTime(example_time);
+    	eveUpdateEvent.addInvite(event,exampleInvitee);
+    	assertEquals(1, event.getInvites().size());
+        assertEquals(exampleInvitee.getUsername(), event.getInvites().get(0).getRecipient());
+        assertTrue(exampleInvitee.getCalendar().getEvents().contains(event));
+    } 
+    
+  //test duplicates in same calendar
+    public void testAddInviteDuplicate() {
+    	eveUpdateEvent.addInvite(event,exampleInvitee);
+    	eveUpdateEvent.addInvite(event,exampleInvitee);
+        assertEquals(1, event.getInvites().size());
+    }
+    
+    public void testRemoveInvite() {
+        List<Invite> expected = new ArrayList<>();
+        eveUpdateEvent.addInvite(event,exampleInvitee);
+        eveUpdateEvent.removeInvite(event,exampleInvitee);
+        assertEquals(expected,event.getInvites());
+        assertFalse(exampleInvitee.getCalendar().getEvents().contains(event));
+    }
+
+    // Test Setters
+    public void testSetEventName() {
+        event.setEventName("testEvent2");
+        assertNotSame("testEvent",event.getEventName());
+        assertEquals("testEvent2",event.getEventName());
+    }
+    public void testSetEventTime() {
+        event.setEventTime(example_time);
+        assertNotNull("Time was not set",event.getEventTime());
+        assertEquals(example_time, event.getEventTime());
+    }
+    public void testSetEventDescription() {
+        event.setEventDescription("testEvent2");
+        assertNotSame("testEvent",event.getEventDescription());
+        assertEquals("testEvent2",event.getEventDescription());
+    }
+    public void testSetEventDuration() {
+        event.setEventDuration(120);
+        assertNotSame(60,event.getEventDuration());
+        assertEquals(120,event.getEventDuration());
+    }
+    // Test removeInvite when user is not found in repository
+    public void testRemoveInviteUserNotInRepo() {
+        User ghostUser = new User("ghostUser","1234",new UserCalendar(null));
+        Invite ghostInvite = new Invite(ghostUser.getUsername(),event.getEventID());
+        event.getInvites().add(ghostInvite);
+        eveUpdateEvent.removeInvite(event, ghostUser); 
+        assertEquals(0, event.getInvites().size()); 
+    }
+    
+    public void testSetOrganizer() {
+    	eveUpdateEvent.setOrganizer(event, exampleNewOrganizer);
+    	assertEquals(exampleNewOrganizer.getUsername(),event.getOrganizer());
+    }
+    
 }
