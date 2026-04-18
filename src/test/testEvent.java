@@ -62,4 +62,11 @@ public class testEvent extends TestCase {
     	assertEquals(expected, event.getParticipants());
     }
     
+    public void testHasExistingInvite() {
+    	eventManager.addInvite(event, exampleInvitee);
+    	assertTrue(event.hasExistingInvite(exampleInvitee.getUsername()));
+    	eventManager.removeInvite(event, exampleInvitee);
+    	assertFalse(event.hasExistingInvite(exampleInvitee.getUsername()));
+    }
+    
 }

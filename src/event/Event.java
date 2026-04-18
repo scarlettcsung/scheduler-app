@@ -61,6 +61,9 @@ public class Event {
         return invites;
     }
     
+    /**
+     * Gets list of participant usernames
+     */
     public List<String> getParticipants() {
     	participantUsernames.clear();
     	
@@ -70,5 +73,20 @@ public class Event {
     	}
     	return participantUsernames;
     }
+    
+    /**
+     * Checks if event already has invite
+     *
+     * @param username string of the username of invited user
+     */
+    public boolean hasExistingInvite(String username) {
+    	for (Invite existingInvite: invites) {
+            if (existingInvite.getRecipient().equals(username)) {
+                return true;
+            }
+    	}
+    	return false;
+    }
+
     
 }
