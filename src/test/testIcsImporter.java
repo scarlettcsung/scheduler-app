@@ -4,7 +4,7 @@ import IcsImporter.IcsImporter;
 import IcsImporter.ImportStatus;
 import User.User;
 import UserCalendar.UserCalendar;
-import event.Event;
+import event.*;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.ParserException;
 
@@ -47,7 +47,7 @@ public class testIcsImporter extends TestCase {
         assertEquals("Fixture event", importedEvent.getEventDescription());
         assertEquals(LocalDateTime.of(2026, 4, 10, 9, 0), importedEvent.getEventTime());
         assertEquals(60, importedEvent.getEventDuration());
-        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+        assertTrue(importedEvent.isImported());
     }
 
     public void testImportCalendarCreatesCalendarAndSetsOrganizer() {
@@ -62,17 +62,17 @@ public class testIcsImporter extends TestCase {
 
         Event importedEvent = user.getCalendar().getEvents().get(0);
         assertEquals("Charles", importedEvent.getOrganizer());
-        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+        assertTrue(importedEvent.isImported());
     }
 
     public void testOverwriteImportedEventsKeepsManualEvents() {
         UserCalendar calendar = new UserCalendar(new ArrayList<>());
 
-        Event manualEvent = new Event("Manual", 30, "Keep me", "Charles", false, null);
+        Event manualEvent = new CreatedEvent("Manual", 30, "Keep me", "Charles", null);
         manualEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 8, 0));
         calendar.addEvent(manualEvent);
 
-        Event oldImportedEvent = new Event("Old import", 45, "Replace me", "Charles", true, null);
+        Event oldImportedEvent = new ImportedEvent("Old import", 45, "Replace me", "Charles", null);
         oldImportedEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 9, 0));
         calendar.addEvent(oldImportedEvent);
 
@@ -88,7 +88,7 @@ public class testIcsImporter extends TestCase {
 
         Event importedEvent = findEvent(calendar.getEvents(), "Simple Import");
         assertNotNull(importedEvent);
-        assertEquals(Boolean.TRUE, importedEvent.getIsImported());
+        assertTrue(importedEvent.isImported());
     }
 
     public void testImportCalendarReturnsUserNotFoundWhenUserIsNull() {

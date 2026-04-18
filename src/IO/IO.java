@@ -5,7 +5,7 @@ import java.util.*;
 import java.io.*;
 import User.User;
 import UserCalendar.UserCalendar;
-import event.Event;
+import event.*;
 import Repository.UserRepository;
 
 //Additional Packages
@@ -31,11 +31,25 @@ public class IO {
      * @throws IOException when the file cannot be read
      */
     public List<User> readUsers(String filePath) throws IOException{
-    	Gson gson = new GsonBuilder()
+    	
+    	// Added to save whether Event was imported or created
+    	JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
+            JsonObject jsonObject = json.getAsJsonObject();
+            boolean isImportedField = jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean();
+            
+            if (isImportedField) {
+                return context.deserialize(json, ImportedEvent.class);
+            } else {
+                return context.deserialize(json, CreatedEvent.class);
+            }
+        };
+
+        Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) 
                 (json, type, context) -> LocalDateTime.parse(json.getAsString()))
+            .registerTypeAdapter(Event.class, eventDeserializer)
             .create();
-
+        
         FileReader reader = new FileReader(filePath);
         User[] users = gson.fromJson(reader, User[].class);
         reader.close();

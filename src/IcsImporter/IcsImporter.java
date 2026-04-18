@@ -111,12 +111,11 @@ public class IcsImporter {
 
             Summary summary = calendarEvent.getSummary();
             Description description = calendarEvent.getDescription();
-            Event event = new Event(
+            Event event = new ImportedEvent(
                     summary.getValue(),
                     durationMinutes,
                     description.getValue(),
                     null,
-                    true,
                     null
             );
             event.setEventTime(startTime);
@@ -135,7 +134,7 @@ public class IcsImporter {
      */
     public void overwriteImportedEvents(UserCalendar calendar, List<Event> importedEvents) {
         // Only remove events that came from a previous import.
-        calendar.getEvents().removeIf(event -> Boolean.TRUE.equals(event.getIsImported()));
+        calendar.getEvents().removeIf(event -> event.isImported());
         // Then append the latest import result.
         calendar.getEvents().addAll(importedEvents);
     }

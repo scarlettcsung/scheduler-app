@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import event.CreatedEvent;
 import event.Event;
 
 import java.awt.GridBagLayout;
@@ -34,7 +35,7 @@ public class ViewEventDialog extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			Event testEvent = new Event("Event Name", 30,"Mendel","nisa",false,null);
+			Event testEvent = new CreatedEvent("Event Name", 30,"Mendel","nisa",null);
 			LocalDateTime eventTimeTest = LocalDateTime.of(2026,04,20,16,00);
 			testEvent.setEventTime(eventTimeTest);
 			ViewEventDialog dialog = new ViewEventDialog(testEvent);

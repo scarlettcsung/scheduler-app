@@ -7,6 +7,7 @@ import Repository.UserRepository;
 import Scheduler.Scheduler;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.CreatedEvent;
 import event.Event;
 import junit.framework.TestCase;
 
@@ -49,12 +50,11 @@ public class testScheduler extends TestCase {
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
         // Duration longer than the daily window should never be schedulable.
         Scheduler oneHourWindow = new Scheduler(8, 9, 3, userRepository);
-        Event tooLong = new Event(
+        Event tooLong = new CreatedEvent(
                 "meeting",
                 61,
                 "test meeting",
                 organizer.getUsername(),
-                false,
                 new ArrayList<>()
         );
 
@@ -66,23 +66,21 @@ public class testScheduler extends TestCase {
     public void testFindAvailableSlotReturnsFirstFreeSlotAfterBusyEvent() {
         // A busy block at the start should push the slot to the first free minute after it.
         LocalDateTime busyStart = baseNow.plusMinutes(1);
-        Event busy = new Event(
+        Event busy = new CreatedEvent(
                 "busy",
                 60,
                 "busy slot",
                 organizer.getUsername(),
-                false,
                 new ArrayList<>()
         );
         busy.setEventTime(busyStart);
         organizer.getCalendar().addEvent(busy);
 
-        Event toSchedule = new Event(
+        Event toSchedule = new CreatedEvent(
                 "meeting",
                 30,
                 "test meeting",
                 organizer.getUsername(),
-                false,
                 new ArrayList<>()
         );
         LocalDateTime slot = scheduler.findAvailableSlot(toSchedule);
@@ -93,12 +91,11 @@ public class testScheduler extends TestCase {
 
     public void testScheduleEventSetsDateAndAddsToAllCalendars() {
         // Successful scheduling should set event time, add to calendars, and keep invites pending.
-    	Event event = new Event(
+    	Event event = new CreatedEvent(
                 "meeting",
                 30,
                 "test meeting",
                 organizer.getUsername(),
-                false,
                 new ArrayList<>()
         );
     	
@@ -124,23 +121,21 @@ public class testScheduler extends TestCase {
                 .withMinute(0)
                 .withSecond(0)
                 .withNano(0);
-        Event block = new Event(
+        Event block = new CreatedEvent(
                 "busy",
                 120,
                 "busy slot",
                 organizer.getUsername(),
-                false,
                 new ArrayList<>()
         );
         block.setEventTime(dayStart);
         organizer.getCalendar().addEvent(block);
 
-        Event toSchedule = new Event(
+        Event toSchedule = new CreatedEvent(
                 "meeting",
                 60,
                 "test meeting",
                 organizer.getUsername(),
-                false,
                 new ArrayList<>()
         );
         boolean scheduled = oneDayLookahead.scheduleEvent(toSchedule);
@@ -151,13 +146,13 @@ public class testScheduler extends TestCase {
     
     public void testFindAvailableSlot_ignoresNullTimeEvent_andStillFindsSlot() {
     	//setup null event
-        Event nullTimeEvent = new Event("ghost", 30, "no time set",
-                organizer.getUsername(), false, new ArrayList<>());
+        Event nullTimeEvent = new CreatedEvent("ghost", 30, "no time set",
+                organizer.getUsername(), new ArrayList<>());
         organizer.getCalendar().addEvent(nullTimeEvent);  // bad data in calendar
         
         //to schedule event
-        Event toSchedule = new Event("meeting", 30, "test meeting",
-                organizer.getUsername(), false, new ArrayList<>());
+        Event toSchedule = new CreatedEvent("meeting", 30, "test meeting",
+                organizer.getUsername(), new ArrayList<>());
         
         //run the find available slot
         LocalDateTime slot = scheduler.findAvailableSlot(toSchedule);

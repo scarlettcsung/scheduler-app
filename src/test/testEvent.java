@@ -4,7 +4,7 @@ import EventManager.EventManager;
 import Invite.Invite;
 import User.User;
 import UserCalendar.UserCalendar;
-import event.Event;
+import event.*;
 import Repository.UserRepository;
 import junit.framework.TestCase;
 
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Unit tests for {@link event.Event}.
+ * Unit tests for {@link event.Event}, {@link event.CreatedEvent}, and {@link event.ImportedEvent}.
  *
  * @author NJ
  * @version TODO
@@ -40,7 +40,7 @@ public class testEvent extends TestCase {
         repository.saveUser(exampleInvitee); // CHANGE
 
         example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
-        event = new Event("testEvent", 60, "testEvent", exampleOrganizer, false, null);
+        event = new CreatedEvent("testEvent", 60, "testEvent", exampleOrganizer, null);
         invite = new Invite(exampleInvitee.getUsername(), event.getEventID());
     }
 

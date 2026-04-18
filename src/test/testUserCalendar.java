@@ -8,6 +8,7 @@ import java.util.List;
 
 import User.User;
 import UserCalendar.UserCalendar;
+import event.CreatedEvent;
 import event.Event;
 
 /**
@@ -27,7 +28,7 @@ public class testUserCalendar extends TestCase {
         // Maak eerst de calendar aan of gebruik null als de User constructor dat toestaat
     	exampleOwner = "Charles";
     	exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
-    	event = new Event("testEvent",60,"testEvent",exampleOwner,false,null);
+    	event = new CreatedEvent("testEvent",60,"testEvent",exampleOwner,null);
         userCalendar = new UserCalendar(null); 
         
     }
@@ -52,7 +53,7 @@ public class testUserCalendar extends TestCase {
     }
     
     public void testRemoveEventNotInCalendar() {
-        Event otherEvent = new Event("otherEvent", 30, "otherDesc", exampleOwner, false, null);
+        Event otherEvent = new CreatedEvent("otherEvent", 30, "otherDesc", exampleOwner, null);
         userCalendar.addEvent(event);
         userCalendar.removeEvent(otherEvent); // otherEvent is not in the calendar
         assertFalse(userCalendar.getEvents().isEmpty()); // original event should still be there

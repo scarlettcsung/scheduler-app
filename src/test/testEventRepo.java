@@ -1,6 +1,7 @@
 package test;
 
 import Repository.EventRepository;
+import event.CreatedEvent;
 import event.Event;
 import junit.framework.TestCase;
 
@@ -13,7 +14,7 @@ public class testEventRepo extends TestCase {
 
     public void testSaveEvent() {
         EventRepository repo = new EventRepository();
-        Event event = new Event("Test", 60, "Desc", "admin", false, null);
+        Event event = new CreatedEvent("Test", 60, "Desc", "admin", null);
 
         repo.save(event);
 

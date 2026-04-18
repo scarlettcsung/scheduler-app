@@ -38,6 +38,7 @@ import User.User;
 import Scheduler.Scheduler;
 import UserService.UserService;
 import event.Event;
+import event.CreatedEvent;
 import Invite.Invite;
 import EventManager.EventManager;
 import javax.swing.JSplitPane;
@@ -444,7 +445,7 @@ public class EventManagePanel extends JPanel {
 				int latestHour = Integer.parseInt(latestTime);
 
 				if (isNewEvent) {
-					EventManagePanel.this.event = new Event(eventName,duration,eventDescription,currentUser.getUsername(),false, new ArrayList<>());
+					EventManagePanel.this.event = new CreatedEvent(eventName,duration,eventDescription,currentUser.getUsername(), new ArrayList<>());
 					EventManagePanel.this.isNewEvent = false;
 
 				} else {

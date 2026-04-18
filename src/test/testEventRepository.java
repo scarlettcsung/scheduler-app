@@ -2,6 +2,7 @@ package test;
 
 import junit.framework.TestCase;
 import Repository.EventRepository;
+import event.CreatedEvent;
 import event.Event;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class testEventRepository extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         eventRepo = new EventRepository();
-        testEvent = new Event("Project", 60, "test description", "admin", false, null);
+        testEvent = new CreatedEvent("Project", 60, "test description", "admin", null);
     }
 
     public void testSaveAndFindEvent() {
@@ -39,7 +40,7 @@ public class testEventRepository extends TestCase {
 
     public void testGetAll() {
         eventRepo.save(testEvent);
-        eventRepo.save(new Event("Lunch", 30, "Kaas", "user1", false, null));
+        eventRepo.save(new CreatedEvent("Lunch", 30, "Kaas", "user1", null));
         
         List allEvents = eventRepo.getAll();
         

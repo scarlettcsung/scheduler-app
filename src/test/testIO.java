@@ -11,6 +11,7 @@ import Repository.UserRepository;
 import User.AdminUser;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.CreatedEvent;
 import event.Event;
 import IO.IO;
 
@@ -36,7 +37,7 @@ public class testIO extends TestCase {
 		input = new IO();
 		calendar=new UserCalendar(null);
 		LocalDateTime eventTime = LocalDateTime.parse("2026-04-08T09:00:00");
-		Event fakeevent= new Event("meeting", 2, "test event", "John", false, null);
+		Event fakeevent= new CreatedEvent("meeting", 2, "test event", "John", null);
 		fakeevent.setEventTime(eventTime);
 		calendar.addEvent(fakeevent);
 		repository = new UserRepository();

@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1
  */
 
-public class Event {
+public abstract class Event {
 
     private String eventName;
     private int eventDuration;
@@ -24,20 +24,22 @@ public class Event {
     private String eventDescription;
     private final String eventID = UUID.randomUUID().toString();
     private String organizerUsername;
-    private Boolean isImported;
     private List<Invite> invites;
     private List<String> participantUsernames;
+    
+    protected boolean isImportedField; // Just for IO
 
     public Event(String eventName, int eventDuration, String eventDescription,
-                 String organizerUsername, Boolean isImported,  List<Invite> invites) {
+                 String organizerUsername,  List<Invite> invites) {
         this.eventName = eventName;
         this.eventDuration = eventDuration;
         this.eventDescription = eventDescription;
         this.organizerUsername = organizerUsername;
-        this.isImported = isImported;
         this.invites = Objects.requireNonNullElseGet(invites, () -> new ArrayList<>());
         this.participantUsernames = new ArrayList<>();
     }
+    
+    public abstract boolean isImported(); 
 
     // Setter Methods
     public void setEventName(String eventName) {this.eventName = eventName;}
@@ -53,7 +55,6 @@ public class Event {
     public String getEventDescription() {return eventDescription; }
     public int getEventDuration() {return eventDuration; }
     public String getEventID() {return eventID; }
-    public Boolean getIsImported() {return isImported;}
 
     // Invites Methods
     

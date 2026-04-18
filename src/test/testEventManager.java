@@ -10,6 +10,7 @@ import Invite.Invite;
 import Invite.inviteStatus;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.CreatedEvent;
 import event.Event;
 import Repository.UserRepository;
 
@@ -27,7 +28,7 @@ public class testEventManager extends TestCase {
 
     String exampleOrganizer = "testUser";
     LocalDateTime example_date = LocalDateTime.of(2026, 4, 1, 12, 0);
-    Event event = new Event("osman", 60, "testEvent", exampleOrganizer, false, null);
+    Event event = new CreatedEvent("osman", 60, "testEvent", exampleOrganizer, null);
     LocalDateTime example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
     
 	// Set up repository
@@ -104,7 +105,7 @@ public class testEventManager extends TestCase {
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
-        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
         
         //add event to calendar
         orgCal.addEvent(e);
@@ -123,7 +124,7 @@ public class testEventManager extends TestCase {
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
         repo.saveUser(new User("inviteeUser", "password", null)); // no calendar
-        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
         
         //add event to calendar
         orgCal.addEvent(e);
@@ -144,7 +145,7 @@ public class testEventManager extends TestCase {
         UserCalendar inviteeCal = new UserCalendar(null);
         User invitee = new User("inviteeUser", "password", inviteeCal);
         repo.saveUser(invitee);
-        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
         
         //add to calendar
         orgCal.addEvent(e);
@@ -159,7 +160,7 @@ public class testEventManager extends TestCase {
     
     // Covers the path where repository is null, hitting the final closing bracket?
     public void testDeleteEventNoRepository() {
-        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
         new EventManager().deleteEvent(e); 
     }
     
@@ -170,7 +171,7 @@ public class testEventManager extends TestCase {
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
-        Event e = new Event("meeting", 60, "desc", "testUser", false, null);
+        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
         
         //add to calendar
         orgCal.addEvent(e);
@@ -184,14 +185,14 @@ public class testEventManager extends TestCase {
     // Test organizerUsername == null branch
     public void testDeleteEventNullOrganizerUsername() {
         UserRepository repo = new UserRepository();
-        Event e = new Event("meeting", 60, "desc", null, false, null); // null organizer
+        Event e = new CreatedEvent("meeting", 60, "desc", null, null); // null organizer
         new EventManager(repo).deleteEvent(e);
     }
     
     // Covers organizer not found in repo (organizer == null) branch
     public void testDeleteEventOrganizerNotInRepo() {
         UserRepository repo = new UserRepository();
-        Event e = new Event("meeting", 60, "desc", "unknownUser", false, null);
+        Event e = new CreatedEvent("meeting", 60, "desc", "unknownUser", null);
         new EventManager(repo).deleteEvent(e);
     }
     

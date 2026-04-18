@@ -22,6 +22,7 @@ import Scheduler.Scheduler;
 import Repository.UserRepository;
 import User.User;
 import event.Event;
+import event.CreatedEvent;
 import Invite.inviteStatus;
 
 public class UserPanel extends JPanel {
@@ -49,20 +50,18 @@ public class UserPanel extends JPanel {
         
         cardBorder = cardBorder();
 
-        event1 = new Event(
+        event1 = new CreatedEvent(
     	        "Team Meeting", 
     	        60, 
     	        "yappen met de bros", 
     	        currentUser.getUsername(), 
-    	        false, 
     	        new ArrayList<>()
     	    );
-        event2 = new Event(
+        event2 = new CreatedEvent(
         		"Deadline", 
         		120, 
         		"strijden voor de deadline", 
         		currentUser.getUsername(), 
-        		false, 
         		new ArrayList<>()
         );  
         LocalDateTime event1Time = LocalDateTime.of(2026, 4,20,16,20);
