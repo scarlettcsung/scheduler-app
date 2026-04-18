@@ -171,6 +171,11 @@ public class EventManager {
         organizer.getCalendar().addEvent(event);
     }
 
+    /**
+     * Gets User object of event organizer
+     *
+     * @param event event to add invite to
+     */
     public User getOrganizer(Event event) {
         String organizerUsername = event.getOrganizer();
         return repository.findUsername(organizerUsername);
