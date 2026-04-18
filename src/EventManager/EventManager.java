@@ -100,21 +100,36 @@ public class EventManager {
             return;
         }
     }
+    
+    /**
+     * Checks if event already has invite
+     *
+     * @param event event to add invite to
+     * @param username string of the username of invited user
+     */
+    public boolean hasExistingInvite(Event event, String username) {
+    	for (Invite existingInvite:event.getInvites()) {
+            if (existingInvite.getRecipient().equals(username)) {
+                return true;
+            }
+    	}
+    	return false;
+    }
 
     /**
-     * Adds invite to event
+     * Adds invite to event if not already invited
      *
      * @param event event to add invite to
      * @param recipient user associated with invite
      */
     public void addInvite(Event event, User recipient) {
-        Invite invite = new Invite(recipient.getUsername(),event.getEventID());
-        for (Invite existingInvite:event.getInvites()) {
-            if (existingInvite.getRecipient().equals(invite.getRecipient())) {
-                return;
-            }
+        if (hasExistingInvite(event,recipient.getUsername())) {
+        	return;
         }
+        
+        Invite invite = new Invite(recipient.getUsername(),event.getEventID());
         event.getInvites().add(invite);
+        
         if (recipient.getCalendar() != null) {
             recipient.getCalendar().addEvent(event);
         }
@@ -129,6 +144,11 @@ public class EventManager {
      */
     public void removeInvite(Event event, User recipient) {
         String username = recipient.getUsername();
+        
+        if (!hasExistingInvite(event,username)) {
+        	return;
+        }
+        
         event.getInvites().removeIf(i -> i.getRecipient().equals(username));
         if (recipient.getCalendar() != null) {
             recipient.getCalendar().removeEvent(event);
