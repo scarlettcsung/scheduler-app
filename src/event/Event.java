@@ -1,9 +1,6 @@
 package event;
 
 import Invite.Invite;
-import User.User;
-import Repository.UserRepository;
-import UserCalendar.UserCalendar;
 
 // Additional Packages
 import java.util.Objects;
