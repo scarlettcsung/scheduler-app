@@ -415,8 +415,8 @@ public class EventManagePanel extends JPanel {
 					return;
 				}
 				
-				if (ldLatest.isBefore(java.time.LocalDate.now())) {
-				    JOptionPane.showMessageDialog(EventManagePanel.this, "The latest date cannot be in the past.");
+				if (!ldLatest.isAfter(java.time.LocalDate.now())) {
+				    JOptionPane.showMessageDialog(EventManagePanel.this, "The latest date must be after today.");
 				    return;
 				}
 
