@@ -101,6 +101,12 @@ public class EventManager {
         }
     }
 
+    /**
+     * Adds invite to event
+     *
+     * @param event event to add invite to
+     * @param recipient user associated with invite
+     */
     public void addInvite(Event event, User recipient) {
         Invite invite = new Invite(recipient.getUsername(),event.getEventID());
         for (Invite existingInvite:event.getInvites()) {
@@ -113,7 +119,14 @@ public class EventManager {
             recipient.getCalendar().addEvent(event);
         }
     }
-
+    
+    
+    /**
+     * Removes invite from event
+     *
+     * @param event event to add invite to
+     * @param recipient user associated with invite
+     */
     public void removeInvite(Event event, User recipient) {
         String username = recipient.getUsername();
         event.getInvites().removeIf(i -> i.getRecipient().equals(username));
@@ -141,6 +154,12 @@ public class EventManager {
         }
     }
 
+    /**
+     * Sets event organizer, if change is necessary
+     *
+     * @param event event to add invite to
+     * @param organizer user to be set as organizer of event
+     */
     public void setOrganizer(Event event, User organizer) {
         event.setOrganizer(organizer.getUsername());
         
