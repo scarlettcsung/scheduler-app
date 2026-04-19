@@ -1,6 +1,6 @@
 package Repository;
 
-import event.Event;
+import Event.Event;
 
 /**
  * In-memory repository for {@link event} instances.
