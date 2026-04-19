@@ -28,6 +28,12 @@ public class UserCalendar {
     }
     
     public void removeEvent(Event event) {
-        events.removeIf(n -> n == event);
+        if (event == null) {
+            return;
+        }
+
+        String targetEventId = event.getEventID();
+        events.removeIf(n -> n == event
+                || (n != null && targetEventId != null && targetEventId.equals(n.getEventID())));
     }
 }
