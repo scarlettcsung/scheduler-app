@@ -2,6 +2,7 @@ package test;
 
 import junit.framework.TestCase;
 import Repository.EventRepository;
+import User.User;
 import event.CreatedEvent;
 import event.Event;
 
@@ -56,6 +57,19 @@ public class testEventRepository extends TestCase {
         assertTrue("Delete should return true when event exists", deleted);
         assertNull("Event should no longer exist in repo", eventRepo.findByEventID(id));
     }
+    
+    public void testDeleteEventsByOrganizer() {
+    	User organiser = new User("John", "admin", null);
+    	User testUser1 = new User("user1", "Pork", null);
+		eventRepo.save(new CreatedEvent("Project", 60, "test description", "John", null));
+		eventRepo.save(new CreatedEvent("Meeting", 45, "Discuss project", "user1", null));
+		
+		assertEquals("Repository should contain 2 events", 2, eventRepo.getAll().size());
+		
+		eventRepo.deleteEventsByOrganizer("John");
+		
+		assertEquals("Repository should contain 1 event after deletion", 1, eventRepo.getAll().size());
+	}
 
     public void testGetRepositoryType() {
         assertEquals("Event Repository", eventRepo.getRepositoryType());

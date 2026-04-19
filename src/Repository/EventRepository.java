@@ -52,4 +52,13 @@ public class EventRepository extends Repository<Event> {
     public String getRepositoryType() {
         return "Event Repository";
 	}
+
+	public void deleteEventsByOrganizer(String username) {
+		for(Event e : data) {
+			if(e.getOrganizer().equals(username)) {
+				deleteEvent(e.getEventID());
+			}
+		}
+		
+	}
 }
