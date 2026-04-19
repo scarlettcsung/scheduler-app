@@ -139,6 +139,7 @@ public class UserPanel extends JPanel {
         btnDeleteAccount.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		repository.deleteUserData(currentUser.getUsername(), user);
+        		eventRepository.deleteEventsByOrganizer(currentUser.getUsername());
         		JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
         		topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
         		topFrame.revalidate();
