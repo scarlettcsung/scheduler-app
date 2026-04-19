@@ -502,30 +502,4 @@ public class EventManagePanel extends JPanel {
 	        textAreaShowParticipants.append(username + " (New)\n");
 	    }
 	}
-
-	/*public static void main(String[] args) {
-		javax.swing.JFrame frame = new javax.swing.JFrame("Event Panel Test");
-		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600, 500);
-
-		// 1. Create dummy data
-		UserRepository dummyRepo = new UserRepository();
-		User testUser = new User("Charles","12345",null);
-		dummyRepo.saveUser(new User("John", "67890", null ));
-		dummyRepo.saveUser(new User("testUser", "888888", null)); // For testing invites
-
-		Scheduler mockScheduler = new Scheduler(0, 23, 7, dummyRepo);
-
-		// 2. Initialize the panel (Testing "New Event" mode)
-		EventManagePanel panel = new EventManagePanel(
-				dummyRepo,
-				testUser,
-				true,  // isNewEvent
-				null,  // event (null because it's new)
-				mockScheduler
-		);
-
-		frame.getContentPane().add(panel);
-		frame.setVisible(true);
-	} */
 }
