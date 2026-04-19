@@ -459,8 +459,10 @@ public class EventManagePanel extends JPanel {
 				}
 
 				for (String username: tempInvites) {
-					Invite newInvite = new Invite(username,EventManagePanel.this.event.getEventID());
-					EventManagePanel.this.eventManager.addInvite(event,repository.findUsername(username));
+					User invitee = repository.findUsername(username);
+					if (invitee != null) {
+						EventManagePanel.this.eventManager.addInvite(EventManagePanel.this.event, invitee);
+					}
 				}
 				tempInvites.clear();
 
