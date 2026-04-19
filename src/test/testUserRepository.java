@@ -1,11 +1,15 @@
 package test;
 
 
+import java.util.ArrayList;
+
 import Repository.UserRepository;
 import User.AdminUser;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.CreatedEvent;
 import junit.framework.TestCase;
+import event.Event;
 
 /**
  * Unit tests for {@link Repository.UserRepository}.
@@ -89,5 +93,38 @@ public class testUserRepository extends TestCase {
         int result = repository.deleteUserData("ghostUser", someUser);
 
         assertEquals(4, result);
+    }
+    
+    public void testRemoveFromAllCalendars() {
+    	Event testEvent1 = new CreatedEvent("Test Event 1", 60, "Description 1", "testUser1", null);
+    	Event testEvent2 = new CreatedEvent("Test Event 2", 60, "Description 2", "testUser2", null);
+    	ArrayList<Event> eventList = new ArrayList<>();
+    	eventList.add(testEvent1);
+    	eventList.add(testEvent2);
+    	UserCalendar calendar1 = new UserCalendar(eventList);
+    	UserCalendar calendar2 = new UserCalendar(eventList);
+    	User testUser1 = new User("testUser2","123",calendar1);
+    	User testUser2 = new User("testUser2","123",calendar2);
+    	repository.saveUser(testUser1);
+    	repository.saveUser(testUser2);
+    	
+    	repository.removeEventFromAllCalendars(testEvent1);
+    	
+    	assertFalse(testUser1.getCalendar().getEvents().contains(testEvent1));
+    	assertFalse(testUser2.getCalendar().getEvents().contains(testEvent1));
+    }
+    
+    public void testCleanupUserEventReferences() {
+    	Event testEvent = new CreatedEvent("Test Event", 60, "Description", "testUser", null);
+		ArrayList<Event> eventList = new ArrayList<>();
+		eventList.add(testEvent);
+		UserCalendar calendar = new UserCalendar(eventList);
+		User testUser = new User("testUser","123",calendar);
+		repository.saveUser(testUser);
+		
+		
+		repository.cleanupUserEventReferences("testUser");
+		
+		assertFalse(testUser.getCalendar().getEvents().contains(testEvent));
     }
 }

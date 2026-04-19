@@ -1,8 +1,13 @@
 package Repository;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import Invite.Invite;
 import User.AdminUser;
 import User.User;
 import UserCalendar.UserCalendar;
+import event.Event;
 
 /**
  * In-memory repository for {@link User} instances.
@@ -11,6 +16,7 @@ import UserCalendar.UserCalendar;
  * @version 1 and 3
  */
 public class UserRepository extends Repository<User> {
+    private EventRepository eventRepository;
 	
 	//hard coded admin
 	/*
@@ -38,6 +44,16 @@ public class UserRepository extends Repository<User> {
      */
     public void saveUser(User user) {
         save(user);
+    }
+
+    /**
+     * Sets the shared event repository so user deletion can keep central event
+     * storage aligned with calendar cleanup.
+     *
+     * @param eventRepository shared event repository
+     */
+    public void setEventRepository(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -69,10 +85,11 @@ public class UserRepository extends Repository<User> {
             return notPermitted;
         }
         
-        if (targetUser.getUsername() == "admin") {
+        if ("admin".equals(targetUser.getUsername())) {
             return notPermitted;
         }
 
+        cleanupUserEventReferences(targetUser.getUsername());
 
         data.removeIf(u -> u.getUsername().equals(username));
 
@@ -107,5 +124,58 @@ public class UserRepository extends Repository<User> {
      */
     public boolean isExistingUser(String username) {
         return findUsername(username) != null;
+    }
+
+    public void cleanupUserEventReferences(String username) {
+        Map<String, Event> eventsById = new LinkedHashMap<>();
+
+        for (User user : data) {
+            if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
+                continue;
+            }
+
+            for (Event event : user.getCalendar().getEvents()) {
+                if (event != null && event.getEventID() != null) {
+                    eventsById.putIfAbsent(event.getEventID(), event);
+                }
+            }
+        }
+
+        if (eventRepository != null) {
+            for (User ignored : data) {
+                for (Event event : eventRepository.getAll()) {
+                    if (event != null && event.getEventID() != null) {
+                        eventsById.putIfAbsent(event.getEventID(), event);
+                    }
+                }
+                break;
+            }
+        }
+
+        for (Event event : eventsById.values()) {
+            if (event == null) {
+                continue;
+            }
+
+            if (username.equals(event.getOrganizer())) {
+                removeEventFromAllCalendars(event);
+                if (eventRepository != null) {
+                    eventRepository.deleteEvent(event.getEventID());
+                }
+                continue;
+            }
+
+            if (event.getInvites() != null) {
+                event.getInvites().removeIf(invite -> invite != null && username.equals(invite.getRecipient()));
+            }
+        }
+    }
+
+    public void removeEventFromAllCalendars(Event event) {
+        for (User user : data) {
+            if (user.getCalendar() != null) {
+                user.getCalendar().removeEvent(event);
+            }
+        }
     }
 }
