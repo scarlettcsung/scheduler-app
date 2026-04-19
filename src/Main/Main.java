@@ -48,6 +48,7 @@ public class Main {
         // 1. Setup the Backend
         UserRepository repository = new UserRepository();
         EventRepository eventRepository = new EventRepository();
+        repository.setEventRepository(eventRepository);
         Scheduler scheduler = new Scheduler(8, 23, 7, repository,eventRepository);
         IO ioHandler = new IO(); 
 
