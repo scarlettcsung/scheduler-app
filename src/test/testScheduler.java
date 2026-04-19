@@ -4,6 +4,7 @@ import EventManager.EventManager;
 import Invite.Invite;
 import Invite.inviteStatus;
 import Repository.UserRepository;
+import Repository.EventRepository;
 import Scheduler.Scheduler;
 import User.User;
 import UserCalendar.UserCalendar;
@@ -24,14 +25,17 @@ public class testScheduler extends TestCase {
 
     private Scheduler scheduler;
     private UserRepository userRepository;
+    private EventRepository eventRepository;
     private User organizer;
     private User invitee;
     private LocalDateTime baseNow;
     private EventManager eventManager;
+    
 
     protected void setUp() {
         baseNow = LocalDateTime.now().withSecond(0).withNano(0);
         userRepository = new UserRepository();
+        eventRepository = new EventRepository();
         organizer = new User("organizer", "pw", null);
         UserCalendar organizerCalendar = new UserCalendar(null);
         organizer.setCalendar(organizerCalendar);
@@ -42,14 +46,14 @@ public class testScheduler extends TestCase {
         invitee.setCalendar(inviteeCalendar);
         userRepository.saveUser(invitee);
 
-        scheduler = new Scheduler(0, 23, 7, userRepository);
+        scheduler = new Scheduler(0, 23, 7, userRepository, eventRepository);
         
         eventManager = new EventManager(userRepository);
     }
 
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
         // Duration longer than the daily window should never be schedulable.
-        Scheduler oneHourWindow = new Scheduler(8, 9, 3, userRepository);
+        Scheduler oneHourWindow = new Scheduler(8, 9, 3, userRepository, eventRepository);
         Event tooLong = new CreatedEvent(
                 "meeting",
                 61,
@@ -110,11 +114,12 @@ public class testScheduler extends TestCase {
         assertEquals(1, event.getInvites().size());
         assertEquals(invitee.getUsername(), event.getInvites().get(0).getRecipient());
         assertEquals(inviteStatus.PENDING, event.getInvites().get(0).getStatus());
+        assertNotNull(eventRepository.findByEventID(event.getEventID()));
     }
 
     public void testScheduleEventReturnsFalseWhenNoSlotInLookahead() {
         // If the whole lookahead window is blocked, scheduling must fail.
-        Scheduler oneDayLookahead = new Scheduler(8, 10, 1, userRepository);
+        Scheduler oneDayLookahead = new Scheduler(8, 10, 1, userRepository,eventRepository);
 
         LocalDateTime dayStart = baseNow
                 .withHour(8)
@@ -156,6 +161,7 @@ public class testScheduler extends TestCase {
         
         //run the find available slot
         LocalDateTime slot = scheduler.findAvailableSlot(toSchedule);
+        assertNotNull(slot);
     }
     
 }
