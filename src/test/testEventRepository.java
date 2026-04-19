@@ -59,8 +59,6 @@ public class testEventRepository extends TestCase {
     }
     
     public void testDeleteEventsByOrganizer() {
-    	User organiser = new User("John", "admin", null);
-    	User testUser1 = new User("user1", "Pork", null);
 		eventRepo.save(new CreatedEvent("Project", 60, "test description", "John", null));
 		eventRepo.save(new CreatedEvent("Meeting", 45, "Discuss project", "user1", null));
 		
