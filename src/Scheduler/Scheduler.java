@@ -5,6 +5,7 @@ import EventManager.EventManager;
 import Repository.UserRepository;
 import User.User;
 import event.Event;
+import Repository.EventRepository;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class Scheduler {
     private Clock clock;
     private UserRepository userRepository;
     private EventManager eventManager;
+    private EventRepository eventRepository;
 
     /**
      * Creates a scheduler that uses the system clock and a user repository to
@@ -37,10 +39,11 @@ public class Scheduler {
      * @param maxLookaheadDays number of days to search for a free slot
      * @param userRepository repository used to inspect and update calendars
      */
-    public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, UserRepository userRepository) {
+    public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, UserRepository userRepository, EventRepository eventRepository) {
         this(dayStart, dayEnd, maxLookaheadDays, Clock.systemDefaultZone());
         this.userRepository = userRepository;
-        this.eventManager = new EventManager(userRepository);
+        this.eventManager = new EventManager(userRepository, eventRepository);
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -154,6 +157,9 @@ public class Scheduler {
         User organizer = userRepository.findUsername(organizerUsername);
         if (organizer != null && organizer.getCalendar() != null) {
             organizer.getCalendar().addEvent(event);
+            if(eventRepository.findByEventID(event.getEventID()) == null) {
+				eventRepository.save(event);
+			}
         }
 
         List<Invite> currentInvites = new ArrayList<>(event.getInvites());
@@ -162,6 +168,9 @@ public class Scheduler {
             User invitee = userRepository.findUsername(inviteeUsername);
             if (invitee != null && invitee.getCalendar() != null) {
                 invitee.getCalendar().addEvent(event);
+                if(eventRepository.findByEventID(event.getEventID()) == null) {
+					eventRepository.save(event);
+				}
             }
 
             // Recreate invites so they reset to default PENDING status.

@@ -3,6 +3,7 @@ package EventManager;
 import Invite.Invite;
 import Invite.inviteStatus;
 import Repository.UserRepository;
+import Repository.EventRepository;
 import User.User;
 import UserCalendar.UserCalendar;
 import event.Event;
@@ -21,12 +22,13 @@ import java.util.ArrayList;
 public class EventManager {
 
     private UserRepository repository;
-
+    private EventRepository eventRepository;
     /**
      * Creates an event manager without repository-backed delete behaviour.
      */
     public EventManager() {
         this.repository = null;
+        this.eventRepository = null;
     }
 
     /**
@@ -36,6 +38,18 @@ public class EventManager {
      */
     public EventManager(UserRepository repository) {
         this.repository = repository;
+        this.eventRepository = null;
+    }
+
+    /**
+     * Creates an event manager backed by user and event repositories.
+     *
+     * @param repository repository used to update user calendars
+     * @param eventRepository repository used to keep a global event index in sync
+     */
+    public EventManager(UserRepository repository, EventRepository eventRepository) {
+        this.repository = repository;
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -81,21 +95,14 @@ public class EventManager {
         }
 
         if (repository != null) {
-            String organizerUsername = event.getOrganizer();
-            User organizer = organizerUsername != null ? repository.findUsername(organizerUsername) : null;
-
-            if (organizer != null && organizer.getCalendar() != null) {
-                organizer.getCalendar().removeEvent(event);
+            for (User user : repository.getAll()) {
+                if (user.getCalendar() != null) {
+                    user.getCalendar().removeEvent(event);
+                }
             }
 
-            if (event.getInvites() != null) {
-                for (Invite invite : event.getInvites()) {
-                    String recipientUsername = invite.getRecipient();
-                    User invitee = recipientUsername != null ? repository.findUsername(recipientUsername) : null;
-                    if (invitee != null && invitee.getCalendar() != null) {
-                        invitee.getCalendar().removeEvent(event);
-                    }
-                }
+            if (eventRepository != null) {
+                eventRepository.deleteEvent(event.getEventID());
             }
             return;
         }

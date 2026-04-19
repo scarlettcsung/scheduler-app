@@ -36,12 +36,13 @@ import com.github.lgooddatepicker.components.DatePicker;
 import Repository.UserRepository;
 import User.User;
 import Scheduler.Scheduler;
-import UserService.UserService;
+import UserService.UserService;	
 import event.Event;
 import event.CreatedEvent;
 import Invite.Invite;
 import EventManager.EventManager;
 import javax.swing.JSplitPane;
+import Repository.EventRepository;	
 
 
 public class EventManagePanel extends JPanel {
@@ -64,6 +65,7 @@ public class EventManagePanel extends JPanel {
 
 	// Back-end items
 	private UserRepository repository;
+	private EventRepository eventRepository;
 	private UserService userService;
 	private User currentUser;
 	private boolean isNewEvent;
@@ -83,26 +85,27 @@ public class EventManagePanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public EventManagePanel(UserRepository repository, User currentUser,
+	public EventManagePanel(UserRepository repository, EventRepository eventRepository, User currentUser,
 					  boolean isNewEvent, Event event, Scheduler scheduler) {
-		this(repository, currentUser, isNewEvent, event, scheduler, null);
+		this(repository, eventRepository, currentUser, isNewEvent, event, scheduler, null);
 	}
 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public EventManagePanel(UserRepository repository, User currentUser,
+	public EventManagePanel(UserRepository repository, EventRepository eventRepository, User currentUser,
 					  boolean isNewEvent, Event event, Scheduler scheduler, Runnable onSaveSuccess) {
 
 		// Initialization
 		this.repository = repository;
+		this.eventRepository = eventRepository;
 		this.userService = new UserService(repository);
 		this.currentUser = currentUser;
 		this.isNewEvent = isNewEvent;
 		this.event = event;
 		this.scheduler = scheduler;
 		this.onSaveSuccess = onSaveSuccess;
-		this.eventManager = new EventManager(repository);
+		this.eventManager = new EventManager(repository, eventRepository);
 		
 
 		// Layout
@@ -462,7 +465,7 @@ public class EventManagePanel extends JPanel {
 				tempInvites.clear();
 
 
-				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository);
+				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository,eventRepository);
 				scheduler.scheduleEvent(EventManagePanel.this.event);
 
 				JOptionPane.showMessageDialog(EventManagePanel.this, "Event Saved.");

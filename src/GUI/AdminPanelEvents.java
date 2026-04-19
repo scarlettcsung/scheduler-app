@@ -32,6 +32,7 @@ import Invite.Invite;
 import Scheduler.Scheduler;
 import User.User;
 import event.Event;
+import Repository.EventRepository;
 import Repository.UserRepository;
 
 public class AdminPanelEvents extends JPanel {
@@ -39,14 +40,16 @@ public class AdminPanelEvents extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private final UserRepository repository;
+	private final EventRepository eventRepository;
 	private final User adminUser;
 	private final Scheduler scheduler;
 	private final JPanel eventPane;
 	private final JPanel invitesPane;
 	private final javax.swing.border.Border cardBorder;
 
-	public AdminPanelEvents(UserRepository repository, User adminUser, Scheduler scheduler) {
+	public AdminPanelEvents(UserRepository repository, User adminUser, Scheduler scheduler,EventRepository eventRepository) {
 		this.repository = repository;
+		this.eventRepository = eventRepository;
 		this.adminUser = adminUser;
 		this.scheduler = scheduler;
 
@@ -64,7 +67,7 @@ public class AdminPanelEvents extends JPanel {
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(AdminPanelEvents.this);
-				topFrame.setContentPane(new AdminPanel(repository, adminUser, scheduler));
+				topFrame.setContentPane(new AdminPanel(repository, adminUser, scheduler,eventRepository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -77,7 +80,7 @@ public class AdminPanelEvents extends JPanel {
 		logoutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(AdminPanelEvents.this);
-				topFrame.setContentPane(new AuthenticationPanel(repository, scheduler));
+				topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -127,14 +130,7 @@ public class AdminPanelEvents extends JPanel {
 	}
 
 	private List<Event> collectUniqueEvents() {
-		Set<Event> allEvents = new LinkedHashSet<>();
-		for (User user : repository.getAll()) {
-			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
-				continue;
-			}
-			allEvents.addAll(user.getCalendar().getEvents());
-		}
-		return new ArrayList<>(allEvents);
+		return new ArrayList<>(eventRepository.getAll());
 	}
 
 	private List<Invite> collectUniqueInvites(List<Event> events) {
@@ -165,8 +161,8 @@ public class AdminPanelEvents extends JPanel {
 		createEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(eventPane);
-				topFrame.setContentPane(new EventManagePanel(repository, adminUser, true, null, scheduler, () -> {
-					topFrame.setContentPane(new AdminPanelEvents(repository, adminUser, scheduler));
+				topFrame.setContentPane(new EventManagePanel(repository, eventRepository, adminUser, true, null, scheduler, () -> {
+					topFrame.setContentPane(new AdminPanelEvents(repository, adminUser, scheduler, eventRepository));
 					topFrame.revalidate();
 					topFrame.repaint();
 				}));
@@ -249,7 +245,7 @@ public class AdminPanelEvents extends JPanel {
 		deleteButton.setBounds(MARGIN + 130, 72, 120, 22);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EventManager eventManager = new EventManager(repository);
+				EventManager eventManager = new EventManager(repository, eventRepository);
 				eventManager.deleteEvent(event);
 				refreshEvents();
 			}
@@ -260,11 +256,11 @@ public class AdminPanelEvents extends JPanel {
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
-				topFrame.setContentPane(new EventManagePanel(repository, adminUser, false, event, scheduler, () -> {
-					topFrame.setContentPane(new AdminPanelEvents(repository, adminUser, scheduler));
-					topFrame.revalidate();
-					topFrame.repaint();
-				}));
+					topFrame.setContentPane(new EventManagePanel(repository, eventRepository, adminUser, false, event, scheduler, () -> {
+						topFrame.setContentPane(new AdminPanelEvents(repository, adminUser, scheduler, eventRepository));
+						topFrame.revalidate();
+						topFrame.repaint();
+					}));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -336,7 +332,7 @@ public class AdminPanelEvents extends JPanel {
 			declineButton.setBounds(90, 34, 70, 16);
 			declineButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					EventManager eventManager = new EventManager(repository);
+					EventManager eventManager = new EventManager(repository, eventRepository);
 					eventManager.rejectInvite(invite,event);
 					refreshEvents();
 				}
@@ -362,7 +358,7 @@ public class AdminPanelEvents extends JPanel {
 
 	private void refreshEvents() {
 		JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-		topFrame.setContentPane(new AdminPanelEvents(repository, adminUser, scheduler));
+		topFrame.setContentPane(new AdminPanelEvents(repository, adminUser, scheduler, eventRepository));
 		topFrame.revalidate();
 		topFrame.repaint();
 	}

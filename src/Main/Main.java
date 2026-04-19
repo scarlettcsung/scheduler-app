@@ -12,6 +12,7 @@ import java.util.List;
 
 import GUI.AuthenticationPanel;
 import Repository.UserRepository;
+import Repository.EventRepository;
 import Scheduler.Scheduler;
 import User.User;
 import UserCalendar.UserCalendar;
@@ -33,12 +34,6 @@ import User.AdminUser;
 public class Main {
     
     /**
-     * A temporary list holding users loaded from the data source before they are 
-     * registered into the repository.
-     */
-    private List<User> users = new ArrayList<>();
-    
-    /**
      * Main method that launches the application.
      * * <ol>
      * <li>Initializes core services: {@link UserRepository}, {@link Scheduler}, and {@link IO}.</li>
@@ -49,10 +44,11 @@ public class Main {
      * </ol>
      * * @param args Command line arguments.
      */
-    public void main(String[] args) {
+    public static void main(String[] args) {
         // 1. Setup the Backend
         UserRepository repository = new UserRepository();
-        Scheduler scheduler = new Scheduler(8, 23, 7, repository);
+        EventRepository eventRepository = new EventRepository();
+        Scheduler scheduler = new Scheduler(8, 23, 7, repository,eventRepository);
         IO ioHandler = new IO(); 
 
         String filePath = "src/test/resources/testFileIO.json";
@@ -60,20 +56,27 @@ public class Main {
         // 2. Load Data
         try {
             List<User> loadedUsers = ioHandler.readUsers(filePath);
-            List<User> updatedUsers = new ArrayList<>();
-
             for (User user : loadedUsers) {
             	if (user.getUsername().equals("admin")) {
                     AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
-                    updatedUsers.add(adminUser);
                     repository.saveUser(adminUser);
                 } else {
-                    updatedUsers.add(user);
                     repository.saveUser(user);
                 }
             }
 
-            users = updatedUsers;
+            for (User user : repository.getAll()) {
+                if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
+                    continue;
+                }
+
+                for (Event event : user.getCalendar().getEvents()) {
+                    if (eventRepository.findByEventID(event.getEventID()) == null) {
+                        eventRepository.save(event);
+                    }
+                }
+            }
+
             System.out.println("Data loaded successfully.");
 
         } catch (Exception e) {
@@ -111,7 +114,7 @@ public class Main {
                 }
             });
 
-            AuthenticationPanel authPanel = new AuthenticationPanel(repository, scheduler);
+            AuthenticationPanel authPanel = new AuthenticationPanel(repository, scheduler, eventRepository);
             frame.setContentPane(authPanel);
             frame.setVisible(true);
         });

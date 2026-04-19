@@ -19,6 +19,7 @@ import java.util.List;
 import EventManager.EventManager;
 import Invite.Invite;
 import Scheduler.Scheduler;
+import Repository.EventRepository;
 import Repository.UserRepository;
 import User.User;
 import event.Event;
@@ -28,6 +29,7 @@ import Invite.inviteStatus;
 public class UserPanel extends JPanel {
     
     private UserRepository repository;
+    private EventRepository eventRepository;
     private User currentUser;
     private Event event1;
     private Event event2;
@@ -42,8 +44,9 @@ public class UserPanel extends JPanel {
                 );
     }
     
-    public UserPanel(UserRepository repository, User user, Scheduler scheduler) {
+    public UserPanel(UserRepository repository, User user, Scheduler scheduler,EventRepository eventRepository) {
         this.repository = repository;
+        this.eventRepository = eventRepository;
         this.currentUser = user;
         this.scheduler = scheduler;
         this.invitesPane = new JPanel();
@@ -89,7 +92,7 @@ public class UserPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Find the parent JFrame and swap back to Login
                 JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
-                topFrame.setContentPane(new AuthenticationPanel(repository,scheduler));
+                topFrame.setContentPane(new AuthenticationPanel(repository,scheduler,eventRepository));
                 topFrame.revalidate();
                 topFrame.repaint();
             }
@@ -137,7 +140,7 @@ public class UserPanel extends JPanel {
         	public void actionPerformed(ActionEvent e) {
         		repository.deleteUserData(currentUser.getUsername(), user);
         		JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
-        		topFrame.setContentPane(new AuthenticationPanel(repository, scheduler));
+        		topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
         		topFrame.revalidate();
         		topFrame.repaint();
         	}
@@ -147,40 +150,28 @@ public class UserPanel extends JPanel {
 
         setupInvites();
     }
-    private List<Event> collectAllUniqueEvents() {
-		Set<Event> allEvents = new LinkedHashSet<>();
-		for (User user : repository.getAll()) {
-			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
-				continue;
-			}
-			allEvents.addAll(user.getCalendar().getEvents());
-		}
-		return new ArrayList<>(allEvents);
+
+    private List<Event> collectAllEventsFromRepository() {
+		return new ArrayList<>(eventRepository.getAll());
 	}
 
     private List<Event> collectVisibleEvents() {
 		Set<Event> allEvents = new LinkedHashSet<>();
-		for (User user : repository.getAll()) {
-			if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
-				continue;
+		for (Event event : eventRepository.getAll()) {
+			boolean accepted = false;
+
+			if (event.getInvites() != null) {
+			    for (Invite invite : event.getInvites()) {
+			        if (currentUser.getUsername().equals(invite.getRecipient())
+			                && invite.getStatus() == inviteStatus.ACCEPTED) {
+			            accepted = true;
+			            break;
+			        }
+			    }
 			}
-			for (Event event : user.getCalendar().getEvents()) {
-				boolean accepted = false;
 
-				if (event.getInvites() != null) {
-				    for (Invite invite : event.getInvites()) {
-				        if (currentUser.getUsername().equals(invite.getRecipient())
-				                && invite.getStatus() == inviteStatus.ACCEPTED) {
-				            accepted = true;
-				            break;
-				        }
-				    }
-				}
-
-				if (currentUser.getUsername().equals(event.getOrganizer()) || accepted) {
-				    allEvents.add(event);
-				}
-
+			if (currentUser.getUsername().equals(event.getOrganizer()) || accepted) {
+			    allEvents.add(event);
 			}
 		}
 		return new ArrayList<>(allEvents);
@@ -228,7 +219,7 @@ public class UserPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
 					JDialog dialog = new JDialog(topFrame, "Create Event", true);
-					dialog.setContentPane(new EventManagePanel(repository, currentUser, true, null, scheduler, () -> {
+					dialog.setContentPane(new EventManagePanel(repository, eventRepository, currentUser, true, null, scheduler, () -> {
 					    dialog.dispose();
 					    refreshEvents();
 					}));
@@ -315,8 +306,9 @@ public class UserPanel extends JPanel {
 		deleteButton.setBounds(MARGIN + 130, 72, 120, 22);
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EventManager eventManager = new EventManager(repository);
+				EventManager eventManager = new EventManager(repository, eventRepository);
 				eventManager.deleteEvent(event);
+				eventRepository.deleteEvent(event.getEventID());
 				refreshEvents();
 			}
 		});
@@ -326,10 +318,10 @@ public class UserPanel extends JPanel {
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
-				topFrame.setContentPane(new EventManagePanel(repository, currentUser, false, event, scheduler, () -> {
-					topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler));
-					topFrame.revalidate();
-					topFrame.repaint();
+					topFrame.setContentPane(new EventManagePanel(repository, eventRepository, currentUser, false, event, scheduler, () -> {
+						topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler,eventRepository));
+						topFrame.revalidate();
+						topFrame.repaint();
 				}));
 				topFrame.revalidate();
 				topFrame.repaint();
@@ -351,7 +343,7 @@ public class UserPanel extends JPanel {
 		invitesCardsPanel.setLayout(null);
 		invitesCardsPanel.setBackground(Color.WHITE);
 
-		List<Event> allEvents = collectAllUniqueEvents();
+		List<Event> allEvents = collectAllEventsFromRepository();
 		List<Invite> invites = collectUniqueInvites(allEvents);
 		int inviteCardHeight = 50;
 		int inviteCardWidth = 560;
@@ -402,7 +394,7 @@ public class UserPanel extends JPanel {
 			declineButton.setBounds(90, 34, 70, 16);
 			declineButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					EventManager eventManager = new EventManager(repository);
+					EventManager eventManager = new EventManager(repository, eventRepository);
 					eventManager.rejectInvite(invite, event);
 					refreshEvents();
 				}
@@ -428,7 +420,7 @@ public class UserPanel extends JPanel {
 
     private void refreshEvents() {
 		JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-		topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler));
+		topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler,eventRepository));
 		topFrame.revalidate();
 		topFrame.repaint();
 	}

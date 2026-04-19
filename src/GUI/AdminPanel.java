@@ -2,7 +2,7 @@ package GUI;
 
 import javax.swing.JPanel;
 
-
+import Repository.EventRepository;
 import Repository.UserRepository;
 import Scheduler.Scheduler;
 
@@ -21,12 +21,14 @@ public class AdminPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private UserRepository repository;
+	private EventRepository eventRepository;
 
 	// existing repository instance here EO GI: 5/4/2026
 	// EO G: 5/4/2026 23.37 adminUser as a parameter
-	public AdminPanel(UserRepository repository, User adminUser, Scheduler scheduler) {
+	public AdminPanel(UserRepository repository, User adminUser, Scheduler scheduler, EventRepository eventRepository) {
 		
 		this.repository = repository;
+		this.eventRepository = eventRepository;
 		setBackground(Color.MAGENTA);
 		setLayout(new MigLayout("", "[75px][75px][75px][][][75px][75px][75px]", "[50px][50px][50px][50px][50px][50px]"));
 		
@@ -77,7 +79,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
 				// chanelled right repository EO GI: 5/4/2026
-				topFrame.setContentPane(new AdminPanelEvents(repository, adminUser,scheduler));
+				topFrame.setContentPane(new AdminPanelEvents(repository, adminUser,scheduler,eventRepository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -105,7 +107,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
 				// chanelled right repository EO GI: 5/4/2026
-				topFrame.setContentPane(new AdminPanelDeleteUser(repository, adminUser, scheduler));
+				topFrame.setContentPane(new AdminPanelDeleteUser(repository, adminUser, scheduler, eventRepository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -157,7 +159,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// EO GI: Transition back to the authentication panel
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
-				topFrame.setContentPane(new AuthenticationPanel(repository, scheduler));
+				topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}

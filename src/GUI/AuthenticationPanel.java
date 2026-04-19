@@ -28,7 +28,7 @@ import User.User;
 import UserCalendar.UserCalendar;
 import EventManager.EventManager;
 import Invite.Invite;
-
+import Repository.EventRepository;
 import Repository.UserRepository;
 
 import Scheduler.Scheduler;
@@ -43,17 +43,20 @@ public class AuthenticationPanel extends JPanel {
 	private Scheduler scheduler;
 	private UserService userService;
 	private Authentication auth;
+	private EventRepository eventRepository;
 	
 	/**
 	 * Create the panel.
 	 */
-	public AuthenticationPanel(UserRepository repository, Scheduler scheduler) {
+	public AuthenticationPanel(UserRepository repository, Scheduler scheduler, EventRepository eventRepository) {
 		// Fancy Colors:))
 		
 	    setBackground(Color.decode("#00FFFF"));
 	    setOpaque(true);
 	    
 	    this.repository = repository;
+	    this.scheduler = scheduler;
+	    this.eventRepository = eventRepository;
 	    userService = new UserService(repository);
 	    auth = new Authentication(repository);
 	    
@@ -91,7 +94,7 @@ public class AuthenticationPanel extends JPanel {
 		textInUsername.setColumns(10);
 		
 		JButton btnLogin = new JButton("Login");
-		btnLogin.addActionListener(new ActionListener() {
+		btnLogin.addActionListener(new ActionListener()  {
 			public void actionPerformed(ActionEvent e) {
 				String username = textInUsername.getText();
 		        String password = new String(textInPassword.getPassword());
@@ -110,9 +113,9 @@ public class AuthenticationPanel extends JPanel {
 			            }
 
 			            if(currentUser.canAccessAdminPanel()) {
-			            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler));
+			            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler,eventRepository));
 			            } else {
-				 topFrame.setContentPane(new UserPanel(repository,currentUser,scheduler));
+				 topFrame.setContentPane(new UserPanel(repository,currentUser,scheduler,eventRepository));
 			            }
 		            topFrame.revalidate();
 		            topFrame.repaint();
@@ -177,10 +180,10 @@ public static void main(String[] args) {
     frame.setSize(800, 600);
 
     UserRepository repository = new UserRepository();
-    EventManager eventManager = new EventManager(repository);
-    Scheduler scheduler = new Scheduler(8,23,7,repository);
+    EventRepository eventRepository = new EventRepository();
+    Scheduler scheduler = new Scheduler(8,23,7,repository,eventRepository);
     
-    frame.setContentPane(new AuthenticationPanel(repository, scheduler));
+    frame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
     frame.setVisible(true);
 }
 }
