@@ -12,6 +12,7 @@ import User.User;
 import UserCalendar.UserCalendar;
 import event.CreatedEvent;
 import event.Event;
+import Repository.EventRepository;
 import Repository.UserRepository;
 
 /**
@@ -23,6 +24,7 @@ import Repository.UserRepository;
 public class testEventManager extends TestCase {
 	
 	private UserRepository repository;
+	private EventRepository eventRepository;
 	private EventManager eveUpdateEvent;
 	private UserCalendar calendar;
 
@@ -38,7 +40,8 @@ public class testEventManager extends TestCase {
 	
 	public void setUp() {
 		repository = new UserRepository();
-		eveUpdateEvent = new EventManager(repository);
+		eventRepository = new EventRepository();
+		eveUpdateEvent = new EventManager(repository, eventRepository);
 		repository.saveUser(new User("Charles","12345",calendar));
 		repository.saveUser(exampleInvitee);
 		repository.saveUser(exampleNewOrganizer);
@@ -62,6 +65,7 @@ public class testEventManager extends TestCase {
     public void testDeleteEvent() {
         // Set up repository
         UserRepository repo = new UserRepository();
+        EventRepository eventRepo = new EventRepository();
 
         // Create organizer with a calendar
         UserCalendar cal = new UserCalendar(null);
@@ -72,7 +76,7 @@ public class testEventManager extends TestCase {
         repo.saveUser(organizer);
 
         // Create EventManager with the repository
-        EventManager managerWithRepo = new EventManager(repo);
+        EventManager managerWithRepo = new EventManager(repo, eventRepo);
 
         // Verify event is in calendar before deletion
         assertTrue(cal.getEvents().contains(event));
@@ -102,6 +106,7 @@ public class testEventManager extends TestCase {
     public void testDeleteEventInviteeNotInRepo() {
     	//setup Event for this test
     	UserRepository repo = new UserRepository();
+        EventRepository eventRepo = new EventRepository();
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
@@ -112,7 +117,7 @@ public class testEventManager extends TestCase {
         e.getInvites().add(new Invite("ghostUser", e.getEventID()));
         
         //test
-        new EventManager(repo).deleteEvent(e);
+        new EventManager(repo, eventRepo).deleteEvent(e);
         assertFalse(orgCal.getEvents().contains(e));
     }
  
@@ -120,6 +125,7 @@ public class testEventManager extends TestCase {
     public void testDeleteEventInviteeHasNoCalendar() {
     	//setup event for test
     	UserRepository repo = new UserRepository();
+        EventRepository eventRepo = new EventRepository();
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
@@ -131,7 +137,7 @@ public class testEventManager extends TestCase {
         e.getInvites().add(new Invite("inviteeUser", e.getEventID()));
         
         //test
-        new EventManager(repo).deleteEvent(e);
+        new EventManager(repo, eventRepo).deleteEvent(e);
         assertFalse(orgCal.getEvents().contains(e));
     }
     
@@ -139,6 +145,7 @@ public class testEventManager extends TestCase {
     public void testDeleteEventWithInvites() {
     	//setup
         UserRepository repo = new UserRepository();
+        EventRepository eventRepo = new EventRepository();
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
@@ -153,7 +160,7 @@ public class testEventManager extends TestCase {
         e.getInvites().add(new Invite("inviteeUser", e.getEventID()));
         
         //test
-        new EventManager(repo).deleteEvent(e);
+        new EventManager(repo, eventRepo).deleteEvent(e);
         assertFalse(orgCal.getEvents().contains(e));
         assertFalse(inviteeCal.getEvents().contains(e));
     }
@@ -168,6 +175,7 @@ public class testEventManager extends TestCase {
     public void testDeleteEventNullRecipientUsername() {
     	//setup
         UserRepository repo = new UserRepository();
+        EventRepository eventRepo = new EventRepository();
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
@@ -178,7 +186,7 @@ public class testEventManager extends TestCase {
         e.getInvites().add(new Invite(null, e.getEventID()));
 
         //test
-        new EventManager(repo).deleteEvent(e);
+        new EventManager(repo, eventRepo).deleteEvent(e);
         assertFalse(orgCal.getEvents().contains(e));
     }
     
@@ -186,14 +194,14 @@ public class testEventManager extends TestCase {
     public void testDeleteEventNullOrganizerUsername() {
         UserRepository repo = new UserRepository();
         Event e = new CreatedEvent("meeting", 60, "desc", null, null); // null organizer
-        new EventManager(repo).deleteEvent(e);
+        new EventManager(repo, new EventRepository()).deleteEvent(e);
     }
     
     // Covers organizer not found in repo (organizer == null) branch
     public void testDeleteEventOrganizerNotInRepo() {
         UserRepository repo = new UserRepository();
         Event e = new CreatedEvent("meeting", 60, "desc", "unknownUser", null);
-        new EventManager(repo).deleteEvent(e);
+        new EventManager(repo, new EventRepository()).deleteEvent(e);
     }
     
  // Test Invite Methods

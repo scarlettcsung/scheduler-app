@@ -48,7 +48,7 @@ public class testScheduler extends TestCase {
 
         scheduler = new Scheduler(0, 23, 7, userRepository, eventRepository);
         
-        eventManager = new EventManager(userRepository);
+        eventManager = new EventManager(userRepository, eventRepository);
     }
 
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {

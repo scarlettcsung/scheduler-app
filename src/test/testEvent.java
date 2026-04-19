@@ -2,6 +2,7 @@ package test;
 
 import EventManager.EventManager;
 import Invite.Invite;
+import Repository.EventRepository;
 import User.User;
 import UserCalendar.UserCalendar;
 import event.*;
@@ -26,16 +27,17 @@ public class testEvent extends TestCase {
     private Invite invite;
     private User exampleInvitee;
     private UserRepository repository;
+    private EventRepository eventRepository;
     private EventManager eventManager;
     
     protected void setUp() {
-    	eventManager = new EventManager(repository);
-    	
         exampleOrganizer = "Charles";
         exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
 
         UserCalendar calendar = new UserCalendar(null);
         repository = new UserRepository();
+        eventRepository = new EventRepository();
+    	eventManager = new EventManager(repository, eventRepository);
         repository.saveUser(new User("Charles", "12345", calendar));
         repository.saveUser(exampleInvitee); // CHANGE
 
