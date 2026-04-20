@@ -6,8 +6,6 @@ import javax.swing.SwingUtilities;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import GUI.AuthenticationPanel;
@@ -15,10 +13,8 @@ import Repository.UserRepository;
 import Repository.EventRepository;
 import Scheduler.Scheduler;
 import User.User;
-import UserCalendar.UserCalendar;
 import event.Event;
 import IO.IO;
-import Invite.Invite;
 import User.AdminUser;
 
 /**
