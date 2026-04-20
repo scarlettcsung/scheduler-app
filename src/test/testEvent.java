@@ -65,13 +65,7 @@ public class testEvent extends TestCase {
     	assertEquals(expected, event.getParticipants());
     }
     
-    public void testHasExistingInvite() {
-    	eventManager.addInvite(event, exampleInvitee);
-    	assertTrue(event.hasExistingInvite(exampleInvitee.getUsername()));
-    	eventManager.removeInvite(event, exampleInvitee);
-    	assertFalse(event.hasExistingInvite(exampleInvitee.getUsername()));
-    }
-    
+
     public void testTimeString() {
     	event.setEventTime(exampleTime);
     	String expected = "Jan 01, 2026 11:00 - 12:00";

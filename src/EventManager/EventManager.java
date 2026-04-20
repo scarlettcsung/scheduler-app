@@ -116,7 +116,7 @@ public class EventManager {
      * @param recipient user associated with invite
      */
     public void addInvite(Event event, User recipient) {
-        if (event.hasExistingInvite(recipient.getUsername())) {
+        if (hasExistingInvite(event, recipient.getUsername())) {
         	return;
         }
         
@@ -138,7 +138,7 @@ public class EventManager {
     public void removeInvite(Event event, User recipient) {
         String username = recipient.getUsername();
         
-        if (!event.hasExistingInvite(username)) {
+        if (!hasExistingInvite(event, username)) {
         	return;
         }
         
@@ -192,5 +192,21 @@ public class EventManager {
     public User getOrganizer(Event event) {
         String organizerUsername = event.getOrganizer();
         return repository.findUsername(organizerUsername);
+    }
+    
+    /**
+     * Checks if an event already has an invite for the given username.
+     *
+     * @param event event to check
+     * @param username username to look for
+     * @return {@code true} when an invite for that username exists
+     */
+    private boolean hasExistingInvite(Event event, String username) {
+        for (Invite invite : event.getInvites()) {
+            if (invite.getRecipient().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
