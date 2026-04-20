@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -169,6 +168,15 @@ public class UserPanel extends JPanel {
                     IcsImporter importer = new IcsImporter();
                     ImportStatus status = importer.importCalendar(currentUser, filePath);
 
+	                List<Event> existingEvents = new ArrayList<>(eventRepository.getAll());
+
+	                for (Event event : existingEvents) {
+	                    if (event.isImported() && currentUser.getUsername().equals(event.getOrganizer())) {
+	                        eventRepository.deleteEvent(event.getEventID());
+	                    }
+	                }
+                    
+                    
                     if (status == ImportStatus.Succes) {
                         for (Event event : currentUser.getCalendar().getEvents()) {
                             if (eventRepository.findByEventID(event.getEventID()) == null) {
@@ -184,7 +192,7 @@ public class UserPanel extends JPanel {
                 }
             }
         });
-        btnImportCalendar.setBounds(831, 444, 117, 29);
+        btnImportCalendar.setBounds(831, 444, 146, 29);
         add(btnImportCalendar);
 
 
@@ -329,9 +337,8 @@ public class UserPanel extends JPanel {
 		});
 		
 		card.add(nameButton);
-		
 
-		JLabel metaLabel = new JLabel("Time: " + event.getTimeString() + " |  Organizer: " + event.getOrganizer());
+		JLabel metaLabel = new JLabel("Duration: " + event.getEventDuration() + " min  |  Organizer: " + event.getOrganizer());
 		metaLabel.setFont(new Font("Arial", Font.PLAIN, 11));
 		metaLabel.setForeground(Color.BLACK);
 		metaLabel.setBounds(MARGIN, 36, 440, 16);
