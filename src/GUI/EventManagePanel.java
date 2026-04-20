@@ -441,6 +441,11 @@ public class EventManagePanel extends JPanel {
 					JOptionPane.showMessageDialog(EventManagePanel.this, "Latest time must be later than earliest time.");
 					return;
 				}
+				if (((Integer.parseInt(selectedEarliestHour.toString()) + (Integer.parseInt(selectedLatestHour.toString())) * 60 < duration)))
+				{
+					JOptionPane.showMessageDialog(EventManagePanel.this, "Duration cannot be bigger than earlist and latest time interval.");
+					return;
+				}
 
 				String earliestTime = selectedEarliestHour.toString();
 				String latestTime = selectedLatestHour.toString();
