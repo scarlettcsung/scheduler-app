@@ -4,8 +4,10 @@ import com.github.lgooddatepicker.components.CalendarPanel;
 
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
@@ -13,6 +15,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -28,6 +31,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.io.File;
+import IcsImporter.IcsImporter;
+import IcsImporter.ImportStatus;
 
 import EventManager.EventManager;
 import Invite.Invite;
@@ -122,6 +128,46 @@ public class AdminPanelEvents extends JPanel {
 
 		setupEvents();
 		setupInvites();
+		
+	    JButton btnImportCalendar = new JButton("Import Calendar");
+	    btnImportCalendar.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            JFileChooser fileChooser = new JFileChooser();
+	            fileChooser.setFileFilter(new FileNameExtensionFilter("ICS Files", "ics"));
+
+	            int result = fileChooser.showOpenDialog(AdminPanelEvents.this);
+
+	            if (result == JFileChooser.APPROVE_OPTION) {
+	                File selectedFile = fileChooser.getSelectedFile();
+	                String filePath = selectedFile.getAbsolutePath();
+
+	                IcsImporter importer = new IcsImporter();
+	                ImportStatus status = importer.importCalendar(adminUser, filePath);
+
+	                List<Event> existingEvents = new ArrayList<>(eventRepository.getAll());
+
+	                for (Event event : existingEvents) {
+	                    if (event.isImported() && adminUser.getUsername().equals(event.getOrganizer())) {
+	                        eventRepository.deleteEvent(event.getEventID());
+	                    }
+	                }
+	                if (status == ImportStatus.Succes) {
+	                    for (Event event : adminUser.getCalendar().getEvents()) {
+	                        if (eventRepository.findByEventID(event.getEventID()) == null) {
+	                            eventRepository.save(event);
+	                        }
+	                    }
+
+	                    JOptionPane.showMessageDialog(AdminPanelEvents.this, "Calendar imported successfully!");
+	                    refreshEvents();
+	                } else {
+	                    JOptionPane.showMessageDialog(AdminPanelEvents.this, "Import failed: " + status);
+	                }
+	            }
+	        }
+	    });
+	    btnImportCalendar.setBounds(831, 444, 146, 29);
+	    add(btnImportCalendar);
 	}
 
 	private javax.swing.border.Border cardBorder() {
@@ -199,6 +245,7 @@ public class AdminPanelEvents extends JPanel {
 		eventsScrollPane.setBorder(null);
 		eventPane.add(eventsScrollPane);
 	}
+	
 
 	private JPanel createEventCard(Event event, JPanel eventsCardsPanel) {
 		JPanel card = new JPanel();
@@ -350,6 +397,7 @@ public class AdminPanelEvents extends JPanel {
 		invitesPane.add(invitesScrollPane);
 	}
 
+
 	private Event findEventById(List<Event> events, String eventId) {
 		for (Event event : events) {
 			if (event.getEventID().equals(eventId)) {
@@ -365,4 +413,5 @@ public class AdminPanelEvents extends JPanel {
 		topFrame.revalidate();
 		topFrame.repaint();
 	}
+	
 }
