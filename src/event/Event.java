@@ -5,7 +5,11 @@ import Invite.Invite;
 // Additional Packages
 import java.util.Objects;
 import java.util.UUID;
+
+import javax.swing.JLabel;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,6 +91,16 @@ public abstract class Event {
             }
     	}
     	return false;
+    }
+    
+    public String getTimeString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
+		String stringDateTime = eventTime.format(formatter);
+		LocalDateTime endTime = eventTime.plusMinutes(eventDuration);
+		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+		String stringDisplay = String.format("%s - %s", stringDateTime, endTimeStr);
+
+		return stringDisplay;
     }
 
     

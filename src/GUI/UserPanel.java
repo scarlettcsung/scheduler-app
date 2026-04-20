@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -328,8 +329,9 @@ public class UserPanel extends JPanel {
 		});
 		
 		card.add(nameButton);
+		
 
-		JLabel metaLabel = new JLabel("Duration: " + event.getEventDuration() + " min  |  Organizer: " + event.getOrganizer());
+		JLabel metaLabel = new JLabel("Time: " + event.getTimeString() + " |  Organizer: " + event.getOrganizer());
 		metaLabel.setFont(new Font("Arial", Font.PLAIN, 11));
 		metaLabel.setForeground(Color.BLACK);
 		metaLabel.setBounds(MARGIN, 36, 440, 16);
