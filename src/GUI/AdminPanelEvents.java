@@ -22,6 +22,8 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -229,7 +231,15 @@ public class AdminPanelEvents extends JPanel {
 		
 		card.add(nameButton);
 
-		JLabel metaLabel = new JLabel("Duration: " + event.getEventDuration() + " min  |  Organizer: " + event.getOrganizer());
+		LocalDateTime eventTime = event.getEventTime();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
+		String stringDateTime = eventTime.format(formatter);
+		int duration = event.getEventDuration();
+		LocalDateTime endTime = eventTime.plusMinutes(duration);
+		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+		String stringDisplay = String.format("%s - %s", stringDateTime, endTimeStr);
+
+		JLabel metaLabel = new JLabel("Time: " + stringDisplay + " |  Organizer: " + event.getOrganizer());
 		metaLabel.setFont(new Font("Arial", Font.PLAIN, 11));
 		metaLabel.setForeground(Color.BLACK);
 		metaLabel.setBounds(MARGIN, 36, 440, 16);
