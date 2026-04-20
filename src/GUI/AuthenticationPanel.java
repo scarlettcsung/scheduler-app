@@ -9,14 +9,12 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
 import Authentication.Authentication;
 import UserService.UserService;
-import event.Event;
 
 import javax.swing.JOptionPane;
 
@@ -26,8 +24,6 @@ import java.awt.Color;
 
 import User.User;
 import UserCalendar.UserCalendar;
-import EventManager.EventManager;
-import Invite.Invite;
 import Repository.EventRepository;
 import Repository.UserRepository;
 
