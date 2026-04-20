@@ -9,9 +9,9 @@ import event.*;
 import Repository.UserRepository;
 import junit.framework.TestCase;
 
-import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Unit tests for {@link event.Event}, {@link event.CreatedEvent}, and {@link event.ImportedEvent}.
@@ -23,7 +23,7 @@ public class testEvent extends TestCase {
 
     private String exampleOrganizer;
     private Event event;
-    private LocalDateTime example_time;
+    private LocalDateTime exampleTime;
     private Invite invite;
     private User exampleInvitee;
     private UserRepository repository;
@@ -31,7 +31,8 @@ public class testEvent extends TestCase {
     private EventManager eventManager;
     
     protected void setUp() {
-        exampleOrganizer = "Charles";
+    	Locale.setDefault(Locale.ENGLISH);       
+    	exampleOrganizer = "Charles";
         exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
 
         UserCalendar calendar = new UserCalendar(null);
@@ -41,7 +42,7 @@ public class testEvent extends TestCase {
         repository.saveUser(new User("Charles", "12345", calendar));
         repository.saveUser(exampleInvitee); // CHANGE
 
-        example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
+        exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new CreatedEvent("testEvent", 60, "testEvent", exampleOrganizer, null);
         invite = new Invite(exampleInvitee.getUsername(), event.getEventID());
     }
@@ -72,7 +73,7 @@ public class testEvent extends TestCase {
     }
     
     public void testTimeString() {
-    	event.setEventTime(example_time);
+    	event.setEventTime(exampleTime);
     	String expected = "Jan 01, 2026 11:00 - 12:00";
     	assertEquals(expected,event.getTimeString());
     }
