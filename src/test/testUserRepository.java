@@ -127,4 +127,16 @@ public class testUserRepository extends TestCase {
 		
 		assertFalse(testUser.getCalendar().getEvents().contains(testEvent));
     }
+    
+    //admin cant delete itself test
+    public void testDeleteAdminUser() {
+        User adminUser = new AdminUser("admin", "admin", null);
+        repository.saveUser(adminUser);
+        
+        int result = repository.deleteUserData("admin", adminUser);
+        
+        assertEquals(4, result);
+    }
+    
+    
 }
