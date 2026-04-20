@@ -268,4 +268,34 @@ public class testEventManager extends TestCase {
     	assertEquals(exampleNewOrganizer.getUsername(),event.getOrganizer());
     }
     
+    public void testSetOrganizerNullCalendar() {
+        User noCalUser = new User("noCalUser", "pass", null); // null calendar
+        eveUpdateEvent.setOrganizer(event, noCalUser);
+        assertNotNull(noCalUser.getCalendar());
+        assertEquals("noCalUser", event.getOrganizer());
+        assertTrue(noCalUser.getCalendar().getEvents().contains(event));
+    }
+    
+    public void testConstructorWithRepositoryOnly() {
+        UserRepository repo = new UserRepository();
+        EventManager manager = new EventManager(repo);
+        
+        // Verify it doesn't crash and behaves correctly with null eventRepository
+        // deleteEvent should still work (repository is set, eventRepository is null)
+        UserCalendar cal = new UserCalendar(null);
+        User organizer = new User("testUser", "password", cal);
+        repo.saveUser(organizer);
+        
+        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
+        cal.addEvent(e);
+        
+        manager.deleteEvent(e);
+        assertFalse(cal.getEvents().contains(e));
+    }
+    
+    public void testGetOrganizer() {
+        Event e = new CreatedEvent("meeting", 60, "desc", "Jennifer", null);
+        User result = eveUpdateEvent.getOrganizer(e);
+        assertEquals(exampleNewOrganizer, result);
+    }
 }
