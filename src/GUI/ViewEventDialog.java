@@ -71,14 +71,7 @@ public class ViewEventDialog extends JDialog {
 			contentPanel.add(lblEventName, gbc_lblEventName);
 		}
 		{
-			LocalDateTime eventTime = event.getEventTime();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy | HH:mm");
-			String stringDateTime = eventTime.format(formatter);
-			int duration = event.getEventDuration();
-			LocalDateTime endTime = eventTime.plusMinutes(duration);
-			String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-			String stringDisplay = String.format("%s - %s", stringDateTime, endTimeStr);
-			JLabel lblDateTime = new JLabel(stringDisplay);
+			JLabel lblDateTime = new JLabel(event.getTimeString());
 			lblDateTime.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			GridBagConstraints gbc_lblDateTime = new GridBagConstraints();
 			gbc_lblDateTime.insets = new Insets(0, 0, 5, 0);
