@@ -23,6 +23,12 @@ import User.User;
 import event.Event;
 import event.CreatedEvent;
 import Invite.inviteStatus;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import IcsImporter.IcsImporter;
+import IcsImporter.ImportStatus;
+
 
 public class UserPanel extends JPanel {
     
@@ -146,6 +152,40 @@ public class UserPanel extends JPanel {
         });
         btnDeleteAccount.setBounds(821, 403, 156, 29);
         add(btnDeleteAccount);
+        
+        JButton btnImportCalendar = new JButton("Import Calendar");
+        btnImportCalendar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new FileNameExtensionFilter("ICS Files", "ics"));
+
+                int result = fileChooser.showOpenDialog(UserPanel.this);
+
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    String filePath = selectedFile.getAbsolutePath();
+
+                    IcsImporter importer = new IcsImporter();
+                    ImportStatus status = importer.importCalendar(currentUser, filePath);
+
+                    if (status == ImportStatus.Succes) {
+                        for (Event event : currentUser.getCalendar().getEvents()) {
+                            if (eventRepository.findByEventID(event.getEventID()) == null) {
+                                eventRepository.save(event);
+                            }
+                        }
+
+                        JOptionPane.showMessageDialog(UserPanel.this, "Calendar imported successfully!");
+                        refreshEvents();
+                    } else {
+                        JOptionPane.showMessageDialog(UserPanel.this, "Import failed: " + status);
+                    }
+                }
+            }
+        });
+        btnImportCalendar.setBounds(831, 444, 117, 29);
+        add(btnImportCalendar);
+
 
         setupInvites();
     }
