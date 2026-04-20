@@ -76,18 +76,29 @@ classDiagram
     }
 
     class Event {
+    	 <<abstract>>
         -eventName: String
-        -eventDate: Date
+        -eventTime: LocalDateTime
         -eventDuration: int
         -eventDescription: String
-        -organizer: User
+        -eventID: String {readOnly}
+        -organizerUser: String
         -invites: List~Invite~
-        -isImported: Boolean
-        +getOrganizer() : User
-        +get()
-        +getInvites() : List~Invite~
-        +addInvite(invite: Invite) : void
-        +removeInvite(invite: Invite) : void
+        -participantUsernames: List~String~
+        #isImportedField boolean
+        
+        +isImported()* boolean
+        +getParticipants() List~String~
+        +hasExistingInvite(String username): boolean
+        +getTimeString() String
+    }
+    
+    class CreatedEvent {
+    	 +isImported() boolean
+    }
+    
+    class ImportedEvent {
+        +isImported() boolean
     }
 
     class Invite {
@@ -102,7 +113,7 @@ classDiagram
 
     class ImportStatus {
         <<enumeration>>
-        Succes
+        Success
         FileNotFound
         UserNotFound
     }
@@ -125,6 +136,8 @@ classDiagram
     User -- Invite : recipient
     UserCalendar *-- "0..*" Event
     Event *-- "0..*" Invite
+    CreatedEvent --|> Event
+    ImportedEvent --|> Event
     Scheduler ..> User
     Scheduler ..> UserCalendar
     Scheduler ..> Event
