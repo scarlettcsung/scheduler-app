@@ -6,6 +6,7 @@ import Invite.Invite;
 import java.util.Objects;
 import java.util.UUID;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +99,6 @@ public abstract class Event {
      */
     public List<String> getParticipants() {
     	List<String> participantUsernames = new ArrayList<>();
-    	participantUsernames.clear();
         for (Invite invite : invites) {
             String participantUsername = invite.getRecipient();
             participantUsernames.add(participantUsername);
@@ -106,4 +106,13 @@ public abstract class Event {
         return participantUsernames;
     }
 
+    public String getTimeString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
+		String stringDateTime = eventTime.format(formatter);
+		LocalDateTime endTime = eventTime.plusMinutes(eventDuration);
+		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+		String stringDisplay = String.format("%s - %s", stringDateTime, endTimeStr);
+
+		return stringDisplay;
+    }
 }
