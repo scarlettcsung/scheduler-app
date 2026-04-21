@@ -1,12 +1,12 @@
 package test;
 
 import junit.framework.TestCase;
-import User.User;
-import Authentication.Authentication;
+import user.User;
 import Repository.UserRepository;
+import authentication.Authentication;
 
 /**
- * Unit tests for {@link Authentication.Authentication}.
+ * Unit tests for {@link authentication.Authentication}.
  *
  * @author NJ
  * @version TODO

@@ -1,4 +1,4 @@
-package IcsImporter;
+package ics.importer;
 
 /**
  * Result codes returned when importing events from an ICS file.

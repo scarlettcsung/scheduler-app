@@ -4,11 +4,11 @@ package test;
 import java.util.ArrayList;
 
 import Repository.UserRepository;
-import User.AdminUser;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.CreatedEvent;
 import junit.framework.TestCase;
+import user.AdminUser;
+import user.User;
+import user.calendar.UserCalendar;
 import event.Event;
 
 /**

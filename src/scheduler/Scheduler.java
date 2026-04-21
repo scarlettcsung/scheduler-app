@@ -1,10 +1,10 @@
-package Scheduler;
+package scheduler;
 
-import Invite.Invite;
-import EventManager.EventManager;
 import Repository.UserRepository;
-import User.User;
 import event.Event;
+import event.manager.EventManager;
+import invite.Invite;
+import user.User;
 import Repository.EventRepository;
 
 import java.time.Clock;

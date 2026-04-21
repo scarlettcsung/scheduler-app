@@ -1,18 +1,18 @@
 package test;
 
 import junit.framework.TestCase;
+import user.User;
+import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import User.User;
-import UserCalendar.UserCalendar;
 import event.CreatedEvent;
 import event.Event;
 
 /**
- * Unit tests for {@link UserCalendar.UserCalendar}.
+ * Unit tests for {@link user.UserCalendar}.
  *
  * @author NJ
  * @version 1

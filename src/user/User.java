@@ -1,6 +1,6 @@
 package user;
 
-import UserCalendar.UserCalendar;
+import user.calendar.UserCalendar;
 
 /**
  * Represents an application user and their personal calendar.

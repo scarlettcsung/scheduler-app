@@ -1,8 +1,8 @@
 package test;
 
 import junit.framework.TestCase;
+import user.User;
 import Repository.EventRepository;
-import User.User;
 import event.CreatedEvent;
 import event.Event;
 
