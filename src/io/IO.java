@@ -1,6 +1,5 @@
 package io;
-//readUserList(filePath): userList, writeUserList(userList,filePath): void, 
-// readCalender(userList): void, writeCalender(userList):void.
+
 import java.util.*;
 import java.io.*;
 
@@ -9,35 +8,20 @@ import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
 
-//Additional Packages
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
-/**
- * Handles JSON-based persistence for users and their calendars.
- *
- * @author AA NJ
- * @version 2
- */
 public class IO {
+    private Gson createReaderGson() {
 
-    // Reads calendar data for all users from files (example: each user has a calendar file)
-    /**
-     * Reads a list of users and calendar data from a JSON file.
-     *
-     * @param filePath path to the JSON file
-     * @return users loaded from the file
-     * @throws IOException when the file cannot be read
-     */
-    public List<User> readUsers(String filePath) throws IOException{
-    	
-    	// Added to save whether Event was imported or created
-    	JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
+        JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
             JsonObject jsonObject = json.getAsJsonObject();
-            boolean isImportedField = jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean();
-            
+
+            boolean isImportedField = jsonObject.has("isImported") 
+                    && jsonObject.get("isImported").getAsBoolean();
+
             if (isImportedField) {
                 return context.deserialize(json, ImportedEvent.class);
             } else {
@@ -45,33 +29,40 @@ public class IO {
             }
         };
 
-        Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) 
-                (json, type, context) -> LocalDateTime.parse(json.getAsString()))
-            .registerTypeAdapter(Event.class, eventDeserializer)
-            .create();
-        
+        return new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class,
+                        (JsonDeserializer<LocalDateTime>)
+                                (json, type, context) -> LocalDateTime.parse(json.getAsString()))
+                .registerTypeAdapter(Event.class, eventDeserializer)
+                .create();
+    }
+    private Gson createWriterGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class,
+                        (JsonSerializer<LocalDateTime>)
+                                (src, type, context) -> new JsonPrimitive(src.toString()))
+                .create();
+    }
+
+    public List<User> readUsers(String filePath) throws IOException {
+
+        // CHANGED: removed GsonBuilder setup → replaced with method call
+        Gson gson = createReaderGson();
+
         FileReader reader = new FileReader(filePath);
         User[] users = gson.fromJson(reader, User[].class);
         reader.close();
-       
 
         return Arrays.asList(users);
     }
 
-    // Writes calendar data for all users to files
-    /**
-     * Writes user and calendar data to a JSON file.
-     *
-     * @param userList users to persist
-     * @param filePath destination file path
-     * @throws IOException when the file cannot be written
-     */
     public void writeUsers(List<User> userList, String filePath) throws IOException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class,(JsonSerializer<LocalDateTime>)
-        		(src,type,context)->new JsonPrimitive(src.toString())).create();
+
+        // CHANGED: removed GsonBuilder setup → replaced with method call
+        Gson gson = createWriterGson();
+
         FileWriter writer = new FileWriter(filePath);
         gson.toJson(userList, writer);
         writer.close();
     }
-    }
+}
