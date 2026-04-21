@@ -11,11 +11,11 @@ import java.util.List;
 import GUI.AuthenticationPanel;
 import Repository.UserRepository;
 import Repository.EventRepository;
-import Scheduler.Scheduler;
-import User.User;
 import event.Event;
-import IO.IO;
-import User.AdminUser;
+import io.IO;
+import scheduler.Scheduler;
+import user.AdminUser;
+import user.User;
 
 /**
  * The entry point for the SmartCalendar application.

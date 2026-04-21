@@ -20,11 +20,10 @@ import javax.swing.JScrollPane;
 
 import Repository.EventRepository;
 import Repository.UserRepository;
-import Scheduler.Scheduler;
+import scheduler.Scheduler;
+import user.User;
 
 import javax.swing.JScrollBar;
-
-import User.User;
 
 public class AdminPanelDeleteUser extends JPanel {
 

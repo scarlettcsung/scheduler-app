@@ -14,20 +14,21 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.List;
 
-import EventManager.EventManager;
-import Invite.Invite;
-import Scheduler.Scheduler;
 import Repository.EventRepository;
 import Repository.UserRepository;
-import User.User;
 import event.Event;
+import event.manager.EventManager;
+import ics.importer.IcsImporter;
+import ics.importer.ImportStatus;
+import invite.Invite;
+import invite.inviteStatus;
+import scheduler.Scheduler;
+import user.User;
 import event.CreatedEvent;
-import Invite.inviteStatus;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
-import IcsImporter.IcsImporter;
-import IcsImporter.ImportStatus;
 
 
 public class UserPanel extends JPanel {

@@ -2,7 +2,7 @@ package event;
 
 import java.util.List;
 
-import Invite.Invite;
+import invite.Invite;
 
 public class CreatedEvent extends Event{
 

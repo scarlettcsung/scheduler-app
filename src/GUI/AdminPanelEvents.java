@@ -32,14 +32,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.io.File;
-import IcsImporter.IcsImporter;
-import IcsImporter.ImportStatus;
 
-import EventManager.EventManager;
-import Invite.Invite;
-import Scheduler.Scheduler;
-import User.User;
 import event.Event;
+import event.manager.EventManager;
+import ics.importer.IcsImporter;
+import ics.importer.ImportStatus;
+import invite.Invite;
+import scheduler.Scheduler;
+import user.User;
 import Repository.EventRepository;
 import Repository.UserRepository;
 

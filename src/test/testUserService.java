@@ -1,12 +1,12 @@
 package test;
 
-import UserService.UserService;
+import authentication.Authentication;
 import junit.framework.TestCase;
-import Authentication.Authentication;
+import user.service.UserService;
 import Repository.UserRepository;
 
 /**
- * Unit tests for {@link UserService.UserService}.
+ * Unit tests for {@link user.service.UserService}.
  *
  * @author SN GI NJ
  * @version 1

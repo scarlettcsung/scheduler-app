@@ -1,10 +1,11 @@
 package event;
 
-import Invite.Invite;
-
 // Additional Packages
 import java.util.Objects;
 import java.util.UUID;
+
+import invite.Invite;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

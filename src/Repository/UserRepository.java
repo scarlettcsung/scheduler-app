@@ -3,11 +3,11 @@ package Repository;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import Invite.Invite;
-import User.AdminUser;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.Event;
+import invite.Invite;
+import user.AdminUser;
+import user.User;
+import user.calendar.UserCalendar;
 
 /**
  * In-memory repository for {@link User} instances.

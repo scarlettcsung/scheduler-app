@@ -1,4 +1,4 @@
-package UserCalendar;
+package user.calendar;
 
 import java.util.ArrayList;
 import java.util.List;

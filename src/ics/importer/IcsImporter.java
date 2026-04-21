@@ -1,7 +1,5 @@
-package IcsImporter;
+package ics.importer;
 
-import User.*;
-import UserCalendar.*;
 import event.*;
 
 import java.io.*;
@@ -15,6 +13,8 @@ import net.fortuna.ical4j.data.*;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.property.*;
+import user.*;
+import user.calendar.*;
 
 /**
  * Imports events from ICS calendar files into the application's event model.
