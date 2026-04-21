@@ -34,10 +34,10 @@ import com.github.lgooddatepicker.components.DatePicker;
 
 // Back-end related imports
 import Repository.UserRepository;
-import User.User;
 import Scheduler.Scheduler;
 import UserService.UserService;	
 import event.Event;
+import user.User;
 import event.CreatedEvent;
 import Invite.Invite;
 import EventManager.EventManager;
@@ -441,7 +441,7 @@ public class EventManagePanel extends JPanel {
 					JOptionPane.showMessageDialog(EventManagePanel.this, "Latest time must be later than earliest time.");
 					return;
 				}
-				if (((Integer.parseInt(selectedEarliestHour.toString()) + (Integer.parseInt(selectedLatestHour.toString())) * 60 < duration)))
+				if (((Integer.parseInt(selectedLatestHour.toString()) - (Integer.parseInt(selectedEarliestHour.toString())) * 60 < duration)))
 				{
 					JOptionPane.showMessageDialog(EventManagePanel.this, "Duration cannot be bigger than earlist and latest time interval.");
 					return;
