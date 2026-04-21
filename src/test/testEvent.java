@@ -1,13 +1,13 @@
 package test;
 
-import EventManager.EventManager;
-import Invite.Invite;
 import Repository.EventRepository;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.*;
+import event.manager.EventManager;
+import invite.Invite;
 import Repository.UserRepository;
 import junit.framework.TestCase;
+import user.User;
+import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;
 import java.util.List;

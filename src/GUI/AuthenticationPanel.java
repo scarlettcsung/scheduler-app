@@ -13,8 +13,11 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
-import Authentication.Authentication;
-import UserService.UserService;
+import authentication.Authentication;
+import scheduler.Scheduler;
+import user.User;
+import user.calendar.UserCalendar;
+import user.service.UserService;
 
 import javax.swing.JOptionPane;
 
@@ -22,12 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.Color;
 
-import User.User;
-import UserCalendar.UserCalendar;
 import Repository.EventRepository;
 import Repository.UserRepository;
-
-import Scheduler.Scheduler;
 
 
 public class AuthenticationPanel extends JPanel {

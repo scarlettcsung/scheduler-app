@@ -1,12 +1,12 @@
-package EventManager;
+package event.manager;
 
-import Invite.Invite;
-import Invite.inviteStatus;
 import Repository.UserRepository;
 import Repository.EventRepository;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.Event;
+import invite.Invite;
+import invite.inviteStatus;
+import user.User;
+import user.calendar.UserCalendar;
 
 //Additional Packages
 import java.time.LocalDateTime;

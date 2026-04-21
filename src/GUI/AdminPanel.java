@@ -4,7 +4,6 @@ import javax.swing.JPanel;
 
 import Repository.EventRepository;
 import Repository.UserRepository;
-import Scheduler.Scheduler;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -14,8 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 
-import User.User;
 import net.miginfocom.swing.MigLayout;
+import scheduler.Scheduler;
+import user.User;
 
 public class AdminPanel extends JPanel {
 

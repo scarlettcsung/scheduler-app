@@ -1,6 +1,6 @@
 package user;
 
-import UserCalendar.UserCalendar;
+import user.calendar.UserCalendar;
 
 /**
  * Specialised user with administrative privileges.

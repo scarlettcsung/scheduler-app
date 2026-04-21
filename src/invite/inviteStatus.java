@@ -1,4 +1,4 @@
-package Invite;
+package invite;
 
 /**
  * Enumerates the lifecycle states of an {@link Invite}.

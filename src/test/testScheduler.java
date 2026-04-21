@@ -1,22 +1,22 @@
 package test;
 
-import EventManager.EventManager;
-import Invite.Invite;
-import Invite.inviteStatus;
 import Repository.UserRepository;
 import Repository.EventRepository;
-import Scheduler.Scheduler;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.CreatedEvent;
 import event.Event;
+import event.manager.EventManager;
+import invite.Invite;
+import invite.inviteStatus;
 import junit.framework.TestCase;
+import scheduler.Scheduler;
+import user.User;
+import user.calendar.UserCalendar;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 /**
- * Unit tests for {@link Scheduler.Scheduler}.
+ * Unit tests for {@link scheduler.Scheduler}.
  *
  * @author SN SS NJ
  * @version 2

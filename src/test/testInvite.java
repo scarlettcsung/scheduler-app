@@ -1,15 +1,15 @@
 package test;
 
-import Invite.Invite;
-import Invite.inviteStatus;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.CreatedEvent;
 import event.Event;
+import invite.Invite;
+import invite.inviteStatus;
 import junit.framework.TestCase;
+import user.User;
+import user.calendar.UserCalendar;
 
 /**
- * Unit tests for {@link Invite.Invite}.
+ * Unit tests for {@link invite.Invite}.
  *
  * @author NJ
  * @version TODO

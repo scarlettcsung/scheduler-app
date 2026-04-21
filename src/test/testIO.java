@@ -1,23 +1,23 @@
 package test;
 
 import junit.framework.TestCase;
+import user.AdminUser;
+import user.User;
+import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.io.*;
 
-import Invite.Invite;
 import Repository.UserRepository;
-import User.AdminUser;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.CreatedEvent;
 import event.Event;
-import IO.IO;
+import invite.Invite;
+import io.IO;
 
 
 /**
- * Unit tests for {@link IO.IO}.
+ * Unit tests for {@link io.IO}.
  *
  * @author AA NJ
  * @version 2

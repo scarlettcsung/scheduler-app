@@ -1,9 +1,9 @@
-package UserService;
+package user.service;
 
-import Authentication.Authentication;
 import Repository.UserRepository;
-import User.User;
-import UserCalendar.UserCalendar;
+import authentication.Authentication;
+import user.User;
+import user.calendar.UserCalendar;
 
 /**
  * Coordinates user-facing operations such as registration, login, and account

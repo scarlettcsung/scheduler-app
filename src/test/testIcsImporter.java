@@ -1,12 +1,12 @@
 package test;
 
-import IcsImporter.IcsImporter;
-import IcsImporter.ImportStatus;
-import User.User;
-import UserCalendar.UserCalendar;
 import event.*;
+import ics.importer.IcsImporter;
+import ics.importer.ImportStatus;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.ParserException;
+import user.User;
+import user.calendar.UserCalendar;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * Unit tests for {@link IcsImporter.IcsImporter}.
+ * Unit tests for {@link ics.importer.IcsImporter}.
  *
  * @author SN AA NJ
  * @version 2

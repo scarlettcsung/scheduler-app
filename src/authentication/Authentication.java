@@ -1,7 +1,7 @@
-package Authentication;
+package authentication;
 
 import Repository.UserRepository;
-import User.User;
+import user.User;
 /**
  * Authenticates users against a UserRepository and keeps track of the
  * currently logged-in user for the active session.

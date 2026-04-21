@@ -1,4 +1,4 @@
-	package Invite;
+	package invite;
 
 /**
  * Represents an invitation for a user to join an event.

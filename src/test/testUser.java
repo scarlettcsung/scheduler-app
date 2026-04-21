@@ -1,12 +1,12 @@
 package test;
 
-import User.AdminUser;
-import User.User;
-import UserCalendar.UserCalendar;
 import junit.framework.TestCase;
+import user.AdminUser;
+import user.User;
+import user.calendar.UserCalendar;
 
 /**
- * Unit tests for {@link User.User} and {@link User.AdminUser}.
+ * Unit tests for {@link user.User} and {@link user.AdminUser}.
  *
  * @author SN GI NJ
  * @version 1

@@ -1,11 +1,12 @@
-package IO;
+package io;
 //readUserList(filePath): userList, writeUserList(userList,filePath): void, 
 // readCalender(userList): void, writeCalender(userList):void.
 import java.util.*;
 import java.io.*;
-import User.User;
-import UserCalendar.UserCalendar;
+
 import event.*;
+import user.User;
+import user.calendar.UserCalendar;
 import Repository.UserRepository;
 
 //Additional Packages
