@@ -2,12 +2,13 @@ package event;
 
 import Invite.Invite;
 
+// Additional Packages
 import java.util.Objects;
 import java.util.UUID;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a schedulable event together with its organizer and invitees.
@@ -25,8 +26,8 @@ public abstract class Event {
     private final String eventID = UUID.randomUUID().toString();
     private String organizerUsername;
     private List<Invite> invites;
-    private List<String> participantUsernames;
-    
+ 
+
     protected boolean isImportedField; // Just for IO
 
     public Event(String eventName, int eventDuration, String eventDescription,
@@ -36,7 +37,7 @@ public abstract class Event {
         this.eventDescription = eventDescription;
         this.organizerUsername = organizerUsername;
         this.invites = Objects.requireNonNullElseGet(invites, () -> new ArrayList<>());
-        this.participantUsernames = new ArrayList<>();
+      
     }
 
     public abstract boolean isImported();
@@ -97,22 +98,25 @@ public abstract class Event {
      * Gets list of participant usernames
      */
     public List<String> getParticipants() {
+    	List<String> participantUsernames = new ArrayList<>();
     	participantUsernames.clear();
-    	
-    	for (Invite invite:invites) {
-    		String participantUsername = invite.getRecipient();
-    		participantUsernames.add(participantUsername);
-    	}
-    	return participantUsernames;
+        for (Invite invite : invites) {
+            String participantUsername = invite.getRecipient();
+            participantUsernames.add(participantUsername);
+        }
+        return participantUsernames;
     }
-    
-    public String getTimeString() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
-		String stringDateTime = eventTime.format(formatter);
-		LocalDateTime endTime = eventTime.plusMinutes(eventDuration);
-		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-		String stringDisplay = String.format("%s - %s", stringDateTime, endTimeStr);
 
-		return stringDisplay;
+    public String getTimeString() {
+    	
+  		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
+  		String stringDateTime = eventTime.format(formatter);
+  		LocalDateTime endTime = eventTime.plusMinutes(eventDuration);
+  		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+  		String stringDisplay = String.format("%s - %s", stringDateTime, endTimeStr);
+
+  		return stringDisplay;
     }
+
+
 }
