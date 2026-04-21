@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
     actor U as User
     participant AP as AuthenticationPanel
@@ -18,3 +19,4 @@ sequenceDiagram
         US-->>AP: true
         AP-->>U: Show "User registered!"
     end
+```
