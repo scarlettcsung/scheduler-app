@@ -1,7 +1,7 @@
 package user.service;
 
-import Repository.UserRepository;
 import authentication.Authentication;
+import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
 

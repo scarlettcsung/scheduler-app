@@ -1,10 +1,10 @@
 package event.manager;
 
-import Repository.UserRepository;
-import Repository.EventRepository;
 import event.Event;
 import invite.Invite;
 import invite.inviteStatus;
+import repository.EventRepository;
+import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
 

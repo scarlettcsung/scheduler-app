@@ -14,14 +14,14 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.List;
 
-import Repository.EventRepository;
-import Repository.UserRepository;
 import event.Event;
 import event.manager.EventManager;
 import ics.importer.IcsImporter;
 import ics.importer.ImportStatus;
 import invite.Invite;
 import invite.inviteStatus;
+import repository.EventRepository;
+import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
 import event.CreatedEvent;

@@ -1,11 +1,11 @@
 package test;
 
-import Repository.EventRepository;
 import event.*;
 import event.manager.EventManager;
 import invite.Invite;
-import Repository.UserRepository;
 import junit.framework.TestCase;
+import repository.EventRepository;
+import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
 

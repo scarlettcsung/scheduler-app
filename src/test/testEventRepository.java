@@ -1,15 +1,15 @@
 package test;
 
 import junit.framework.TestCase;
+import repository.EventRepository;
 import user.User;
-import Repository.EventRepository;
 import event.CreatedEvent;
 import event.Event;
 
 import java.util.List;
 
 /**
- * Unit tests for {@link Repository.EventRepository}.
+ * Unit tests for {@link repository.EventRepository}.
  *
  * @author CR EO
  * @version 3

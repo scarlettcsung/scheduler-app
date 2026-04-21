@@ -2,8 +2,8 @@ package test;
 
 import authentication.Authentication;
 import junit.framework.TestCase;
+import repository.UserRepository;
 import user.service.UserService;
-import Repository.UserRepository;
 
 /**
  * Unit tests for {@link user.service.UserService}.

@@ -1,6 +1,8 @@
 package test;
 
 import junit.framework.TestCase;
+import repository.EventRepository;
+import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
 
@@ -13,8 +15,6 @@ import event.Event;
 import event.manager.EventManager;
 import invite.Invite;
 import invite.inviteStatus;
-import Repository.EventRepository;
-import Repository.UserRepository;
 
 /**
  * Unit tests for {@link event.EventManager}.

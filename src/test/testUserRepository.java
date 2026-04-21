@@ -3,16 +3,16 @@ package test;
 
 import java.util.ArrayList;
 
-import Repository.UserRepository;
 import event.CreatedEvent;
 import junit.framework.TestCase;
+import repository.UserRepository;
 import user.AdminUser;
 import user.User;
 import user.calendar.UserCalendar;
 import event.Event;
 
 /**
- * Unit tests for {@link Repository.UserRepository}.
+ * Unit tests for {@link repository.UserRepository}.
  *
  * @author CR EO NJ
  * @version 3 and 4

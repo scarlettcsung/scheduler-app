@@ -1,10 +1,6 @@
 package GUI;
 
 import javax.swing.JPanel;
-
-import Repository.EventRepository;
-import Repository.UserRepository;
-
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 import net.miginfocom.swing.MigLayout;
+import repository.EventRepository;
+import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
 

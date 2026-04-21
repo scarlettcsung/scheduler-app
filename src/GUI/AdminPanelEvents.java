@@ -38,10 +38,10 @@ import event.manager.EventManager;
 import ics.importer.IcsImporter;
 import ics.importer.ImportStatus;
 import invite.Invite;
+import repository.EventRepository;
+import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
-import Repository.EventRepository;
-import Repository.UserRepository;
 
 public class AdminPanelEvents extends JPanel {
 

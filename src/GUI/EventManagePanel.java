@@ -32,20 +32,18 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import com.github.lgooddatepicker.components.DatePicker;
 
-// Back-end related imports
-import Repository.UserRepository;
-
 import event.Event;
 import event.manager.EventManager;
 import invite.Invite;
+import repository.EventRepository;
+import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
 import user.service.UserService;
 
 import event.CreatedEvent;
 
-import javax.swing.JSplitPane;
-import Repository.EventRepository;	
+import javax.swing.JSplitPane;	
 
 
 public class EventManagePanel extends JPanel {

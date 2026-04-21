@@ -18,8 +18,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JScrollPane;
 
-import Repository.EventRepository;
-import Repository.UserRepository;
+import repository.EventRepository;
+import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
 

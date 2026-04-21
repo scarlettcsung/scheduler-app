@@ -1,6 +1,7 @@
 package test;
 
 import junit.framework.TestCase;
+import repository.UserRepository;
 import user.AdminUser;
 import user.User;
 import user.calendar.UserCalendar;
@@ -9,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.io.*;
 
-import Repository.UserRepository;
 import event.CreatedEvent;
 import event.Event;
 import invite.Invite;

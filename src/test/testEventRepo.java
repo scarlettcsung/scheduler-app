@@ -1,9 +1,9 @@
 package test;
 
-import Repository.EventRepository;
 import event.CreatedEvent;
 import event.Event;
 import junit.framework.TestCase;
+import repository.EventRepository;
 
 public class testEventRepo extends TestCase {
 

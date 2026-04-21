@@ -1,8 +1,8 @@
 package test;
 
 import junit.framework.TestCase;
+import repository.UserRepository;
 import user.User;
-import Repository.UserRepository;
 import authentication.Authentication;
 
 /**

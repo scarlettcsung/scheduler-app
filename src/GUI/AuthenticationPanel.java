@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
 import authentication.Authentication;
+import repository.EventRepository;
+import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
 import user.calendar.UserCalendar;
@@ -24,9 +26,6 @@ import javax.swing.JOptionPane;
 
 import javax.swing.JLabel;
 import java.awt.Color;
-
-import Repository.EventRepository;
-import Repository.UserRepository;
 
 
 public class AuthenticationPanel extends JPanel {

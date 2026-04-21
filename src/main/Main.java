@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.util.List;
 
 import GUI.AuthenticationPanel;
-import Repository.UserRepository;
-import Repository.EventRepository;
 import event.Event;
 import io.IO;
+import repository.EventRepository;
+import repository.UserRepository;
 import scheduler.Scheduler;
 import user.AdminUser;
 import user.User;

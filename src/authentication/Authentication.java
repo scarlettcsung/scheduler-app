@@ -1,6 +1,6 @@
 package authentication;
 
-import Repository.UserRepository;
+import repository.UserRepository;
 import user.User;
 /**
  * Authenticates users against a UserRepository and keeps track of the
