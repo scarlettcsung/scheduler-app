@@ -81,16 +81,16 @@ classDiagram
         -eventTime: LocalDateTime
         -eventDuration: int
         -eventDescription: String
-        -eventID: String {readOnly}
+        -eventID: String 
         -organizerUser: String
         -invites: List~Invite~
         -participantUsernames: List~String~
-        #isImportedField boolean
+        #isImportedField: boolean
         
-        +isImported()* boolean
+        +isImported(): boolean
         +getParticipants() List~String~
         +hasExistingInvite(String username): boolean
-        +getTimeString() String
+        +getTimeString(): String
     }
     
     class CreatedEvent {

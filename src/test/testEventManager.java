@@ -225,6 +225,21 @@ public class testEventManager extends TestCase {
         assertEquals(1, event.getInvites().size());
     }
     
+    // Explicitly tests the private hasExistingInvite method
+    public void testHasExistingInvite() throws Exception {
+        java.lang.reflect.Method method = EventManager.class.getDeclaredMethod("hasExistingInvite", Event.class, String.class);
+        method.setAccessible(true);
+        
+        // Verify it returns false when no invite exists
+        boolean hasInvite = (boolean) method.invoke(eveUpdateEvent, event, exampleInvitee.getUsername());
+        assertFalse(hasInvite);
+        
+        // Add invite and verify it returns true
+        eveUpdateEvent.addInvite(event, exampleInvitee);
+        hasInvite = (boolean) method.invoke(eveUpdateEvent, event, exampleInvitee.getUsername());
+        assertTrue(hasInvite);
+    }
+    
     public void testRemoveInvite() {
         List<Invite> expected = new ArrayList<>();
         eveUpdateEvent.addInvite(event,exampleInvitee);
