@@ -1,7 +1,7 @@
 package test;
 
-import Main.Main;
 import junit.framework.TestCase;
+import main.Main;
 
 public class testMain extends TestCase {
 
