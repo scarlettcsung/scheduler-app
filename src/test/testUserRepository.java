@@ -10,6 +10,7 @@ import user.AdminUser;
 import user.User;
 import user.calendar.UserCalendar;
 import event.Event;
+import user.service.UserDeletionResult;
 
 /**
  * Unit tests for {@link repository.UserRepository}.
@@ -47,8 +48,8 @@ public class testUserRepository extends TestCase {
 
     public void testDeleteNullUsername() {
  
-        int deleted = repository.deleteUserData("MissingUser", null);
-        assertEquals(1, deleted);
+        UserDeletionResult deleted = repository.deleteUserData("MissingUser", null);
+        assertEquals(UserDeletionResult.NOT_AUTHENTICATED, deleted);
     }
     
     public void testDeleteExistingUserAsAdmin() {
@@ -56,21 +57,21 @@ public class testUserRepository extends TestCase {
     	// Now we will just go on with a dummy admin user.
 		User adminUser = new AdminUser("admin", "admin", null);
 		repository.saveUser(testUser);
-		int deleted = repository.deleteUserData("testUser", adminUser);
-		assertEquals(2, deleted);
+		UserDeletionResult deleted = repository.deleteUserData("testUser", adminUser);
+		assertEquals(UserDeletionResult.DELETED_BY_ADMIN, deleted);
 			}
 	
 	public void testDeleteExistingUserAsSelf() {
 		repository.saveUser(testUser);
-		int deleted = repository.deleteUserData("testUser", testUser);
-		assertEquals(3, deleted);
+		UserDeletionResult deleted = repository.deleteUserData("testUser", testUser);
+		assertEquals(UserDeletionResult.DELETED_SELF, deleted);
 			}
 	
 	public void testDeleteExistingUserAsOther() {
 		User otherUser = new User("otherUser", "pw123", null);
 		repository.saveUser(testUser);
-		int deleted = repository.deleteUserData("testUser", otherUser);
-		assertEquals(4, deleted);
+		UserDeletionResult deleted = repository.deleteUserData("testUser", otherUser);
+		assertEquals(UserDeletionResult.NOT_PERMITTED, deleted);
 		
 	}
 
@@ -90,9 +91,9 @@ public class testUserRepository extends TestCase {
     public void testDeleteNonExistingUser() {
         User someUser = new User("someone", "pw", null);
 
-        int result = repository.deleteUserData("ghostUser", someUser);
+        UserDeletionResult result = repository.deleteUserData("ghostUser", someUser);
 
-        assertEquals(4, result);
+        assertEquals(UserDeletionResult.NOT_PERMITTED, result);
     }
     
     public void testRemoveFromAllCalendars() {
@@ -133,9 +134,9 @@ public class testUserRepository extends TestCase {
         User adminUser = new AdminUser("admin", "admin", null);
         repository.saveUser(adminUser);
         
-        int result = repository.deleteUserData("admin", adminUser);
+        UserDeletionResult result = repository.deleteUserData("admin", adminUser);
         
-        assertEquals(4, result);
+        assertEquals(UserDeletionResult.NOT_PERMITTED, result);
     }
     
     
