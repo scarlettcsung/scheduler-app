@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
-import authentication.Authentication;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -36,7 +35,6 @@ public class AuthenticationPanel extends JPanel {
 	private UserRepository repository;
 	private Scheduler scheduler;
 	private UserService userService;
-	private Authentication auth;
 	private EventRepository eventRepository;
 	
 	/**
@@ -52,7 +50,6 @@ public class AuthenticationPanel extends JPanel {
 	    this.scheduler = scheduler;
 	    this.eventRepository = eventRepository;
 	    userService = new UserService(repository);
-	    auth = new Authentication(repository);
 	    
 	    //Backend stuff meets with frontend stuff
 	    
@@ -93,12 +90,9 @@ public class AuthenticationPanel extends JPanel {
 				String username = textInUsername.getText();
 		        String password = new String(textInPassword.getPassword());
 		        
-		        boolean success = auth.login(username, password);
+		        User currentUser = userService.authenticateUser(username, password);
 		        
-		        // EO GI: 5/4/2026 23.42 currentUser upgrade
-		        User currentUser = auth.getauthenticatedUser();
-		        
-			        if (success) {
+			        if (currentUser != null) {
 			            JOptionPane.showMessageDialog(null, "Login successful!");
 			            // EO GI: Transition to the admin panel or user dashboard here
 			            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);

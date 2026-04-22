@@ -22,13 +22,14 @@ import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
-
-import javax.swing.JScrollBar;
+import user.service.UserDeletionResult;
+import user.service.UserService;
 
 public class AdminPanelDeleteUser extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private UserRepository repository;
+	private UserService userService;
 
 	/**
 	 * Create the panel.
@@ -37,6 +38,7 @@ public class AdminPanelDeleteUser extends JPanel {
 	public AdminPanelDeleteUser(UserRepository repository, User adminUser, Scheduler scheduler,EventRepository eventRepository) {
 		
 		this.repository = repository;
+		this.userService = new UserService(repository);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0};
@@ -55,9 +57,8 @@ public class AdminPanelDeleteUser extends JPanel {
 		DefaultListModel<String> listModel = new DefaultListModel<>();
 		
 		
-		for(int i = 0; i < repository.getAll().size(); i++)
-		{
-			listModel.addElement(repository.getAll().get(i).getUsername());
+		for (String username : userService.listUsernames()) {
+			listModel.addElement(username);
 		}
 		JList<String> userList = new JList<>(listModel);
 		
@@ -96,15 +97,17 @@ public class AdminPanelDeleteUser extends JPanel {
 		            return;
 		        }
 
-		        int result = repository.deleteUserData(selectedUsername, adminUser);
+		        UserDeletionResult result = userService.deleteUser(selectedUsername, adminUser);
 
-		        if (result == 2) {
+		        if (result.isSuccess()) {
 		            listModel.removeElement(selectedUsername);
 		            JOptionPane.showMessageDialog(null, "User deleted successfully!");
-
+		        } else if (result == UserDeletionResult.NOT_AUTHENTICATED) {
+		        	JOptionPane.showMessageDialog(null, "You must be logged in to delete a user.");
+		        } else if (result == UserDeletionResult.NOT_PERMITTED) {
+		        	JOptionPane.showMessageDialog(null, "User could not be deleted.");
 		        } else {
 		        	JOptionPane.showMessageDialog(null, "Problem occured :(");
-
 		        }
 		    }
 		});

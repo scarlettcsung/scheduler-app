@@ -29,6 +29,8 @@ import event.CreatedEvent;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import user.service.UserDeletionResult;
+import user.service.UserService;
 
 
 public class UserPanel extends JPanel {
@@ -39,6 +41,7 @@ public class UserPanel extends JPanel {
     private Event event1;
     private Event event2;
     private Scheduler scheduler;
+    private UserService userService;
     private final JPanel invitesPane;
     private final javax.swing.border.Border cardBorder;
     
@@ -54,6 +57,7 @@ public class UserPanel extends JPanel {
         this.eventRepository = eventRepository;
         this.currentUser = user;
         this.scheduler = scheduler;
+        this.userService = new UserService(repository);
         this.invitesPane = new JPanel();
         
         cardBorder = cardBorder();
@@ -143,12 +147,18 @@ public class UserPanel extends JPanel {
         JButton btnDeleteAccount = new JButton("Delete Account");
         btnDeleteAccount.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		repository.deleteUserData(currentUser.getUsername(), user);
-        		eventRepository.deleteEventsByOrganizer(currentUser.getUsername());
-        		JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
-        		topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
-        		topFrame.revalidate();
-        		topFrame.repaint();
+        		UserDeletionResult result = userService.deleteOwnAccount(currentUser);
+
+        		if (result.isSuccess()) {
+        			JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
+        			topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
+        			topFrame.revalidate();
+        			topFrame.repaint();
+        		} else if (result == UserDeletionResult.NOT_AUTHENTICATED) {
+        			JOptionPane.showMessageDialog(UserPanel.this, "You must be logged in to delete your account.");
+        		} else {
+        			JOptionPane.showMessageDialog(UserPanel.this, "Your account could not be deleted.");
+        		}
         	}
         });
         btnDeleteAccount.setBounds(821, 403, 156, 29);
