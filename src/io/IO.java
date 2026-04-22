@@ -31,13 +31,11 @@ public class IO {
      * @return users loaded from the file
      * @throws IOException when the file cannot be read
      */
-    public List<User> readUsers(String filePath) throws IOException{
-    	
-    	// Added to save whether Event was imported or created
-    	JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
+	public List<User> readUsers(String filePath) {
+        JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
             JsonObject jsonObject = json.getAsJsonObject();
             boolean isImportedField = jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean();
-            
+
             if (isImportedField) {
                 return context.deserialize(json, ImportedEvent.class);
             } else {
@@ -46,17 +44,23 @@ public class IO {
         };
 
         Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>) 
+            .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>)
                 (json, type, context) -> LocalDateTime.parse(json.getAsString()))
             .registerTypeAdapter(Event.class, eventDeserializer)
             .create();
-        
-        FileReader reader = new FileReader(filePath);
-        User[] users = gson.fromJson(reader, User[].class);
-        reader.close();
-       
 
-        return Arrays.asList(users);
+        try (FileReader reader = new FileReader(filePath)) {
+            User[] users = gson.fromJson(reader, User[].class);
+            return Arrays.asList(users);
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + filePath);
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Failed to read users from: " + filePath);
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
     }
 
     // Writes calendar data for all users to files
@@ -67,11 +71,17 @@ public class IO {
      * @param filePath destination file path
      * @throws IOException when the file cannot be written
      */
-    public void writeUsers(List<User> userList, String filePath) throws IOException {
-        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class,(JsonSerializer<LocalDateTime>)
-        		(src,type,context)->new JsonPrimitive(src.toString())).create();
-        FileWriter writer = new FileWriter(filePath);
-        gson.toJson(userList, writer);
-        writer.close();
+	public void writeUsers(List<User> userList, String filePath) {
+        Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>)
+                (src, type, context) -> new JsonPrimitive(src.toString()))
+            .create();
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            gson.toJson(userList, writer);
+        } catch (IOException e) {
+            System.err.println("Failed to write users to: " + filePath);
+            e.printStackTrace();
+        }
     }
-    }
+}
