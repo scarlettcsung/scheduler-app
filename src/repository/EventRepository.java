@@ -18,13 +18,15 @@ public class EventRepository extends Repository<Event> {
 		
 	}
 	
+	
 	/**
 	 * Finds an event by its identifier.
 	 *
 	 * @param eventID identifier to search for
 	 * @return matching event, or {@code null} when not found
 	 */
-	public Event findByEventID(String eventID) {
+	@Override
+	public Event getItemByID(String eventID) {
         for (Event e : data) {
             if (e.getEventID().equals(eventID)) {
                 return e;
@@ -33,15 +35,22 @@ public class EventRepository extends Repository<Event> {
         return null;
     }
 	
+		
+	
+	
 	/**
 	 * Deletes an event by its identifier.
 	 *
 	 * @param eventID identifier of the event to remove
 	 * @return {@code true} when an event was removed
 	 */
-	public boolean deleteEvent(String eventID) {
-        return data.removeIf(e -> e.getEventID().equals(eventID));
-    }
+	@Override
+	public int deleteItem(String eventID) {
+		if(data.removeIf(e -> e.getEventID().equals(eventID)))
+		{return 1;}	
+		else
+		{return 0;}
+	}
 
     /**
      * Returns the repository type label.
@@ -56,9 +65,8 @@ public class EventRepository extends Repository<Event> {
 	public void deleteEventsByOrganizer(String username) {
 		for(Event e : data) {
 			if(e.getOrganizer().equals(username)) {
-				deleteEvent(e.getEventID());
+				deleteItem(e.getEventID());
 			}
 		}
-		
 	}
 }
