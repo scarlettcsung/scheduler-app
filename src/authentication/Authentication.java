@@ -32,7 +32,7 @@ public class Authentication {
 	 */
 	public boolean login(String UserName, String UserPassword) {
 	
-		User currentUser = repository.findUsername(UserName);
+		User currentUser = repository.getItemByID(UserName);
 		
 		if(currentUser!=null){
 			if (currentUser.getPassword().equals(UserPassword)) 

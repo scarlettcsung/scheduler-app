@@ -159,7 +159,7 @@ public class EventManager {
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(inviteStatus.REJECTED);
         if (this.repository != null) {
-        	User invitee = repository.findUsername(invite.getRecipient());
+        	User invitee = repository.getItemByID(invite.getRecipient());
         	
         	if (invitee != null) {
         		this.removeInvite(event, invitee);
@@ -191,7 +191,7 @@ public class EventManager {
      */
     public User getOrganizer(Event event) {
         String organizerUsername = event.getOrganizer();
-        return repository.findUsername(organizerUsername);
+        return repository.getItemByID(organizerUsername);
     }
     
     /**
