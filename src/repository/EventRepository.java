@@ -44,7 +44,7 @@ public class EventRepository extends Repository<Event> {
 	 * @param eventID identifier of the event to remove
 	 * @return {@code true} when an event was removed
 	 */
-	@Override
+	
 	public int deleteItem(String eventID) {
 		if(data.removeIf(e -> e.getEventID().equals(eventID)))
 		{return 1;}	
