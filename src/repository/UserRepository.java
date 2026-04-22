@@ -5,9 +5,8 @@ import java.util.Map;
 
 import event.Event;
 import invite.Invite;
-import user.AdminUser;
 import user.User;
-import user.calendar.UserCalendar;
+import user.service.UserDeletionResult;
 
 /**
  * In-memory repository for {@link User} instances.
@@ -61,32 +60,24 @@ public class UserRepository extends Repository<User> {
      *
      * @param username username of the user to delete
      * @param currentUser user requesting the deletion
-     * @return {@code 1} when nobody is authenticated, {@code 2} when an admin
-     *         deleted the user, {@code 3} when a user deleted themself, or
-     *         {@code 4} when deletion was not permitted or the user was missing
+     * @return named deletion result for the request
      */
-    public int deleteUserData(String username, User currentUser) {
-    	
-    	int notAuthenticated = 1;
-    	int adminDeletion = 2;
-    	int deleteItself = 3;
-    	int notPermitted = 4;
-
+    public UserDeletionResult deleteUserData(String username, User currentUser) {
         if (currentUser == null) {
-            return notAuthenticated;
+            return UserDeletionResult.NOT_AUTHENTICATED;
         }
 
         User targetUser = findUsername(username);
         if (targetUser == null) {
-            return notPermitted;
+            return UserDeletionResult.NOT_PERMITTED;
         }
 
         if (!currentUser.canDeleteUser(targetUser)) {
-            return notPermitted;
+            return UserDeletionResult.NOT_PERMITTED;
         }
         
         if ("admin".equals(targetUser.getUsername())) {
-            return notPermitted;
+            return UserDeletionResult.NOT_PERMITTED;
         }
 
         cleanupUserEventReferences(targetUser.getUsername());
@@ -95,10 +86,10 @@ public class UserRepository extends Repository<User> {
 
        
         if (currentUser.canAccessAdminPanel()) {
-            return adminDeletion; 
+            return UserDeletionResult.DELETED_BY_ADMIN; 
         }
 
-        return deleteItself;
+        return UserDeletionResult.DELETED_SELF;
     }
 
     /**
