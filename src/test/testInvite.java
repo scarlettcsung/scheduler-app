@@ -1,6 +1,7 @@
 package test;
 
 import event.CreatedEvent;
+import invite.Role;
 import event.Event;
 import invite.Invite;
 import invite.inviteStatus;
@@ -64,5 +65,14 @@ public class testInvite extends TestCase{
     public void testSetInviteStatus() {
         invite.setInviteStatus(inviteStatus.REJECTED);
         assertEquals(inviteStatus.REJECTED, invite.getStatus());
+    }
+    //test setOrganiser 
+    public void testSetOrganizerandgetRole() {
+    	invite.setOrganiser();
+    	assertEquals(Role.Organiser,invite.getRole());
+    }
+    public void testSetGuestandgetRole() {
+    	invite.setGuest();
+    	assertEquals(Role.Guest,invite.getRole());
     }
 }
