@@ -33,14 +33,14 @@ public class testUserRepository extends TestCase {
     public void testSaveAndFindUser() {
         repository.saveUser(testUser);
         
-        User found = repository.findUsername("testUser");
+        User found = repository.getItemByID("testUser");
         
         assertNotNull(found);
         assertEquals("testUser", found.getUsername());
     }
 
     public void testFindNonExistentUser() {
-        User found = repository.findUsername("nonExistent");
+        User found = repository.getItemByID("nonExistent");
         assertNull(found);
     }
     	// Delete Checks :EO GI

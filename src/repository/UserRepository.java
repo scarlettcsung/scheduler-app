@@ -76,7 +76,7 @@ public class UserRepository extends Repository<User> {
             return notAuthenticated;
         }
 
-        User targetUser = findUsername(username);
+        User targetUser = getItemByID(username);
         if (targetUser == null) {
             return notPermitted;
         }
@@ -107,7 +107,8 @@ public class UserRepository extends Repository<User> {
      * @param username username to search for
      * @return matching user, or {@code null} when not found
      */
-    public User findUsername(String username) {
+    @Override
+    public User getItemByID(String username) {
         for (User u : data) {
             if (u.getUsername().equals(username)) {
                 return u;
@@ -123,7 +124,7 @@ public class UserRepository extends Repository<User> {
      * @return {@code true} when a user with that username exists
      */
     public boolean isExistingUser(String username) {
-        return findUsername(username) != null;
+        return getItemByID(username) != null;
     }
 
     public void cleanupUserEventReferences(String username) {
@@ -160,7 +161,7 @@ public class UserRepository extends Repository<User> {
             if (username.equals(event.getOrganizer())) {
                 removeEventFromAllCalendars(event);
                 if (eventRepository != null) {
-                    eventRepository.deleteEvent(event.getEventID());
+                    eventRepository.deleteItem(event.getEventID());
                 }
                 continue;
             }

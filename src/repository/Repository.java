@@ -22,7 +22,6 @@ public abstract class Repository<T> {
     }
     public abstract T getItemByID(String itemID);
     
-    public abstract int deleteItem(String itemID);
     
     /**
      * Stores an item in the repository.
