@@ -114,7 +114,7 @@ public class testScheduler extends TestCase {
         assertEquals(1, event.getInvites().size());
         assertEquals(invitee.getUsername(), event.getInvites().get(0).getRecipient());
         assertEquals(inviteStatus.PENDING, event.getInvites().get(0).getStatus());
-        assertNotNull(eventRepository.findByEventID(event.getEventID()));
+        assertNotNull(eventRepository.getItemByID(event.getEventID()));
     }
 
     public void testScheduleEventReturnsFalseWhenNoSlotInLookahead() {

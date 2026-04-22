@@ -2,6 +2,7 @@ package event.manager;
 
 import event.Event;
 import invite.Invite;
+import invite.Role;
 import invite.inviteStatus;
 import repository.EventRepository;
 import repository.UserRepository;
@@ -11,6 +12,7 @@ import user.calendar.UserCalendar;
 //Additional Packages
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -102,7 +104,7 @@ public class EventManager {
             }
 
             if (eventRepository != null) {
-                eventRepository.deleteEvent(event.getEventID());
+                eventRepository.deleteItem(event.getEventID());
             }
             return;
         }
@@ -209,4 +211,33 @@ public class EventManager {
         }
         return false;
     }
-}
+    
+    public List<Event> returnParticipatingEvents(String username,EventRepository repo) {
+    	List<Event> pEvents= new ArrayList<>();
+    	List<Event> allEvents= repo.getAll();
+    	for (Event e: allEvents) { 
+    		for (Invite i: e.getInvites()){
+    			if (username.equals(i.getRecipient())){
+    				if(i.getRole().equals(Role.Guest)) 
+    					{pEvents.add(e);}
+    			}
+    	}
+    	}
+    	return pEvents;
+    	
+    }
+    
+    public List<Event> returnOrganisedEvents(String username,EventRepository repo) {
+    	List<Event> oEvents= new ArrayList<>();
+    	List<Event> allEvents= repo.getAll();
+    	for (Event e: allEvents) { 
+    		for (Invite i: e.getInvites()){
+    			if (username.equals(i.getRecipient())){
+    				if(i.getRole().equals(Role.Organiser)) 
+    					{oEvents.add(e);}
+    			}
+    	}
+    	} return oEvents;
+    }
+    }
+

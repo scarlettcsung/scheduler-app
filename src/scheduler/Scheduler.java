@@ -157,7 +157,7 @@ public class Scheduler {
         User organizer = userRepository.getItemByID(organizerUsername);
         if (organizer != null && organizer.getCalendar() != null) {
             organizer.getCalendar().addEvent(event);
-            if(eventRepository.findByEventID(event.getEventID()) == null) {
+            if(eventRepository.getItemByID(event.getEventID()) == null) {
 				eventRepository.save(event);
 			}
         }
@@ -168,7 +168,7 @@ public class Scheduler {
             User invitee = userRepository.getItemByID(inviteeUsername);
             if (invitee != null && invitee.getCalendar() != null) {
                 invitee.getCalendar().addEvent(event);
-                if(eventRepository.findByEventID(event.getEventID()) == null) {
+                if(eventRepository.getItemByID(event.getEventID()) == null) {
 					eventRepository.save(event);
 				}
             }
