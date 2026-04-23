@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JScrollPane;
 
+import easter.egg.LanguageFacts;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -98,6 +99,8 @@ public class AdminPanelDeleteUser extends JPanel {
 		        }
 
 		        UserDeletionResult result = userService.deleteUser(selectedUsername, adminUser);
+		        
+		        LanguageFacts languageFacts = new LanguageFacts();
 
 		        if (result.isSuccess()) {
 		            listModel.removeElement(selectedUsername);
@@ -105,9 +108,9 @@ public class AdminPanelDeleteUser extends JPanel {
 		        } else if (result == UserDeletionResult.NOT_AUTHENTICATED) {
 		        	JOptionPane.showMessageDialog(null, "You must be logged in to delete a user.");
 		        } else if (result == UserDeletionResult.NOT_PERMITTED) {
-		        	JOptionPane.showMessageDialog(null, "User could not be deleted.");
+		        	JOptionPane.showMessageDialog(null, "User could not be deleted \n\n" + languageFacts.randomFact());
 		        } else {
-		        	JOptionPane.showMessageDialog(null, "Problem occured :(");
+		        	JOptionPane.showMessageDialog(null, "Problem occured :(\n\n" + languageFacts.randomFact());
 		        }
 		    }
 		});
