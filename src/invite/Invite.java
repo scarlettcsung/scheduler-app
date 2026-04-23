@@ -11,6 +11,7 @@ public class Invite {
     private String recipientUsername;
     private String eventID;
     private inviteStatus status;
+	private Role role;
 
     /**
      * Creates a new pending invite for an event recipient.
@@ -88,5 +89,17 @@ public class Invite {
      */
     public void setInviteStatus(inviteStatus status) {
         this.status = status;
+    }
+
+    public void setOrganiser() {
+        this.role = Role.Organiser;
+    }
+
+    public void setGuest() {
+        this.role = Role.Guest;
+    }
+
+    public Role getRole() {
+        return role;
     }
 }

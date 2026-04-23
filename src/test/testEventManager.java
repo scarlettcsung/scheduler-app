@@ -314,4 +314,55 @@ public class testEventManager extends TestCase {
         User result = eveUpdateEvent.getOrganizer(e);
         assertEquals(exampleNewOrganizer, result);
     }
-}
+    
+    public void testReturnOrganizedEvents() {
+        Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", exampleNewOrganizer.getUsername(), null);
+        Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventID());
+        invite1.setOrganiser(); 
+        event1.getInvites().add(invite1);
+        
+        Event event2 = new CreatedEvent("Project Deadline", 120, "Work session", exampleNewOrganizer.getUsername(), null);
+        Invite invite2 = new Invite(exampleNewOrganizer.getUsername(), event2.getEventID());
+        invite2.setOrganiser();
+        event2.getInvites().add(invite2);
+        
+        Event event3 = new CreatedEvent("Lunch", 45, "Food", "Charles", null);
+        Invite invite3 = new Invite("Charles", event3.getEventID());
+        invite3.setOrganiser();
+        event3.getInvites().add(invite3);
+        
+        eventRepository.save(event1);
+        eventRepository.save(event2);
+        eventRepository.save(event3);
+
+        List<Event> jennifersEvents = eveUpdateEvent.returnOrganisedEvents(exampleNewOrganizer.getUsername(), eventRepository);
+
+        assertEquals(2, jennifersEvents.size());
+        assertFalse(jennifersEvents.contains(event3));
+    }
+
+    public void testReturnParticipatingEvents() {
+        Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", exampleNewOrganizer.getUsername(), null);
+        
+        Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventID());
+        invite1.setOrganiser();
+        event1.getInvites().add(invite1);
+
+        Invite invite2 = new Invite(exampleInvitee.getUsername(), event1.getEventID());
+        invite2.setGuest(); 
+        event1.getInvites().add(invite2); 
+        
+        eventRepository.save(event1);
+
+        List<Event> joesEvents = eveUpdateEvent.returnParticipatingEvents(exampleInvitee.getUsername(), eventRepository);
+        List<Event> jennifersParticipatingEvents = eveUpdateEvent.returnParticipatingEvents(exampleNewOrganizer.getUsername(), eventRepository);
+
+        assertEquals(1, joesEvents.size());
+        assertEquals("Team Meeting", joesEvents.get(0).getEventName());
+        assertEquals(0, jennifersParticipatingEvents.size());
+    }
+
+
+    }
+
+

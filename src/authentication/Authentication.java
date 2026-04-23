@@ -11,7 +11,6 @@ import user.User;
  * @version 1
  */
 public class Authentication {
-
     // Authenticated user, the user that will have their details presented.
     private User authenticatedUser;
     private UserRepository repository;
@@ -34,7 +33,7 @@ public class Authentication {
      * @return {@code true} when the credentials match an existing user
      */
     public boolean login(String UserName, String UserPassword) {
-        User currentUser = repository.findUsername(UserName);
+        User currentUser = repository.getItemByID(UserName);
 
         if (currentUser == null) {
             return false;

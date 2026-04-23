@@ -17,12 +17,10 @@ flowchart LR
         subgraph Administration [Administration]
             UC_ManageUsers([Manage users])
             UC_ViewAllUsers([View all users])
-            UC_UpdatePerms([Update permissions / roles])
             UC_DeleteUser([Delete user])
             UC_ViewAllEvents([View all events])
 
             UC_ManageUsers -.->|includes| UC_ViewAllUsers
-            UC_ManageUsers -.->|includes| UC_UpdatePerms
             UC_ManageUsers -.->|includes| UC_DeleteUser
         end
 
@@ -34,12 +32,13 @@ flowchart LR
 
         subgraph OrganizedEvents [Organized Events]
             UC_ViewOrgEvents([View organized events])
-            UC_ViewRSVP([View RSVP statuses])
             UC_DeleteEvent([Delete event])
             UC_UpdateEvent([Update event])
+            UC_UninviteUser([Uninvite user])
             UC_RescheduleEvent([Reschedule event])
 
             UC_UpdateEvent -.->|may trigger| UC_RescheduleEvent
+            UC_UpdateEvent -.->|includes| UC_UninviteUser
         end
 
         %% Cross-Group Extension
@@ -65,6 +64,8 @@ flowchart LR
         subgraph DashboardCalendar [Dashboard and Calendar]
             UC_ViewCalendar([View calendar])
             UC_UploadICS([Upload .ics calendar])
+            UC_DeleteOwnAccount([Delete own account])
+            
         end
 
         subgraph Auth [Authentication]
@@ -84,13 +85,15 @@ flowchart LR
     Invitee --> UC_DeclineInvite
 
     Organizer --> UC_ViewOrgEvents
-    Organizer --> UC_ViewRSVP
     Organizer --> UC_DeleteEvent
     Organizer --> UC_UpdateEvent
     Organizer --> UC_CreateEvent
+    Organizer --> UC_UninviteUser
+    
 
     AuthUser --> UC_ViewCalendar
     AuthUser --> UC_UploadICS
+    AuthUser --> UC_DeleteOwnAccount
     AuthUser --> UC_LogOut
 
     Guest --> UC_Register
