@@ -1,11 +1,11 @@
 ```mermaid
 flowchart LR
     %% Actors
-    Admin[Admin]
-    Invitee[Invitee]
-    Organizer[Organizer]
-    AuthUser[Authenticated User]
-    Guest[Guest]
+    Admin[👤 Admin]
+    Invitee[👤 Invitee]
+    Organizer[👤 Organizer]
+    AuthUser[👤 Authenticated User]
+    Guest[👤 Guest]
 
     %% Actor Inheritance / Generalization
     Admin ---> AuthUser
@@ -26,7 +26,7 @@ flowchart LR
             UC_ManageUsers -.->|includes| UC_DeleteUser
         end
 
-        subgraph Invitations [Invitations]
+        subgraph Manage Invitations [Manage Invitations]
             UC_ViewInvites([View invitations])
             UC_AcceptInvite([Accept invitation])
             UC_DeclineInvite([Decline invitation])

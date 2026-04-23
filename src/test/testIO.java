@@ -61,5 +61,30 @@ public class testIO extends TestCase {
 	//(String eventName, LocalDateTime eventTime, int eventDuration, String eventDescription,]
 	//User organizer, Boolean isImported,  List<Invite> invites)
 	
+	public void testReadUsers_FileNotFound_ReturnsEmptyList() {
+	    List<User> result = input.readUsers("src/test/resources/doesNotExist.json");
+	    
+	    assertNotNull("Result should not be null", result);
+	    assertTrue("Result should be empty when file is not found", result.isEmpty());
+	}
+	
+	public void testWriteUsers_IOException_UnwritableFile() throws IOException {
+	    File unwritable = new File("src/test/resources/unwritable.json");
+
+	    // Create the file and make it unwritable
+	    unwritable.createNewFile();
+	    unwritable.setWritable(false);
+
+	    try {
+	        input.writeUsers(repository.getAll(), unwritable.getPath());
+	        // If we reach here, the catch block handled it without throwing
+	    } finally {
+	        // Restore permissions and clean up
+	        unwritable.setWritable(true);
+	        unwritable.delete();
+	    }
+	}
+	
+	
 	
 }
