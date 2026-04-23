@@ -20,6 +20,23 @@ classDiagram
         +login(String, String)
     }
 
+    class Repository~T~ {
+        <<abstract>>
+        -List~T~ data
+        +Repository()
+        +save(item: T) void
+        +getAll() List~T~
+        +getRepositoryType() String
+    }
+
+    class EventRepository {
+        +EventRepository()
+        +findByEventID(eventID: String) Event
+        +deleteEvent(eventID: String) boolean
+        +getRepositoryType() String
+        +deleteEventsByOrganizer(username: String) void
+    }
+
     class UserRepository {
         -userList: List~User~
         +saveUser(user: User) : void
@@ -76,7 +93,7 @@ classDiagram
     }
 
     class Event {
-    	 <<abstract>>
+         <<abstract>>
         -eventName: String
         -eventTime: LocalDateTime
         -eventDuration: int
@@ -94,7 +111,7 @@ classDiagram
     }
     
     class CreatedEvent {
-    	 +isImported() boolean
+         +isImported() boolean
     }
     
     class ImportedEvent {
@@ -128,14 +145,14 @@ classDiagram
     %% Relationships
     Authentication ..> UserRepository : Use
     UserService ..> UserRepository
-    UserService -- User
+    UserService --> User
     UserRepository o-- User
-    UserRepository -- "1" IO : Relationship
-    User *-- "1" UserCalendar
-    User -- Event : owner
-    User -- Invite : recipient
-    UserCalendar *-- "0..*" Event
-    Event *-- "0..*" Invite
+    UserRepository --> IO : Relationship
+    User *-- UserCalendar
+    User --> Event : owner
+    User --> Invite : recipient
+    UserCalendar *-- Event
+    Event *-- Invite
     CreatedEvent --|> Event
     ImportedEvent --|> Event
     Scheduler ..> User
@@ -146,4 +163,11 @@ classDiagram
     ICSImportService --> Event : creates imported events
     ICSImportService --> ImportStatus
     Invite --> InviteStatus
+    Repository <|-- EventRepository
+    Repository <|-- UserRepository
+    EventRepository --> Event : stores
+    UserRepository --> EventRepository : uses
+    Scheduler --> EventRepository : uses
+    EventManager --> EventRepository : uses
+    EventManager --> UserRepository : uses
 ```
