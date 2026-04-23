@@ -26,15 +26,14 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.io.File;
 
 import event.Event;
 import event.manager.EventManager;
+import event.service.EventInviteView;
+import event.service.EventQueryService;
 import ics.importer.IcsImporter;
 import ics.importer.ImportStatus;
 import invite.Invite;
@@ -51,6 +50,7 @@ public class AdminPanelEvents extends JPanel {
 	private final EventRepository eventRepository;
 	private final User adminUser;
 	private final Scheduler scheduler;
+	private final EventQueryService eventQueryService;
 	private final JPanel eventPane;
 	private final JPanel invitesPane;
 	private final javax.swing.border.Border cardBorder;
@@ -60,6 +60,7 @@ public class AdminPanelEvents extends JPanel {
 		this.eventRepository = eventRepository;
 		this.adminUser = adminUser;
 		this.scheduler = scheduler;
+		this.eventQueryService = new EventQueryService(eventRepository);
 
 		setBackground(Color.CYAN);
 		setLayout(null);
@@ -177,27 +178,6 @@ public class AdminPanelEvents extends JPanel {
 		);
 	}
 
-	private List<Event> collectUniqueEvents() {
-		return new ArrayList<>(eventRepository.getAll());
-	}
-
-	private List<Invite> collectUniqueInvites(List<Event> events) {
-		Set<String> seen = new LinkedHashSet<>();
-		List<Invite> invites = new ArrayList<>();
-		for (Event event : events) {
-			if (event.getInvites() == null) {
-				continue;
-			}
-			for (Invite invite : event.getInvites()) {
-				String key = invite.getRecipient() + "|" + invite.getEventID();
-				if (seen.add(key)) {
-					invites.add(invite);
-				}
-			}
-		}
-		return invites;
-	}
-
 	private void setupEvents() {
 		JLabel eventPaneTitle = new JLabel("Events");
 		eventPaneTitle.setFont(new Font("Arial", Font.BOLD, 16));
@@ -225,7 +205,7 @@ public class AdminPanelEvents extends JPanel {
 		eventsCardsPanel.setBackground(Color.WHITE);
 		eventsCardsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		List<Event> events = collectUniqueEvents();
+		List<Event> events = eventQueryService.getEventsForAdmin();
 		eventsCardsPanel.setPreferredSize(new Dimension(500, Math.max(1, events.size()) * 118));
 
 		for (Event event : events) {
@@ -331,19 +311,16 @@ public class AdminPanelEvents extends JPanel {
 		invitesCardsPanel.setLayout(null);
 		invitesCardsPanel.setBackground(Color.WHITE);
 
-		List<Event> events = collectUniqueEvents();
-		List<Invite> invites = collectUniqueInvites(events);
+		List<EventInviteView> invites = eventQueryService.getInvitesForAdmin();
 		int inviteCardHeight = 50;
 		int inviteCardWidth = 560;
 		int inviteCardSpacing = 58;
 		invitesCardsPanel.setPreferredSize(new Dimension(290, Math.max(1, invites.size()) * inviteCardSpacing));
 
 		for (int i = 0; i < invites.size(); i++) {
-			Invite invite = invites.get(i);
-			Event event = findEventById(events, invite.getEventID());
-			if (event == null) {
-				continue;
-			}
+			EventInviteView inviteView = invites.get(i);
+			Invite invite = inviteView.getInvite();
+			Event event = inviteView.getEvent();
 
 			JPanel inviteCard = new JPanel();
 			inviteCard.setLayout(null);
@@ -395,16 +372,6 @@ public class AdminPanelEvents extends JPanel {
 		JScrollPane invitesScrollPane = new JScrollPane(invitesCardsPanel);
 		invitesScrollPane.setBounds(10, 45, 565, 235);
 		invitesPane.add(invitesScrollPane);
-	}
-
-
-	private Event findEventById(List<Event> events, String eventId) {
-		for (Event event : events) {
-			if (event.getEventID().equals(eventId)) {
-				return event;
-			}
-		}
-		return null;
 	}
 
 	private void refreshEvents() {
