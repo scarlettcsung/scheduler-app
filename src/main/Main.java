@@ -1,13 +1,9 @@
 package main;
-
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.List;
-
 import GUI.AuthenticationPanel;
 import event.Event;
 import io.IO;
@@ -17,41 +13,17 @@ import scheduler.Scheduler;
 import user.AdminUser;
 import user.User;
 
-/**
- * The entry point for the SmartCalendar application.
- * <p>
- * This class is responsible for initializing the backend components (Repository, Scheduler, IO),
- * loading existing user data from storage, and launching the graphical interface.
- * It also puts data in storage to use for the next start of the program.
- * </p>
- * * @NS CR 
- * @version 3
- */
 public class Main {
-    
-    /**
-     * Main method that launches the application.
-     * * <ol>
-     * <li>Initializes core services: {@link UserRepository}, {@link Scheduler}, and {@link IO}.</li>
-     * <li>Loads user data from a predefined JSON file path.</li>
-     * <li>Sets up the main {@link JFrame} and attaches a {@link WindowAdapter} to handle 
-     * data persistence upon closing.</li>
-     * <li>Displays the {@link AuthenticationPanel} to the user.</li>
-     * </ol>
-     * * @param args Command line arguments.
-     */
     public static void main(String[] args) {
         // 1. Setup the Backend
         UserRepository repository = new UserRepository();
         EventRepository eventRepository = new EventRepository();
         repository.setEventRepository(eventRepository);
-        Scheduler scheduler = new Scheduler(8, 23, 7, repository,eventRepository);
-        IO ioHandler = new IO(); 
-
-        String filePath = "src/filestorage/userStorage.json";
+        Scheduler scheduler = new Scheduler(8, 23, 7, repository, eventRepository);
+        IO ioHandler = new IO();
 
         // 2. Load Data
-        List<User> loadedUsers = ioHandler.readUsers(filePath);
+        List<User> loadedUsers = ioHandler.readUsers();
         for (User user : loadedUsers) {
             if (user.getUsername().equals("admin")) {
                 AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
@@ -60,19 +32,16 @@ public class Main {
                 repository.saveUser(user);
             }
         }
-
         for (User user : repository.getAll()) {
             if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
                 continue;
             }
             for (Event event : user.getCalendar().getEvents()) {
-            	if (eventRepository.getItemByID(String.valueOf(event.getEventID())) == null) {
-            	
+                if (eventRepository.getItemByID(String.valueOf(event.getEventID())) == null) {
                     eventRepository.save(event);
                 }
             }
         }
-
         System.out.println("Data loaded successfully.");
 
         // 3. Launch the UI
@@ -82,18 +51,13 @@ public class Main {
             frame.setSize(800, 600);
             frame.setLocationRelativeTo(null);
 
-         // 4. Add Window Listener for the "X" button
+            // 4. Add Window Listener for the "X" button
             frame.addWindowListener(new WindowAdapter() {
-                /**
-                 * Intercepts the window closing event to save current repository data
-                 * to the JSON file before exiting.
-                 * @param e The window event.
-                 */
                 @Override
                 public void windowClosing(WindowEvent e) {
                     System.out.println("Saving data...");
                     List<User> usersToSave = repository.getAll();
-                    ioHandler.writeUsers(usersToSave, filePath);
+                    ioHandler.writeUsers(usersToSave);
                     System.out.println("Save successful.");
                     frame.dispose();
                     System.exit(0);
