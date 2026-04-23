@@ -36,7 +36,7 @@ public class IO {
      * @return users loaded from the file
      * @throws IOException when the file cannot be read
      */
-    public List<User> readUsersChanged(String filePath) {
+    public List<User> readUsers(String filePath) {
         JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
             JsonObject jsonObject = json.getAsJsonObject();
             boolean isImportedField = jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean();

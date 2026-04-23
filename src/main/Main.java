@@ -51,7 +51,7 @@ public class Main {
         String filePath = "src/filestorage/userStorage.json";
 
         // 2. Load Data
-        List<User> loadedUsers = ioHandler.readUsersChanged(filePath);
+        List<User> loadedUsers = ioHandler.readUsers(filePath);
         for (User user : loadedUsers) {
             if (user.getUsername().equals("admin")) {
                 AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
