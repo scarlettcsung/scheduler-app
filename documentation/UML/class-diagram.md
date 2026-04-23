@@ -16,12 +16,12 @@ classDiagram
         -userRepository: UserRepository
 		-authentication: Authentication
         +UserService(userRepository: UserRepository)
-		+registerUser(username: String, password: String) : : boolean
-		+authenticateUser(username: String, password: String) : : User
-		+login(username: String, password: String) : : boolean
-		+listUsernames() : : List<String>
-		+deleteUser(username: String, currentUser: User) : : UserDeletionResult
-		+deleteOwnAccount(currentUser: User) : : UserDeletionResult
+		+registerUser(username: String, password: String) : Boolean
+		+authenticateUser(username: String, password: String) : User
+		+login(username: String, password: String) : boolean
+		+listUsernames() : List<String>
+		+deleteUser(username: String, currentUser: User) : UserDeletionResult
+		+deleteOwnAccount(currentUser: User) : UserDeletionResult
     }
 
 
