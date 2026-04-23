@@ -1,0 +1,39 @@
+Title: remove user
+As a... admin
+I want to... remove a user from the system
+So that... the active user list stays up to date when someone leaves
+
+Acceptance criteria:
+
+Admin can remove a normal user from the system
+Removed user no longer appears in the user list
+A normal user cannot remove another user
+The active user list stays up to date after a user is removed
+
+Acceptance Test:
+
+Test 1: Admin removes a normal user
+Given: admin exists in the system
+And: exampleuser exists in the system
+And: exampleuser appears in the active user list
+When: admin removes exampleuser
+Then: exampleuser is no longer in the system
+And: admin deletion succeeds
+And: exampleuser no longer appears in the active user list
+
+Test 2: Normal user cannot remove another user
+Given: otheruser exists in the system
+And: exampleuser exists in the system
+And: exampleuser appears in the active user list
+When: otheruser tries to remove exampleuser
+Then: exampleuser is still in the system
+And: deletion is denied
+And: exampleuser still appears in the active user list
+
+Test 3: User list is updated after removal
+Given: admin exists in the system
+And: exampleuser exists in the system
+And: the active user list contains admin and exampleuser
+When: admin removes exampleuser
+Then: the active user list no longer contains exampleuser
+And: the active user list still contains admin
