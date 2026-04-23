@@ -8,8 +8,10 @@ import user.calendar.UserCalendar;
  * @author SN GI
  * @version 1
  */
-public class User extends Account {
+public class User {
 
+    private String username;
+    private String password;
     private UserCalendar myCalendar;
 
     /**
@@ -20,8 +22,27 @@ public class User extends Account {
      * @param myCalendar calendar owned by the user
      */
     public User(String username, String password, UserCalendar myCalendar) {
-        super(username, password);
+        this.username = username;
+        this.password = password;
         this.myCalendar = myCalendar;
+    }
+
+    /**
+     * Returns the username.
+     *
+     * @return username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Returns the password.
+     *
+     * @return password
+     */
+    public String getPassword() {
+        return password;
     }
 
     /**
@@ -61,6 +82,6 @@ public class User extends Account {
         if (targetUser == null) {
             return false;
         }
-        return getUsername().equals(targetUser.getUsername());
+        return username.equals(targetUser.getUsername());
     }
 }
