@@ -60,10 +60,9 @@ classDiagram
         -password: String
         -isAdmin: Boolean
         -myCalendar: Calendar
-        +getUsername() : String
-        +getPassword() : String
-        +getCalendar() : UserCalendar
-        +isAdmin() : Boolean
+        +canAccessAdminPanel() : Boolean
+        +canDeleteUser() : Boolean
+
     }
 
     class Scheduler {
