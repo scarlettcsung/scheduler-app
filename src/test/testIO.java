@@ -52,7 +52,7 @@ public class testIO extends TestCase {
 		input.writeUsers(repository.getAll(),"src/test/resources/testFileIO.json");
 		
 		//read the just written file
-		List<User> imported = input.readUsers("src/test/resources/testFileIO.json");
+		List<User> imported = input.readUsersChanged("src/test/resources/testFileIO.json");
 		
 		//compare read result with repository
 		assertEquals(repository.getAll().size(), imported.size());
@@ -62,7 +62,7 @@ public class testIO extends TestCase {
 	//User organizer, Boolean isImported,  List<Invite> invites)
 	
 	public void testReadUsers_FileNotFound_ReturnsEmptyList() {
-	    List<User> result = input.readUsers("src/test/resources/doesNotExist.json");
+	    List<User> result = input.readUsersChanged("src/test/resources/doesNotExist.json");
 	    
 	    assertNotNull("Result should not be null", result);
 	    assertTrue("Result should be empty when file is not found", result.isEmpty());
