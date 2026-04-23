@@ -10,16 +10,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.List;
 
 import event.Event;
 import event.manager.EventManager;
+import event.service.EventInviteView;
+import event.service.EventQueryService;
 import ics.importer.IcsImporter;
 import ics.importer.ImportStatus;
 import invite.Invite;
-import invite.inviteStatus;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -29,6 +28,8 @@ import event.CreatedEvent;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import user.service.UserDeletionResult;
+import user.service.UserService;
 
 
 public class UserPanel extends JPanel {
@@ -39,6 +40,8 @@ public class UserPanel extends JPanel {
     private Event event1;
     private Event event2;
     private Scheduler scheduler;
+    private UserService userService;
+    private EventQueryService eventQueryService;
     private final JPanel invitesPane;
     private final javax.swing.border.Border cardBorder;
     
@@ -54,6 +57,8 @@ public class UserPanel extends JPanel {
         this.eventRepository = eventRepository;
         this.currentUser = user;
         this.scheduler = scheduler;
+        this.userService = new UserService(repository);
+        this.eventQueryService = new EventQueryService(eventRepository);
         this.invitesPane = new JPanel();
         
         cardBorder = cardBorder();
@@ -143,12 +148,18 @@ public class UserPanel extends JPanel {
         JButton btnDeleteAccount = new JButton("Delete Account");
         btnDeleteAccount.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		repository.deleteUserData(currentUser.getUsername(), user);
-        		eventRepository.deleteEventsByOrganizer(currentUser.getUsername());
-        		JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
-        		topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
-        		topFrame.revalidate();
-        		topFrame.repaint();
+        		UserDeletionResult result = userService.deleteOwnAccount(currentUser);
+
+        		if (result.isSuccess()) {
+        			JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
+        			topFrame.setContentPane(new AuthenticationPanel(repository, scheduler,eventRepository));
+        			topFrame.revalidate();
+        			topFrame.repaint();
+        		} else if (result == UserDeletionResult.NOT_AUTHENTICATED) {
+        			JOptionPane.showMessageDialog(UserPanel.this, "You must be logged in to delete your account.");
+        		} else {
+        			JOptionPane.showMessageDialog(UserPanel.this, "Your account could not be deleted.");
+        		}
         	}
         });
         btnDeleteAccount.setBounds(821, 403, 156, 29);
@@ -200,60 +211,6 @@ public class UserPanel extends JPanel {
         setupInvites();
     }
 
-    private List<Event> collectAllEventsFromRepository() {
-		return new ArrayList<>(eventRepository.getAll());
-	}
-
-    private List<Event> collectVisibleEvents() {
-		Set<Event> allEvents = new LinkedHashSet<>();
-		for (Event event : eventRepository.getAll()) {
-			boolean accepted = false;
-
-			if (event.getInvites() != null) {
-			    for (Invite invite : event.getInvites()) {
-			        if (currentUser.getUsername().equals(invite.getRecipient())
-			                && invite.getStatus() == inviteStatus.ACCEPTED) {
-			            accepted = true;
-			            break;
-			        }
-			    }
-			}
-
-			if (currentUser.getUsername().equals(event.getOrganizer()) || accepted) {
-			    allEvents.add(event);
-			}
-		}
-		return new ArrayList<>(allEvents);
-	}
-
-    private List<Invite> collectUniqueInvites(List<Event> events) {
-    	Set<String> seen = new LinkedHashSet<>();
-    	List<Invite> invites = new ArrayList<>();
-
-    	for (Event event : events) {
-    		if (event.getInvites() == null) {
-    			continue;
-    		}
-
-    		for (Invite invite : event.getInvites()) {
-    			if (invite.getRecipient() == null) {
-    				continue;
-    			}
-
-    			if (!invite.getRecipient().equals(currentUser.getUsername())) {
-    				continue;
-    			}
-
-    			String key = invite.getRecipient() + "|" + invite.getEventID();
-    			if (seen.add(key)) {
-    				invites.add(invite);
-    			}
-    		}
-    	}
-
-    	return invites;
-   	}
-
     private void setupEvents(JPanel eventPane, int W, int H, int MARGIN, javax.swing.border.Border CARD_BORDER) {
 		JLabel eventPaneTitle = new JLabel("Events");
 		eventPaneTitle.setFont(new Font("Arial", Font.BOLD, 16));
@@ -287,7 +244,7 @@ public class UserPanel extends JPanel {
 		eventsCardsPanel.setBackground(Color.WHITE);
 		eventsCardsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		List<Event> events = collectVisibleEvents();
+		List<Event> events = eventQueryService.getVisibleEventsForUser(currentUser.getUsername());
 		eventsCardsPanel.setPreferredSize(new Dimension(500, Math.max(1, events.size()) * 118));
 
 		for (Event event : events) {
@@ -392,19 +349,16 @@ public class UserPanel extends JPanel {
 		invitesCardsPanel.setLayout(null);
 		invitesCardsPanel.setBackground(Color.WHITE);
 
-		List<Event> allEvents = collectAllEventsFromRepository();
-		List<Invite> invites = collectUniqueInvites(allEvents);
+		List<EventInviteView> invites = eventQueryService.getInvitesForUser(currentUser.getUsername());
 		int inviteCardHeight = 50;
 		int inviteCardWidth = 560;
 		int inviteCardSpacing = 58;
 		invitesCardsPanel.setPreferredSize(new Dimension(290, Math.max(1, invites.size()) * inviteCardSpacing));
 
 		for (int i = 0; i < invites.size(); i++) {
-			Invite invite = invites.get(i);
-			Event event = findEventById(allEvents, invite.getEventID());
-			if (event == null) {
-				continue;
-			}
+			EventInviteView inviteView = invites.get(i);
+			Invite invite = inviteView.getInvite();
+			Event event = inviteView.getEvent();
 
 			JPanel inviteCard = new JPanel();
 			inviteCard.setLayout(null);
@@ -456,15 +410,6 @@ public class UserPanel extends JPanel {
 		JScrollPane invitesScrollPane = new JScrollPane(invitesCardsPanel);
 		invitesScrollPane.setBounds(10, 45, 565, 235);
 		invitesPane.add(invitesScrollPane);
-	}
-
-    private Event findEventById(List<Event> events, String eventId) {
-		for (Event event : events) {
-			if (event.getEventID().equals(eventId)) {
-				return event;
-			}
-		}
-		return null;
 	}
 
     private void refreshEvents() {

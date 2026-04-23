@@ -1,5 +1,7 @@
 package event.manager;
 
+import java.time.LocalDateTime;
+
 import event.Event;
 import invite.Invite;
 import invite.inviteStatus;
@@ -7,11 +9,6 @@ import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
-
-//Additional Packages
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
 
 /**
  * Applies event mutations such as updates, deletion, and invite rejection.
@@ -23,6 +20,7 @@ public class EventManager {
 
     private UserRepository repository;
     private EventRepository eventRepository;
+
     /**
      * Creates an event manager without repository-backed delete behaviour.
      */
@@ -61,11 +59,7 @@ public class EventManager {
      *        and {@code eventDuration}
      * @param newValue new value represented as text
      */
-
     public void updateEvent(Event event, String updateAspect, String newValue) {
-    	
-    	// You should type enter eventName for example as a parameter to updateAspect part.
-    	
         switch (updateAspect) {
             case "eventName":
                 event.setEventName(newValue);
@@ -74,8 +68,8 @@ public class EventManager {
                 event.setEventDescription(newValue);
                 break;
             case "eventTime":
-            	LocalDateTime date = LocalDateTime.parse(newValue);
-            	event.setEventTime(date);
+                LocalDateTime date = LocalDateTime.parse(newValue);
+                event.setEventTime(date);
                 break;
             case "eventDuration":
                 event.setEventDuration(Integer.parseInt(newValue));
@@ -107,47 +101,44 @@ public class EventManager {
             return;
         }
     }
-    
-    
+
     /**
-     * Adds invite to event if not already invited
+     * Adds invite to event if not already invited.
      *
      * @param event event to add invite to
      * @param recipient user associated with invite
      */
     public void addInvite(Event event, User recipient) {
         if (hasExistingInvite(event, recipient.getUsername())) {
-        	return;
+            return;
         }
-        
-        Invite invite = new Invite(recipient.getUsername(),event.getEventID());
+
+        Invite invite = new Invite(recipient.getUsername(), event.getEventID());
         event.getInvites().add(invite);
-        
+
         if (recipient.getCalendar() != null) {
             recipient.getCalendar().addEvent(event);
         }
     }
-    
-    
+
     /**
-     * Removes invite from event
+     * Removes invite from event.
      *
-     * @param event event to add invite to
+     * @param event event to remove invite from
      * @param recipient user associated with invite
      */
     public void removeInvite(Event event, User recipient) {
         String username = recipient.getUsername();
-        
+
         if (!hasExistingInvite(event, username)) {
-        	return;
+            return;
         }
-        
+
         event.getInvites().removeIf(i -> i.getRecipient().equals(username));
         if (recipient.getCalendar() != null) {
             recipient.getCalendar().removeEvent(event);
         }
     }
-
 
     /**
      * Marks an invite as rejected and removes the event from the invitee's
@@ -159,23 +150,23 @@ public class EventManager {
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(inviteStatus.REJECTED);
         if (this.repository != null) {
-        	User invitee = repository.findUsername(invite.getRecipient());
-        	
-        	if (invitee != null) {
-        		this.removeInvite(event, invitee);
-        	}
+            User invitee = repository.findUsername(invite.getRecipient());
+
+            if (invitee != null) {
+                this.removeInvite(event, invitee);
+            }
         }
     }
 
     /**
-     * Sets event organizer, if change is necessary
+     * Sets event organizer, if change is necessary.
      *
-     * @param event event to add invite to
+     * @param event event to update
      * @param organizer user to be set as organizer of event
      */
     public void setOrganizer(Event event, User organizer) {
         event.setOrganizer(organizer.getUsername());
-        
+
         UserCalendar calendar = new UserCalendar(null);
 
         if (organizer.getCalendar() == null) {
@@ -185,15 +176,16 @@ public class EventManager {
     }
 
     /**
-     * Gets User object of event organizer
+     * Gets User object of event organizer.
      *
-     * @param event event to add invite to
+     * @param event event whose organizer should be loaded
+     * @return organizer user
      */
     public User getOrganizer(Event event) {
         String organizerUsername = event.getOrganizer();
         return repository.findUsername(organizerUsername);
     }
-    
+
     /**
      * Checks if an event already has an invite for the given username.
      *

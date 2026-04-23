@@ -13,7 +13,6 @@ import java.util.List;
 public abstract class Repository<T> {
     protected List<T> data;
 
-    // general repository
     /**
      * Creates an empty repository.
      */
@@ -36,16 +35,13 @@ public abstract class Repository<T> {
      * @return repository contents
      */
     public List<T> getAll() {
-    	return new ArrayList<>(data);
-    	
+        return new ArrayList<>(data);
     }
+
     /**
      * Returns a descriptive repository type label.
      *
      * @return repository type name
      */
     public abstract String getRepositoryType();
-
-
 }
- 

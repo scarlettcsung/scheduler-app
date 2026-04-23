@@ -51,34 +51,28 @@ public class Main {
         String filePath = "src/filestorage/userStorage.json";
 
         // 2. Load Data
-        try {
-            List<User> loadedUsers = ioHandler.readUsers(filePath);
-            for (User user : loadedUsers) {
-            	if (user.getUsername().equals("admin")) {
-                    AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
-                    repository.saveUser(adminUser);
-                } else {
-                    repository.saveUser(user);
-                }
+        List<User> loadedUsers = ioHandler.readUsers(filePath);
+        for (User user : loadedUsers) {
+            if (user.getUsername().equals("admin")) {
+                AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
+                repository.saveUser(adminUser);
+            } else {
+                repository.saveUser(user);
             }
-
-            for (User user : repository.getAll()) {
-                if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
-                    continue;
-                }
-
-                for (Event event : user.getCalendar().getEvents()) {
-                    if (eventRepository.findByEventID(event.getEventID()) == null) {
-                        eventRepository.save(event);
-                    }
-                }
-            }
-
-            System.out.println("Data loaded successfully.");
-
-        } catch (Exception e) {
-            System.err.println("Error loading file: " + e.getMessage());
         }
+
+        for (User user : repository.getAll()) {
+            if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
+                continue;
+            }
+            for (Event event : user.getCalendar().getEvents()) {
+                if (eventRepository.findByEventID(event.getEventID()) == null) {
+                    eventRepository.save(event);
+                }
+            }
+        }
+
+        System.out.println("Data loaded successfully.");
 
         // 3. Launch the UI
         SwingUtilities.invokeLater(() -> {
@@ -87,27 +81,21 @@ public class Main {
             frame.setSize(800, 600);
             frame.setLocationRelativeTo(null);
 
-            // 4. Add Window Listener for the "X" button
+         // 4. Add Window Listener for the "X" button
             frame.addWindowListener(new WindowAdapter() {
                 /**
                  * Intercepts the window closing event to save current repository data
                  * to the JSON file before exiting.
-                 * * @param e The window event.
+                 * @param e The window event.
                  */
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    try {
-                        System.out.println("Saving data...");
-                        // Get the latest list from repository to ensure all changes are saved
-                        List<User> usersToSave = repository.getAll(); 
-                        ioHandler.writeUsers(usersToSave, filePath);
-                        System.out.println("Save successful.");
-                    } catch (IOException ex) {
-                        System.err.println("Failed to save data: " + ex.getMessage());
-                    } finally {
-                        frame.dispose(); // Close the window
-                        System.exit(0);  // Terminate the app
-                    }
+                    System.out.println("Saving data...");
+                    List<User> usersToSave = repository.getAll();
+                    ioHandler.writeUsers(usersToSave, filePath);
+                    System.out.println("Save successful.");
+                    frame.dispose();
+                    System.exit(0);
                 }
             });
 

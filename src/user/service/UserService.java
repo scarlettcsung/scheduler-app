@@ -1,5 +1,8 @@
 package user.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import authentication.Authentication;
 import repository.UserRepository;
 import user.User;
@@ -15,7 +18,7 @@ import user.calendar.UserCalendar;
 public class UserService {
     private UserRepository userRepository;
     private Authentication authentication;
-// changed 
+
     /**
      * Creates a service backed by the given repository.
      *
@@ -25,8 +28,7 @@ public class UserService {
         this.userRepository = userRepository;
         this.authentication = new Authentication(userRepository);
     }
-    
-// changed 
+
     /**
      * Registers a new user when the username is still available.
      *
@@ -35,18 +37,33 @@ public class UserService {
      * @return {@code true} when the user was created
      */
     public boolean registerUser(String username, String password) {
-		if (userRepository.isExistingUser(username)) {
-			return false;
-		}	
-	else {
+        if (userRepository.isExistingUser(username)) {
+            return false;
+        }
+
         User newUser = new User(username, password, null);
         newUser.setCalendar(new UserCalendar(null));
         userRepository.saveUser(newUser);
-       
+
         return true;
-		}
     }
- // login implemented EO GI: 2/4/2026
+
+    /**
+     * Attempts to authenticate a user and returns the matching user when the
+     * credentials are valid.
+     *
+     * @param username username to authenticate
+     * @param password password to validate
+     * @return authenticated user, or {@code null} when authentication failed
+     */
+    public User authenticateUser(String username, String password) {
+        if (!authentication.login(username, password)) {
+            return null;
+        }
+
+        return authentication.getauthenticatedUser();
+    }
+
     /**
      * Attempts to log in a user.
      *
@@ -55,8 +72,47 @@ public class UserService {
      * @return {@code true} when authentication succeeded
      */
     public boolean login(String username, String password) {
-		return authentication.login(username, password);
-	}
+        return authenticateUser(username, password) != null;
+    }
 
+    /**
+     * Returns usernames for GUI list rendering without exposing the repository
+     * directly.
+     *
+     * @return usernames currently stored in the repository
+     */
+    public List<String> listUsernames() {
+        List<String> usernames = new ArrayList<>();
 
+        for (User user : userRepository.getAll()) {
+            usernames.add(user.getUsername());
+        }
+
+        return usernames;
+    }
+
+    /**
+     * Deletes a target user on behalf of the current actor.
+     *
+     * @param username username to delete
+     * @param currentUser user requesting the deletion
+     * @return named deletion result for the request
+     */
+    public UserDeletionResult deleteUser(String username, User currentUser) {
+        return userRepository.deleteUserData(username, currentUser);
+    }
+
+    /**
+     * Deletes the currently logged-in user's own account.
+     *
+     * @param currentUser user requesting self-deletion
+     * @return named deletion result for the request
+     */
+    public UserDeletionResult deleteOwnAccount(User currentUser) {
+        if (currentUser == null) {
+            return UserDeletionResult.NOT_AUTHENTICATED;
+        }
+
+        return deleteUser(currentUser.getUsername(), currentUser);
+    }
 }

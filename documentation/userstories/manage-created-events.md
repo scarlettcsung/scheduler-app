@@ -1,19 +1,27 @@
 **Title** : manage created events  
 **ID** : 0  
 **As a...** user  
-**I want to ...** change the details of the event, like edit dates or participants 
+**I want to ...** change the details of the event, like edit dates or participants
 **So that...** I can update the event as things change and progress
 
-**Acceptance criteria:**  
+**Acceptance criteria:**
 
-a user should be able to change event details
+Only the event creator can edit the event
 
-a user should be able to delete event i created
+The user can update date, time, participants, and description
+
+Changes are saved and visible after confirmation
+
+Invalid inputs (e.g. past date) are rejected with an error message
 
 **Acceptance Test:**  
-after login in as a user press the button below the event in question that says update event
+Given: am logged in as the event creator
 
-then i open a new panel that shows the current information and allow the organizer to change the details
+When: click “Edit event”
 
-next to this update event button is the delete button for the event
+Then: see a form pre-filled with current event details
+
+When: update the date and click save
+
+Then: the event is updated and the new date is displayed
 

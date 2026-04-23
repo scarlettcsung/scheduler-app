@@ -5,9 +5,8 @@ import java.util.Map;
 
 import event.Event;
 import invite.Invite;
-import user.AdminUser;
 import user.User;
-import user.calendar.UserCalendar;
+import user.service.UserDeletionResult;
 
 /**
  * In-memory repository for {@link User} instances.
@@ -17,16 +16,17 @@ import user.calendar.UserCalendar;
  */
 public class UserRepository extends Repository<User> {
     private EventRepository eventRepository;
-	
-	//hard coded admin
-	/*
-	public UserRepository() {
+
+    // hard-coded admin
+    /*
+    public UserRepository() {
         super();
         AdminUser admin = new AdminUser("admin", "admin", null);
         admin.setCalendar(new UserCalendar(null));
         data.add(admin);
     }
     */
+
     /**
      * Returns the repository type label.
      *
@@ -34,7 +34,7 @@ public class UserRepository extends Repository<User> {
      */
     @Override
     public String getRepositoryType() {
-    	return "user Repository";
+        return "user Repository";
     }
 
     /**
@@ -61,44 +61,35 @@ public class UserRepository extends Repository<User> {
      *
      * @param username username of the user to delete
      * @param currentUser user requesting the deletion
-     * @return {@code 1} when nobody is authenticated, {@code 2} when an admin
-     *         deleted the user, {@code 3} when a user deleted themself, or
-     *         {@code 4} when deletion was not permitted or the user was missing
+     * @return named deletion result for the request
      */
-    public int deleteUserData(String username, User currentUser) {
-    	
-    	int notAuthenticated = 1;
-    	int adminDeletion = 2;
-    	int deleteItself = 3;
-    	int notPermitted = 4;
-
+    public UserDeletionResult deleteUserData(String username, User currentUser) {
         if (currentUser == null) {
-            return notAuthenticated;
+            return UserDeletionResult.NOT_AUTHENTICATED;
         }
 
         User targetUser = findUsername(username);
         if (targetUser == null) {
-            return notPermitted;
+            return UserDeletionResult.NOT_PERMITTED;
         }
 
         if (!currentUser.canDeleteUser(targetUser)) {
-            return notPermitted;
+            return UserDeletionResult.NOT_PERMITTED;
         }
-        
+
         if ("admin".equals(targetUser.getUsername())) {
-            return notPermitted;
+            return UserDeletionResult.NOT_PERMITTED;
         }
 
         cleanupUserEventReferences(targetUser.getUsername());
 
         data.removeIf(u -> u.getUsername().equals(username));
 
-       
         if (currentUser.canAccessAdminPanel()) {
-            return adminDeletion; 
+            return UserDeletionResult.DELETED_BY_ADMIN;
         }
 
-        return deleteItself;
+        return UserDeletionResult.DELETED_SELF;
     }
 
     /**
@@ -126,6 +117,11 @@ public class UserRepository extends Repository<User> {
         return findUsername(username) != null;
     }
 
+    /**
+     * Removes references to a user from events and calendars before deletion.
+     *
+     * @param username username whose event references should be cleaned up
+     */
     public void cleanupUserEventReferences(String username) {
         Map<String, Event> eventsById = new LinkedHashMap<>();
 
@@ -171,6 +167,11 @@ public class UserRepository extends Repository<User> {
         }
     }
 
+    /**
+     * Removes an event from every stored user's calendar.
+     *
+     * @param event event to remove from calendars
+     */
     public void removeEventFromAllCalendars(Event event) {
         for (User user : data) {
             if (user.getCalendar() != null) {
