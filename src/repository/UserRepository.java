@@ -16,16 +16,17 @@ import user.service.UserDeletionResult;
  */
 public class UserRepository extends Repository<User> {
     private EventRepository eventRepository;
-	
-	//hard coded admin
-	/*
-	public UserRepository() {
+
+    // hard-coded admin
+    /*
+    public UserRepository() {
         super();
         AdminUser admin = new AdminUser("admin", "admin", null);
         admin.setCalendar(new UserCalendar(null));
         data.add(admin);
     }
     */
+
     /**
      * Returns the repository type label.
      *
@@ -33,7 +34,7 @@ public class UserRepository extends Repository<User> {
      */
     @Override
     public String getRepositoryType() {
-    	return "user Repository";
+        return "user Repository";
     }
 
     /**
@@ -75,7 +76,7 @@ public class UserRepository extends Repository<User> {
         if (!currentUser.canDeleteUser(targetUser)) {
             return UserDeletionResult.NOT_PERMITTED;
         }
-        
+
         if ("admin".equals(targetUser.getUsername())) {
             return UserDeletionResult.NOT_PERMITTED;
         }
@@ -84,9 +85,8 @@ public class UserRepository extends Repository<User> {
 
         data.removeIf(u -> u.getUsername().equals(username));
 
-       
         if (currentUser.canAccessAdminPanel()) {
-            return UserDeletionResult.DELETED_BY_ADMIN; 
+            return UserDeletionResult.DELETED_BY_ADMIN;
         }
 
         return UserDeletionResult.DELETED_SELF;

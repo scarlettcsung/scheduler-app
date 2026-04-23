@@ -11,35 +11,35 @@ import invite.Invite;
  */
 public class EventInviteView {
 
-	private final Event event;
-	private final Invite invite;
+    private final Event event;
+    private final Invite invite;
 
-	/**
-	 * Creates an invite view for GUI rendering.
-	 *
-	 * @param event event that owns the invite
-	 * @param invite invite to display
-	 */
-	public EventInviteView(Event event, Invite invite) {
-		this.event = event;
-		this.invite = invite;
-	}
+    /**
+     * Creates an invite view for GUI rendering.
+     *
+     * @param event event that owns the invite
+     * @param invite invite to display
+     */
+    public EventInviteView(Event event, Invite invite) {
+        this.event = event;
+        this.invite = invite;
+    }
 
-	/**
-	 * Returns the event that owns the invite.
-	 *
-	 * @return event to display
-	 */
-	public Event getEvent() {
-		return event;
-	}
+    /**
+     * Returns the event that owns the invite.
+     *
+     * @return event to display
+     */
+    public Event getEvent() {
+        return event;
+    }
 
-	/**
-	 * Returns the invite to display.
-	 *
-	 * @return invite to display
-	 */
-	public Invite getInvite() {
-		return invite;
-	}
+    /**
+     * Returns the invite to display.
+     *
+     * @return invite to display
+     */
+    public Invite getInvite() {
+        return invite;
+    }
 }

@@ -9,22 +9,21 @@ import event.Event;
  * @version 3
  */
 public class EventRepository extends Repository<Event> {
-	
-	/**
-	 * Creates an empty event repository.
-	 */
-	public EventRepository() {
-		super();
-		
-	}
-	
-	/**
-	 * Finds an event by its identifier.
-	 *
-	 * @param eventID identifier to search for
-	 * @return matching event, or {@code null} when not found
-	 */
-	public Event findByEventID(String eventID) {
+
+    /**
+     * Creates an empty event repository.
+     */
+    public EventRepository() {
+        super();
+    }
+
+    /**
+     * Finds an event by its identifier.
+     *
+     * @param eventID identifier to search for
+     * @return matching event, or {@code null} when not found
+     */
+    public Event findByEventID(String eventID) {
         for (Event e : data) {
             if (e.getEventID().equals(eventID)) {
                 return e;
@@ -32,14 +31,14 @@ public class EventRepository extends Repository<Event> {
         }
         return null;
     }
-	
-	/**
-	 * Deletes an event by its identifier.
-	 *
-	 * @param eventID identifier of the event to remove
-	 * @return {@code true} when an event was removed
-	 */
-	public boolean deleteEvent(String eventID) {
+
+    /**
+     * Deletes an event by its identifier.
+     *
+     * @param eventID identifier of the event to remove
+     * @return {@code true} when an event was removed
+     */
+    public boolean deleteEvent(String eventID) {
         return data.removeIf(e -> e.getEventID().equals(eventID));
     }
 
@@ -48,22 +47,21 @@ public class EventRepository extends Repository<Event> {
      *
      * @return repository type name
      */
-	@Override
-	public String getRepositoryType() {
+    @Override
+    public String getRepositoryType() {
         return "Event Repository";
-	}
+    }
 
-	/**
-	 * Deletes all events organized by the given user.
-	 *
-	 * @param username organizer username whose events should be removed
-	 */
-	public void deleteEventsByOrganizer(String username) {
-		for(Event e : data) {
-			if(e.getOrganizer().equals(username)) {
-				deleteEvent(e.getEventID());
-			}
-		}
-		
-	}
+    /**
+     * Deletes all events organized by the given user.
+     *
+     * @param username organizer username whose events should be removed
+     */
+    public void deleteEventsByOrganizer(String username) {
+        for (Event e : data) {
+            if (e.getOrganizer().equals(username)) {
+                deleteEvent(e.getEventID());
+            }
+        }
+    }
 }

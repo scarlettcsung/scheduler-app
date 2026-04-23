@@ -37,16 +37,15 @@ public class UserService {
      * @return {@code true} when the user was created
      */
     public boolean registerUser(String username, String password) {
-		if (userRepository.isExistingUser(username)) {
-			return false;
-		}	
-	else {
+        if (userRepository.isExistingUser(username)) {
+            return false;
+        }
+
         User newUser = new User(username, password, null);
         newUser.setCalendar(new UserCalendar(null));
         userRepository.saveUser(newUser);
-       
+
         return true;
-		}
     }
 
     /**
@@ -116,6 +115,4 @@ public class UserService {
 
         return deleteUser(currentUser.getUsername(), currentUser);
     }
-
-
 }

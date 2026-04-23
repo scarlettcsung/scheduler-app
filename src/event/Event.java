@@ -1,15 +1,13 @@
 package event;
 
-// Additional Packages
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 import invite.Invite;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a schedulable event together with its organizer and invitees.
@@ -17,7 +15,6 @@ import java.time.format.DateTimeFormatter;
  * @author NS SS
  * @version 1
  */
-
 public abstract class Event {
 
     private String eventName;
@@ -27,7 +24,6 @@ public abstract class Event {
     private final String eventID = UUID.randomUUID().toString();
     private String organizerUsername;
     private List<Invite> invites;
- 
 
     protected boolean isImportedField; // Just for IO
 
@@ -47,7 +43,6 @@ public abstract class Event {
         this.eventDescription = eventDescription;
         this.organizerUsername = organizerUsername;
         this.invites = Objects.requireNonNullElseGet(invites, () -> new ArrayList<>());
-      
     }
 
     /**
@@ -57,7 +52,6 @@ public abstract class Event {
      */
     public abstract boolean isImported();
 
-    // Setter Methods
     /**
      * Updates the event name.
      *
@@ -103,7 +97,6 @@ public abstract class Event {
         this.organizerUsername = organizerUsername;
     }
 
-    // Getter Methods
     /**
      * Returns the event name.
      *
@@ -158,8 +151,6 @@ public abstract class Event {
         return eventID;
     }
 
-    // Invites Methods
-
     /**
      * Returns the mutable invite list for this event.
      *
@@ -175,8 +166,7 @@ public abstract class Event {
      * @return participant usernames derived from the invite list
      */
     public List<String> getParticipants() {
-    	List<String> participantUsernames = new ArrayList<>();
-    	participantUsernames.clear();
+        List<String> participantUsernames = new ArrayList<>();
         for (Invite invite : invites) {
             String participantUsername = invite.getRecipient();
             participantUsernames.add(participantUsername);
@@ -190,15 +180,11 @@ public abstract class Event {
      * @return formatted time range
      */
     public String getTimeString() {
-    	
-  		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
-  		String stringDateTime = eventTime.format(formatter);
-  		LocalDateTime endTime = eventTime.plusMinutes(eventDuration);
-  		String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-  		String stringDisplay = String.format("%s - %s", stringDateTime, endTimeStr);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
+        String stringDateTime = eventTime.format(formatter);
+        LocalDateTime endTime = eventTime.plusMinutes(eventDuration);
+        String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
 
-  		return stringDisplay;
+        return String.format("%s - %s", stringDateTime, endTimeStr);
     }
-
-
 }

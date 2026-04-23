@@ -1,18 +1,18 @@
 package scheduler;
 
-import event.Event;
-import event.manager.EventManager;
-import invite.Invite;
-import repository.EventRepository;
-import repository.UserRepository;
-import user.User;
-
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import event.Event;
+import event.manager.EventManager;
+import invite.Invite;
+import repository.EventRepository;
+import repository.UserRepository;
+import user.User;
 
 /**
  * Finds available time slots for events and places scheduled events into the
@@ -38,8 +38,10 @@ public class Scheduler {
      * @param dayEnd latest scheduling hour, exclusive
      * @param maxLookaheadDays number of days to search for a free slot
      * @param userRepository repository used to inspect and update calendars
+     * @param eventRepository repository used to persist scheduled events
      */
-    public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, UserRepository userRepository, EventRepository eventRepository) {
+    public Scheduler(int dayStart, int dayEnd, int maxLookaheadDays, UserRepository userRepository,
+            EventRepository eventRepository) {
         this(dayStart, dayEnd, maxLookaheadDays, Clock.systemDefaultZone());
         this.userRepository = userRepository;
         this.eventManager = new EventManager(userRepository, eventRepository);
@@ -71,7 +73,9 @@ public class Scheduler {
     public LocalDateTime findAvailableSlot(Event event) {
         int duration = event.getEventDuration();
         int minutesInDay = (dayEnd - dayStart) * 60;
-        if (duration > minutesInDay) return null;
+        if (duration > minutesInDay) {
+            return null;
+        }
 
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDateTime dayCursor = now;
@@ -96,21 +100,24 @@ public class Scheduler {
                     if (e == null || e == event || e.getEventTime() == null) {
                         continue;
                     }
-                    if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) busyEvents.add(e);
+                    if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) {
+                        busyEvents.add(e);
+                    }
                 }
             }
-
 
             for (Invite invite : event.getInvites()) {
                 String inviteeUsername = invite.getRecipient();
                 User invitee = userRepository.findUsername(inviteeUsername);
                 if (invitee != null && invitee.getCalendar() != null) {
-                	for (Event e : invitee.getCalendar().getEvents()) {
-                		if (e == null || e == event || e.getEventTime() == null) {
-                			continue;
-                		}
-                		if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) busyEvents.add(e);
-                	}
+                    for (Event e : invitee.getCalendar().getEvents()) {
+                        if (e == null || e == event || e.getEventTime() == null) {
+                            continue;
+                        }
+                        if (e.getEventTime().toLocalDate().equals(dayCursor.toLocalDate())) {
+                            busyEvents.add(e);
+                        }
+                    }
                 }
             }
 
@@ -150,16 +157,18 @@ public class Scheduler {
      */
     public boolean scheduleEvent(Event event) {
         LocalDateTime slot = findAvailableSlot(event);
-        if (slot == null) return false;
+        if (slot == null) {
+            return false;
+        }
 
         event.setEventTime(slot);
         String organizerUsername = event.getOrganizer();
         User organizer = userRepository.findUsername(organizerUsername);
         if (organizer != null && organizer.getCalendar() != null) {
             organizer.getCalendar().addEvent(event);
-            if(eventRepository.findByEventID(event.getEventID()) == null) {
-				eventRepository.save(event);
-			}
+            if (eventRepository.findByEventID(event.getEventID()) == null) {
+                eventRepository.save(event);
+            }
         }
 
         List<Invite> currentInvites = new ArrayList<>(event.getInvites());
@@ -168,9 +177,9 @@ public class Scheduler {
             User invitee = userRepository.findUsername(inviteeUsername);
             if (invitee != null && invitee.getCalendar() != null) {
                 invitee.getCalendar().addEvent(event);
-                if(eventRepository.findByEventID(event.getEventID()) == null) {
-					eventRepository.save(event);
-				}
+                if (eventRepository.findByEventID(event.getEventID()) == null) {
+                    eventRepository.save(event);
+                }
             }
 
             // Recreate invites so they reset to default PENDING status.

@@ -1,4 +1,4 @@
-	package invite;
+package invite;
 
 /**
  * Represents an invitation for a user to join an event.
@@ -28,7 +28,10 @@ public class Invite {
     /**
      * Marks the invite as accepted.
      */
-    public void accept() {status = inviteStatus.ACCEPTED;}
+    public void accept() {
+        status = inviteStatus.ACCEPTED;
+    }
+
     // reject moved to EventManager to avoid circularity
 
 
@@ -38,7 +41,10 @@ public class Invite {
      *
      * @return recipient username
      */
-    public String getRecipient() {return recipientUsername;}
+    public String getRecipient() {
+        return recipientUsername;
+    }
+
     /**
      * Returns the associated event identifier.
      *
@@ -52,7 +58,9 @@ public class Invite {
      *
      * @return invite status
      */
-    public inviteStatus getStatus() {return status;}
+    public inviteStatus getStatus() {
+        return status;
+    }
 
     // Setter methods
     /**
@@ -60,17 +68,25 @@ public class Invite {
      *
      * @param recipientUsername new recipient username
      */
-    public void setRecipient(String recipientUsername) {this.recipientUsername = recipientUsername;}
+    public void setRecipient(String recipientUsername) {
+        this.recipientUsername = recipientUsername;
+    }
+
     /**
      * Updates the associated event identifier.
      *
      * @param eventID new event identifier
      */
-    public void setEvent(String eventID) {this.eventID = eventID;}
+    public void setEvent(String eventID) {
+        this.eventID = eventID;
+    }
+
     /**
      * Updates the invite status directly.
      *
      * @param status new invite status
      */
-    public void setInviteStatus(inviteStatus status) {this.status = status;}
+    public void setInviteStatus(inviteStatus status) {
+        this.status = status;
+    }
 }
