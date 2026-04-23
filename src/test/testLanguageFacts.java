@@ -21,11 +21,16 @@ public class testLanguageFacts extends TestCase {
     }
 
     public void testFactInAllFacts() {
-        assertTrue(allFacts.contains(languageFact));
+        String randomFact = languageFacts.randomFact();
+        List<String> facts = languageFacts.allFacts();
+
+        assertEquals(3, facts.size());
+        assertTrue(facts.contains(randomFact));
     }
 
     public void testListIsNotEmpty() {
         assertFalse(allFacts.isEmpty());
+        assertEquals(allFacts, languageFacts.allFacts());
     }
 
     public void testAllFactsContainsThreeFacts() {

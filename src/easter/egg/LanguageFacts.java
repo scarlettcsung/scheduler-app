@@ -19,19 +19,19 @@ public class LanguageFacts {
             Fun Turkish Language Fact: Muvaffakiyetsizleştiricileştiriveremeyebileceklerimizdenmişsinizcesine is a 70-letter word that means
             'As if you were one of those we might not be able to make unsuccessful'.
             """);
+    private static final int FACT_COUNT = FACTS.size();
 
     public List<String> allFacts() {
         return FACTS;
     }
 
     public String randomFact() {
-        List<String> facts = allFacts();
-        if (facts.isEmpty()) {
+        if (FACT_COUNT == 0) {
             throw new IllegalStateException("No language facts available");
         }
 
-        int randomIndex = ThreadLocalRandom.current().nextInt(facts.size());
-        return facts.get(randomIndex);
+        int randomIndex = ThreadLocalRandom.current().nextInt(FACT_COUNT);
+        return FACTS.get(randomIndex);
     }
 
 }
