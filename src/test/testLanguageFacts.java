@@ -17,8 +17,13 @@ public class testLanguageFacts extends TestCase {
 	}
 	
 	public void testFactExists() {assertNotNull(languageFact);}
-	public void testFactInAllFacts() {assertTrue(allFacts.contains(languageFact));}
-	public void testListIsNotEmpty() {assertFalse(allFacts.isEmpty());
+	public void testFactInAllFacts() {
+		assertEquals(3, allFacts.size());
+		assertTrue(allFacts.contains(languageFact));
+	}
+	public void testListIsNotEmpty() {
+		assertFalse(allFacts.isEmpty());
+		assertNotSame(allFacts, languageFacts.allFacts());
 	}
 
 }
