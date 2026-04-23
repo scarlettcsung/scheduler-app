@@ -324,7 +324,7 @@ public class EventManagePanel extends JPanel {
 				}
 
 				// Checks if invitee exists in repository and is not already in event
-				User invitee = repository.findUsername(inviteeUsername);
+				User invitee = repository.getItemByID(inviteeUsername);
 				if (invitee != null) {
 					// if statement adds the participant to the list
 					if (!tempInvites.contains(inviteeUsername) || !event.getParticipants().contains(inviteeUsername)) {
@@ -359,7 +359,7 @@ public class EventManagePanel extends JPanel {
 				}
 				
 
-				User invitee = repository.findUsername(inviteeUsername);
+				User invitee = repository.getItemByID(inviteeUsername);
 				if (invitee == null) {
 					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this, 
 							"User not found.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -465,7 +465,7 @@ public class EventManagePanel extends JPanel {
 				}
 
 				for (String username: tempInvites) {
-					User invitee = repository.findUsername(username);
+					User invitee = repository.getItemByID(username);
 					if (invitee != null) {
 						EventManagePanel.this.eventManager.addInvite(EventManagePanel.this.event, invitee);
 					}

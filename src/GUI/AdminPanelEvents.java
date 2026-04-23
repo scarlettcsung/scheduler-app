@@ -149,12 +149,12 @@ public class AdminPanelEvents extends JPanel {
 
 	                for (Event event : existingEvents) {
 	                    if (event.isImported() && adminUser.getUsername().equals(event.getOrganizer())) {
-	                        eventRepository.deleteEvent(event.getEventID());
+	                        eventRepository.deleteItem(event.getEventID());
 	                    }
 	                }
 	                if (status == ImportStatus.Succes) {
 	                    for (Event event : adminUser.getCalendar().getEvents()) {
-	                        if (eventRepository.findByEventID(event.getEventID()) == null) {
+	                        if (eventRepository.getItemByID(event.getEventID()) == null) {
 	                            eventRepository.save(event);
 	                        }
 	                    }
@@ -343,7 +343,7 @@ public class AdminPanelEvents extends JPanel {
 			acceptButton.setFont(new Font("Arial", Font.PLAIN, 10));
 			acceptButton.setBackground(Color.GREEN);
 			acceptButton.setForeground(Color.WHITE);
-			acceptButton.setBounds(10, 34, 70, 16);
+			acceptButton.setBounds(10, 34, 70, 16); 
 			acceptButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					invite.accept();

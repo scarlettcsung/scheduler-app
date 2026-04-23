@@ -9,7 +9,6 @@ import event.Event;
  * @version 3
  */
 public class EventRepository extends Repository<Event> {
-
     /**
      * Creates an empty event repository.
      */
@@ -23,7 +22,8 @@ public class EventRepository extends Repository<Event> {
      * @param eventID identifier to search for
      * @return matching event, or {@code null} when not found
      */
-    public Event findByEventID(String eventID) {
+    @Override
+    public Event getItemByID(String eventID) {
         for (Event e : data) {
             if (e.getEventID().equals(eventID)) {
                 return e;
@@ -36,10 +36,13 @@ public class EventRepository extends Repository<Event> {
      * Deletes an event by its identifier.
      *
      * @param eventID identifier of the event to remove
-     * @return {@code true} when an event was removed
+     * @return {@code 1} when an event was removed, otherwise {@code 0}
      */
-    public boolean deleteEvent(String eventID) {
-        return data.removeIf(e -> e.getEventID().equals(eventID));
+    public int deleteItem(String eventID) {
+        if (data.removeIf(e -> e.getEventID().equals(eventID))) {
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -60,7 +63,7 @@ public class EventRepository extends Repository<Event> {
     public void deleteEventsByOrganizer(String username) {
         for (Event e : data) {
             if (e.getOrganizer().equals(username)) {
-                deleteEvent(e.getEventID());
+                deleteItem(e.getEventID());
             }
         }
     }
