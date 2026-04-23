@@ -66,7 +66,8 @@ public class Main {
                 continue;
             }
             for (Event event : user.getCalendar().getEvents()) {
-                if (eventRepository.findByEventID(event.getEventID()) == null) {
+            	if (eventRepository.getItemByID(String.valueOf(event.getEventID())) == null) {
+            	
                     eventRepository.save(event);
                 }
             }
