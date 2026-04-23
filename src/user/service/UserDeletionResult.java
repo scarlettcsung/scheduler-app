@@ -2,6 +2,9 @@ package user.service;
 
 /**
  * Named outcomes for user-deletion requests exposed to the GUI layer.
+ *
+ * @author EO SN
+ * @version 3
  */
 public enum UserDeletionResult {
     NOT_AUTHENTICATED,

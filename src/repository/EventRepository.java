@@ -49,10 +49,15 @@ public class EventRepository extends Repository<Event> {
      * @return repository type name
      */
 	@Override
-    public String getRepositoryType() {
+	public String getRepositoryType() {
         return "Event Repository";
 	}
 
+	/**
+	 * Deletes all events organized by the given user.
+	 *
+	 * @param username organizer username whose events should be removed
+	 */
 	public void deleteEventsByOrganizer(String username) {
 		for(Event e : data) {
 			if(e.getOrganizer().equals(username)) {

@@ -117,6 +117,11 @@ public class UserRepository extends Repository<User> {
         return findUsername(username) != null;
     }
 
+    /**
+     * Removes references to a user from events and calendars before deletion.
+     *
+     * @param username username whose event references should be cleaned up
+     */
     public void cleanupUserEventReferences(String username) {
         Map<String, Event> eventsById = new LinkedHashMap<>();
 
@@ -162,6 +167,11 @@ public class UserRepository extends Repository<User> {
         }
     }
 
+    /**
+     * Removes an event from every stored user's calendar.
+     *
+     * @param event event to remove from calendars
+     */
     public void removeEventFromAllCalendars(Event event) {
         for (User user : data) {
             if (user.getCalendar() != null) {
