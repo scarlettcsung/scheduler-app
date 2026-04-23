@@ -1,15 +1,17 @@
 package event.manager;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import event.Event;
 import invite.Invite;
+import invite.Role;
 import invite.inviteStatus;
 import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
-
 /**
  * Applies event mutations such as updates, deletion, and invite rejection.
  *
@@ -96,7 +98,7 @@ public class EventManager {
             }
 
             if (eventRepository != null) {
-                eventRepository.deleteEvent(event.getEventID());
+                eventRepository.deleteItem(event.getEventID());
             }
             return;
         }
@@ -150,7 +152,7 @@ public class EventManager {
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(inviteStatus.REJECTED);
         if (this.repository != null) {
-            User invitee = repository.findUsername(invite.getRecipient());
+            User invitee = repository.getItemByID(invite.getRecipient());
 
             if (invitee != null) {
                 this.removeInvite(event, invitee);
@@ -183,7 +185,7 @@ public class EventManager {
      */
     public User getOrganizer(Event event) {
         String organizerUsername = event.getOrganizer();
-        return repository.findUsername(organizerUsername);
+        return repository.getItemByID(organizerUsername);
     }
 
     /**
@@ -201,4 +203,32 @@ public class EventManager {
         }
         return false;
     }
-}
+    
+    public List<Event> returnParticipatingEvents(String username,EventRepository repo) {
+    	List<Event> pEvents= new ArrayList<>();
+    	List<Event> allEvents= repo.getAll();
+    	for (Event e: allEvents) { 
+    		for (Invite i: e.getInvites()){
+    			if (username.equals(i.getRecipient())){
+    				if(i.getRole().equals(Role.Guest)) 
+    					{pEvents.add(e);}
+    			}
+    	}
+    	}
+    	return pEvents;
+    	
+    }
+    
+    public List<Event> returnOrganisedEvents(String username,EventRepository repo) {
+    	List<Event> oEvents= new ArrayList<>();
+    	List<Event> allEvents= repo.getAll();
+    	for (Event e: allEvents) { 
+    		for (Invite i: e.getInvites()){
+    			if (username.equals(i.getRecipient())){
+    				if(i.getRole().equals(Role.Organiser)) 
+    					{oEvents.add(e);}
+    			}
+    	}
+    	} return oEvents;
+    }
+    }

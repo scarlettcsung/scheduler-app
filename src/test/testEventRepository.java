@@ -33,7 +33,7 @@ public class testEventRepository extends TestCase {
         eventRepo.save(testEvent);
         String id = testEvent.getEventID();
         
-        Event found = eventRepo.findByEventID(id);
+        Event found = eventRepo.getItemByID(id);
         
         assertNotNull("Event should be found by ID", found);
         assertEquals("Project", found.getEventName());
@@ -52,10 +52,10 @@ public class testEventRepository extends TestCase {
         eventRepo.save(testEvent);
         String id = testEvent.getEventID();
         
-        boolean deleted = eventRepo.deleteEvent(id);
+        int deleted = eventRepo.deleteItem(id);
         
-        assertTrue("Delete should return true when event exists", deleted);
-        assertNull("Event should no longer exist in repo", eventRepo.findByEventID(id));
+        assertEquals(1, deleted);
+        assertNull("Event should no longer exist in repo", eventRepo.getItemByID(id));
     }
     
     public void testDeleteEventsByOrganizer() {
