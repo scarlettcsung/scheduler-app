@@ -18,7 +18,7 @@ import java.util.TimeZone;
  * Unit tests for {@link ics.importer.IcsImporter}.
  *
  * @author SN AA NJ
- * @version 2
+ * @version 3
  */
 public class TestIcsImporter extends TestCase {
 
@@ -37,8 +37,9 @@ public class TestIcsImporter extends TestCase {
 
     public void testParseICSReturnsImportedEvents() throws IOException, ParserException {
         IcsImporter importer = new IcsImporter();
+        importer.setIcsFilePath(SIMPLE_ICS);
 
-        List<Event> importedEvents = importer.parseIcs(SIMPLE_ICS);
+        List<Event> importedEvents = importer.parseIcs();
 
         assertEquals(1, importedEvents.size());
 
@@ -53,10 +54,11 @@ public class TestIcsImporter extends TestCase {
     public void testImportCalendarCreatesCalendarAndSetsOrganizer() {
         User user = new User("Charles", "password", null);
         IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(user);
+        importer.setIcsFilePath(SIMPLE_ICS);
+        importer.runImport();
 
-        ImportStatus status = importer.importCalendar(user, SIMPLE_ICS);
-
-        assertEquals(ImportStatus.Succes, status);
+        assertEquals(ImportStatus.Succes, importer.getLastImportStatus());
         assertNotNull(user.getCalendar());
         assertEquals(1, user.getCalendar().getEvents().size());
 
@@ -78,10 +80,11 @@ public class TestIcsImporter extends TestCase {
 
         User user = new User("Charles", "password", calendar);
         IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(user);
+        importer.setIcsFilePath(SIMPLE_ICS);
+        importer.runImport();
 
-        ImportStatus status = importer.importCalendar(user, SIMPLE_ICS);
-
-        assertEquals(ImportStatus.Succes, status);
+        assertEquals(ImportStatus.Succes, importer.getLastImportStatus());
         assertEquals(2, calendar.getEvents().size());
         assertNotNull(findEvent(calendar.getEvents(), "Manual"));
         assertNull(findEvent(calendar.getEvents(), "Old import"));
@@ -93,19 +96,63 @@ public class TestIcsImporter extends TestCase {
 
     public void testImportCalendarReturnsUserNotFoundWhenUserIsNull() {
         IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(null);
+        importer.setIcsFilePath(SIMPLE_ICS);
+        importer.runImport();
 
-        ImportStatus status = importer.importCalendar(null, SIMPLE_ICS);
-
-        assertEquals(ImportStatus.UserNotFound, status);
+        assertEquals(ImportStatus.UserNotFound, importer.getLastImportStatus());
     }
 
     public void testImportCalendarReturnsFileNotFoundWhenFileIsMissing() {
         User user = new User("Charles", "password", null);
         IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(user);
+        importer.setIcsFilePath("src/test/resources/missing.ics");
+        importer.runImport();
 
-        ImportStatus status = importer.importCalendar(user, "src/test/resources/missing.ics");
+        assertEquals(ImportStatus.FileNotFound, importer.getLastImportStatus());
+    }
 
-        assertEquals(ImportStatus.FileNotFound, status);
+    // test for ics file = null
+    public void testImportCalendarReturnsFileNotFoundWhenFileIsNull() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(user);
+        importer.setIcsFilePath(null);
+        importer.runImport();
+
+        assertEquals(ImportStatus.FileNotFound, importer.getLastImportStatus());
+    }
+
+    // test end with Z function
+    public void testParseICSHandlesZuluTime() throws IOException, ParserException {
+        IcsImporter importer = new IcsImporter();
+        importer.setIcsFilePath("src/test/resources/utcImport.ics");
+
+        List<Event> events = importer.parseIcs();
+
+        assertEquals(1, events.size());
+
+        Event event = events.get(0);
+
+        // "Z" should be stripped, so it parses as local time
+        assertEquals(LocalDateTime.of(2026, 4, 10, 9, 0), event.getEventTime());
+        assertEquals("UTC Event", event.getEventName());
+    }
+
+    public void testImportCalendarThrowsIllegalStateOnInvalidICS() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(user);
+        importer.setIcsFilePath("src/test/resources/invalid.ics");
+
+        try {
+            importer.runImport();
+            fail("Expected IllegalStateException to be thrown");
+        } catch (IllegalStateException e) {
+            assertEquals("Calendar import failed", e.getMessage());
+            assertTrue(e.getCause() instanceof ParserException);
+        }
     }
 
     private Event findEvent(List<Event> events, String eventName) {
@@ -118,42 +165,48 @@ public class TestIcsImporter extends TestCase {
         return null;
     }
     
-    //test for ics file = null
-    public void testImportCalendarReturnsFileNotFoundWhenFileIsNull() {
+    public void testGetTargetUserReturnsSetUser() {
         User user = new User("Charles", "password", null);
         IcsImporter importer = new IcsImporter();
-
-        ImportStatus status = importer.importCalendar(user, null);
-
-        assertEquals(ImportStatus.FileNotFound, status);
+        importer.setTargetUser(user);
+ 
+        assertEquals(user, importer.getTargetUser());
     }
-    
-    //test end with Z function
-    public void testParseICSHandlesZuluTime() throws IOException, ParserException {
+ 
+    public void testGetTargetUserReturnsNullWhenNotSet() {
         IcsImporter importer = new IcsImporter();
-
-        List<Event> events = importer.parseIcs("src/test/resources/utcImport.ics");
-
+ 
+        assertNull(importer.getTargetUser());
+    }
+ 
+    public void testGetIcsFilePathReturnsSetPath() {
+        IcsImporter importer = new IcsImporter();
+        importer.setIcsFilePath(SIMPLE_ICS);
+ 
+        assertEquals(SIMPLE_ICS, importer.getIcsFilePath());
+    }
+ 
+    public void testGetIcsFilePathReturnsNullWhenNotSet() {
+        IcsImporter importer = new IcsImporter();
+ 
+        assertNull(importer.getIcsFilePath());
+    }
+ 
+    public void testGetLastImportedEventsReturnsEventsAfterImport() {
+        User user = new User("Charles", "password", null);
+        IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(user);
+        importer.setIcsFilePath(SIMPLE_ICS);
+        importer.runImport();
+ 
+        List<Event> events = importer.getLastImportedEvents();
+        assertNotNull(events);
         assertEquals(1, events.size());
-
-        Event event = events.get(0);
-
-        // "Z" should be stripped, so it parses as local time
-        assertEquals(LocalDateTime.of(2026, 4, 10, 9, 0), event.getEventTime());
-        assertEquals("UTC Event", event.getEventName());
     }
-    
-    public void testImportCalendarThrowsIllegalStateOnInvalidICS() {
-        User user = new User("Charles", "password", null);
+ 
+    public void testGetLastImportedEventsReturnsNullBeforeImport() {
         IcsImporter importer = new IcsImporter();
-
-        try {
-        	//these two lines below are red in the test but without them the test is not testing dont know why
-            importer.importCalendar(user, "src/test/resources/invalid.ics");
-            fail("Expected IllegalStateException to be thrown");
-        } catch (IllegalStateException e) {
-            assertEquals("Calendar import failed", e.getMessage());
-            assertTrue(e.getCause() instanceof ParserException);
-        }
+ 
+        assertNull(importer.getLastImportedEvents());
     }
 }

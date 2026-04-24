@@ -143,7 +143,10 @@ public class AdminPanelEvents extends JPanel {
 	                String filePath = selectedFile.getAbsolutePath();
 
 	                IcsImporter importer = new IcsImporter();
-	                ImportStatus status = importer.importCalendar(adminUser, filePath);
+	                importer.setTargetUser(adminUser);
+	                importer.setIcsFilePath(filePath);
+	                importer.runImport();
+	                ImportStatus status = importer.getLastImportStatus();
 
 	                List<Event> existingEvents = new ArrayList<>(eventRepository.getAll());
 
