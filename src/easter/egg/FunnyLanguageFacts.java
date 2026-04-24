@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class LanguageFacts {
+public class FunnyLanguageFacts {
 
 	private final List<String> facts = List.of(
 			"""
