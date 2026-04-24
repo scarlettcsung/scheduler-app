@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.google.gson.annotations.SerializedName;
+
 import invite.Invite;
 
 /**
@@ -21,10 +23,12 @@ public abstract class Event {
     private int eventDuration;
     private LocalDateTime eventTime;
     private String eventDescription;
+    @SerializedName(value = "eventId", alternate = {"eventID"})
     private final String eventId = UUID.randomUUID().toString();
     private String organizerUsername;
     private List<Invite> invites;
 
+    @SerializedName(value = "isImportedField", alternate = {"isImported"})
     protected boolean isImportedField; // Just for persistence
 
     /**

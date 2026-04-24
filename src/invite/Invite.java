@@ -1,5 +1,7 @@
 package invite;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Represents an invitation for a user to join an event.
  *
@@ -9,6 +11,7 @@ package invite;
 public class Invite {
 
     private String recipientUsername;
+    @SerializedName(value = "eventId", alternate = {"eventID"})
     private String eventId;
     private InviteStatus status;
 	private Role role;
