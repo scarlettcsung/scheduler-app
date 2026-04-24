@@ -444,29 +444,56 @@ public class EventManagePanel extends JPanel {
 				int earliestHour = Integer.parseInt(earliestTime);
 				int latestHour = Integer.parseInt(latestTime);
 
+				boolean wasNewEvent = isNewEvent;
+				String oldEventName = null;
+				int oldEventDuration = 0;
+				String oldEventDescription = null;
+				java.time.LocalDateTime oldEventTime = null;
+
 				if (isNewEvent) {
 					EventManagePanel.this.event = new CreatedEvent(eventName,duration,eventDescription,currentUser.getUsername(), new ArrayList<>());
-					EventManagePanel.this.isNewEvent = false;
 
 				} else {
+					oldEventName = EventManagePanel.this.event.getEventName();
+					oldEventDuration = EventManagePanel.this.event.getEventDuration();
+					oldEventDescription = EventManagePanel.this.event.getEventDescription();
+					oldEventTime = EventManagePanel.this.event.getEventTime();
 
 					EventManagePanel.this.event.setEventName(eventName);
 					EventManagePanel.this.event.setEventDuration(duration);
 					EventManagePanel.this.event.setEventDescription(eventDescription);
 				}
 
+				List<Invite> addedInvites = new ArrayList<>();
 				for (String username: tempInvites) {
 					User invitee = repository.getItemById(username);
 					if (invitee != null) {
-						EventManagePanel.this.eventManager.addInvite(EventManagePanel.this.event, invitee);
+						Invite invite = new Invite(invitee.getUsername(), EventManagePanel.this.event.getEventId(), null);
+						EventManagePanel.this.event.getInvites().add(invite);
+						addedInvites.add(invite);
 					}
 				}
-				tempInvites.clear();
-
 
 				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository,eventRepository);
-				scheduler.scheduleEvent(EventManagePanel.this.event);
+				boolean scheduled = scheduler.scheduleEvent(EventManagePanel.this.event);
+				if (!scheduled) {
+					EventManagePanel.this.event.getInvites().removeAll(addedInvites);
+					if (wasNewEvent) {
+						EventManagePanel.this.event = null;
+						EventManagePanel.this.isNewEvent = true;
+					} else {
+						EventManagePanel.this.event.setEventName(oldEventName);
+						EventManagePanel.this.event.setEventDuration(oldEventDuration);
+						EventManagePanel.this.event.setEventDescription(oldEventDescription);
+						EventManagePanel.this.event.setEventTime(oldEventTime);
+					}
+					JOptionPane.showMessageDialog(EventManagePanel.this, "No available time slot found.");
+					updateParticipantList();
+					return;
+				}
 
+				EventManagePanel.this.isNewEvent = false;
+				tempInvites.clear();
 				JOptionPane.showMessageDialog(EventManagePanel.this, "Event Saved.");
 				updateParticipantList();
 				if (onSaveSuccess != null) {
