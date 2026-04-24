@@ -18,63 +18,151 @@ import user.calendar.*;
 
 /**
  * Imports events from ICS calendar files into the application's event model.
+ * Holds import configuration and results as instance state so that all methods
+ * are either accessors or mutators.
  *
  * @author AA SN
- * @version 2
+ * @version 3
  */
 public class IcsImporter {
 
     private static final DateTimeFormatter ICS_DATE_TIME_FORMAT =
             DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
 
+    // ── Instance state ────────────────────────────────────────────────────────
+
+    /** The user whose calendar will receive the imported events. */
+    private User targetUser;
+
+    /** Path to the ICS file to be imported. */
+    private String icsFilePath;
+
+    /** Events produced by the most recent successful parse. */
+    private List<Event> lastImportedEvents;
+
+    /** Outcome of the most recent import attempt. */
+    private ImportStatus lastImportStatus;
+
+    // ── Mutators ──────────────────────────────────────────────────────────────
+
     /**
-     * Imports an ICS file into the given user's calendar.
+     * Sets the user whose calendar should receive imported events.
      *
-     * @param user user whose calendar should receive the imported events
-     * @param icsFile path to the ICS file to import
-     * @return status describing the outcome of the import attempt
+     * @param user target user for the next import
      */
-    public ImportStatus importCalendar(User user, String icsFile) {
-        // Return explicit status codes for the expected invalid input cases.
-        if (user == null) {
-            return ImportStatus.UserNotFound;
+    public void setTargetUser(User user) {
+        this.targetUser = user;
+    }
+
+    /**
+     * Sets the path of the ICS file to import.
+     *
+     * @param icsFilePath path to the ICS file
+     */
+    public void setIcsFilePath(String icsFilePath) {
+        this.icsFilePath = icsFilePath;
+    }
+
+    /**
+     * Runs the import using the current {@link #targetUser} and
+     * {@link #icsFilePath}. Updates {@link #lastImportedEvents} and
+     * {@link #lastImportStatus} with the outcome.
+     */
+    public void runImport() {
+        if (targetUser == null) {
+            lastImportStatus = ImportStatus.UserNotFound;
+            return;
         }
 
-        if (icsFile == null) {
-            return ImportStatus.FileNotFound;
+        if (icsFilePath == null) {
+            lastImportStatus = ImportStatus.FileNotFound;
+            return;
         }
 
         try {
             // Create a calendar on first import so imported events always have a target list.
-            if (user.getCalendar() == null) {
-                user.setCalendar(new UserCalendar(null));
+            if (targetUser.getCalendar() == null) {
+                targetUser.setCalendar(new UserCalendar(null));
             }
 
-            List<Event> importedEvents = parseIcs(icsFile);
+            lastImportedEvents = parseIcs();
+
             // Imported events should belong to the user who initiated the import.
-            for (Event event : importedEvents) {
-                event.setOrganizer(user.getUsername());
+            for (Event event : lastImportedEvents) {
+                event.setOrganizer(targetUser.getUsername());
             }
 
             // Replace old imported events but keep manually created events.
-            overwriteImportedEvents(user.getCalendar(), importedEvents);
-            return ImportStatus.Succes;
+            overwriteImportedEvents(targetUser.getCalendar(), lastImportedEvents);
+            lastImportStatus = ImportStatus.Succes;
         } catch (FileNotFoundException e) {
-            return ImportStatus.FileNotFound;
+            lastImportStatus = ImportStatus.FileNotFound;
         } catch (IOException | ParserException e) {
             throw new IllegalStateException("Calendar import failed", e);
         }
     }
 
     /**
-     * Parses the supplied ICS file into application {@link Event} instances.
+     * Replaces previously imported events in a calendar with a fresh set of
+     * imported events while preserving manually created events.
      *
-     * @param icsFile path to the ICS file to parse
-     * @return imported events extracted from the file
-     * @throws IOException when the file cannot be read
+     * @param calendar       calendar to update
+     * @param importedEvents events produced by the latest import
+     */
+    public void overwriteImportedEvents(UserCalendar calendar, List<Event> importedEvents) {
+        // Only remove events that came from a previous import.
+        calendar.getEvents().removeIf(event -> event.isImported());
+        // Then append the latest import result.
+        calendar.getEvents().addAll(importedEvents);
+    }
+
+    // ── Accessors ─────────────────────────────────────────────────────────────
+
+    /**
+     * Returns the target user configured for this importer.
+     *
+     * @return target user, or {@code null} if not set
+     */
+    public User getTargetUser() {
+        return targetUser;
+    }
+
+    /**
+     * Returns the ICS file path configured for this importer.
+     *
+     * @return ICS file path, or {@code null} if not set
+     */
+    public String getIcsFilePath() {
+        return icsFilePath;
+    }
+
+    /**
+     * Returns the events produced by the most recent import.
+     *
+     * @return last imported events, or {@code null} if no import has run yet
+     */
+    public List<Event> getLastImportedEvents() {
+        return lastImportedEvents;
+    }
+
+    /**
+     * Returns the status of the most recent import attempt.
+     *
+     * @return last import status, or {@code null} if no import has run yet
+     */
+    public ImportStatus getLastImportStatus() {
+        return lastImportStatus;
+    }
+
+    /**
+     * Parses the ICS file at {@link #icsFilePath} and returns the resulting
+     * events. Does not modify any instance state.
+     *
+     * @return events extracted from the file
+     * @throws IOException     when the file cannot be read
      * @throws ParserException when the ICS content cannot be parsed
      */
-    public List<Event> parseIcs(String icsFile) throws IOException, ParserException {
+    public List<Event> parseIcs() throws IOException, ParserException {
         // Keep parameter parsing minimal: we only need TZID support from our test ICS files.
         CalendarBuilder calendarBuilder = new CalendarBuilder(
                 new CalendarParserImpl(),
@@ -85,7 +173,7 @@ public class IcsImporter {
         );
 
         net.fortuna.ical4j.model.Calendar calendar;
-        try (InputStream inputStream = new FileInputStream(icsFile)) {
+        try (InputStream inputStream = new FileInputStream(icsFilePath)) {
             calendar = calendarBuilder.build(inputStream);
         }
 
@@ -123,19 +211,5 @@ public class IcsImporter {
         }
 
         return importedEvents;
-    }
-
-    /**
-     * Replaces previously imported events in a calendar with a fresh set of
-     * imported events while preserving manually created events.
-     *
-     * @param calendar calendar to update
-     * @param importedEvents events produced by the latest import
-     */
-    public void overwriteImportedEvents(UserCalendar calendar, List<Event> importedEvents) {
-        // Only remove events that came from a previous import.
-        calendar.getEvents().removeIf(event -> event.isImported());
-        // Then append the latest import result.
-        calendar.getEvents().addAll(importedEvents);
     }
 }

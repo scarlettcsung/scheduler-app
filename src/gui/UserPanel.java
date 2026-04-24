@@ -178,7 +178,10 @@ public class UserPanel extends JPanel {
                     String filePath = selectedFile.getAbsolutePath();
 
                     IcsImporter importer = new IcsImporter();
-                    ImportStatus status = importer.importCalendar(currentUser, filePath);
+                    importer.setTargetUser(currentUser);
+                    importer.setIcsFilePath(filePath);
+                    importer.runImport();
+                    ImportStatus status = importer.getLastImportStatus();
 
 	                List<Event> existingEvents = new ArrayList<>(eventRepository.getAll());
 
