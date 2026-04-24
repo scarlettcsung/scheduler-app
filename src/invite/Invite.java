@@ -95,11 +95,11 @@ public class Invite {
     }
 
     public void setOrganizer() {
-        this.role = Role.Organiser;
+        this.role = Role.ORGANIZER;
     }
 
     public void setGuest() {
-        this.role = Role.Guest;
+        this.role = Role.GUEST;
     }
 
     public Role getRole() {

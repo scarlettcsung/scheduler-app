@@ -210,7 +210,7 @@ public class EventManager {
     	for (Event e: allEvents) { 
     		for (Invite i: e.getInvites()){
     			if (username.equals(i.getRecipient())){
-    				if(i.getRole().equals(Role.Guest)) 
+    				if(i.getRole().equals(Role.GUEST)) 
     					{pEvents.add(e);}
     			}
     	}
@@ -225,7 +225,7 @@ public class EventManager {
     	for (Event e: allEvents) { 
     		for (Invite i: e.getInvites()){
     			if (username.equals(i.getRecipient())){
-    				if(i.getRole().equals(Role.Organiser)) 
+    				if(i.getRole().equals(Role.ORGANIZER)) 
     					{oEvents.add(e);}
     			}
     	}

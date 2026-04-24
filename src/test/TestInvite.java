@@ -69,10 +69,10 @@ public class TestInvite extends TestCase{
     // test setOrganizer
     public void testSetOrganizerAndGetRole() {
     	invite.setOrganizer();
-    	assertEquals(Role.Organiser,invite.getRole());
+    	assertEquals(Role.ORGANIZER,invite.getRole());
     }
     public void testSetGuestAndGetRole() {
     	invite.setGuest();
-    	assertEquals(Role.Guest,invite.getRole());
+    	assertEquals(Role.GUEST,invite.getRole());
     }
 }
