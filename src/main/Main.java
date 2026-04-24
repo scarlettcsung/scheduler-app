@@ -10,7 +10,7 @@ import java.util.List;
 
 import gui.AuthenticationPanel;
 import event.Event;
-import io.Io;
+import io.IO;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -32,7 +32,7 @@ public class Main {
     /**
      * Main method that launches the application.
      * * <ol>
-     * <li>Initializes core services: {@link UserRepository}, {@link Scheduler}, and {@link Io}.</li>
+     * <li>Initializes core services: {@link UserRepository}, {@link Scheduler}, and {@link IO}.</li>
      * <li>Loads user data from a predefined JSON file path.</li>
      * <li>Sets up the main {@link JFrame} and attaches a {@link WindowAdapter} to handle 
      * data persistence upon closing.</li>
@@ -46,7 +46,7 @@ public class Main {
         EventRepository eventRepository = new EventRepository();
         repository.setEventRepository(eventRepository);
         Scheduler scheduler = new Scheduler(8, 23, 7, repository,eventRepository);
-        Io ioHandler = new Io(); 
+        IO ioHandler = new IO(); 
 
         String filePath = "src/filestorage/userStorage.json";
 
