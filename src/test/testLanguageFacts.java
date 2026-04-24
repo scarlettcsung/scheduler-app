@@ -4,7 +4,7 @@ import easter.egg.LanguageFacts;
 import junit.framework.TestCase;
 import java.util.List;
 
-public class testLanguageFacts extends TestCase {
+public class TestLanguageFacts extends TestCase {
 	
 	private LanguageFacts languageFacts;
 	private List<String> allFacts;

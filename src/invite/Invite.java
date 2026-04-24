@@ -1,5 +1,7 @@
 package invite;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Represents an invitation for a user to join an event.
  *
@@ -9,20 +11,21 @@ package invite;
 public class Invite {
 
     private String recipientUsername;
-    private String eventID;
-    private inviteStatus status;
+    @SerializedName(value = "eventId", alternate = {"eventID"})
+    private String eventId;
+    private InviteStatus status;
 	private Role role;
 
     /**
      * Creates a new pending invite for an event recipient.
      *
      * @param recipientUsername username of the invite recipient
-     * @param eventID identifier of the related event
+     * @param eventId identifier of the related event
      */
-    public Invite(String recipientUsername, String eventID) {
+    public Invite(String recipientUsername, String eventId) {
         this.recipientUsername = recipientUsername;
-        this.eventID = eventID;
-        this.status = inviteStatus.PENDING;
+        this.eventId = eventId;
+        this.status = InviteStatus.PENDING;
     }
 
     // Status update
@@ -30,7 +33,7 @@ public class Invite {
      * Marks the invite as accepted.
      */
     public void accept() {
-        status = inviteStatus.ACCEPTED;
+        status = InviteStatus.ACCEPTED;
     }
 
     // reject moved to EventManager to avoid circularity
@@ -51,15 +54,15 @@ public class Invite {
      *
      * @return event identifier
      */
-    public String getEventID() {
-        return eventID;
+    public String getEventId() {
+        return eventId;
     }
     /**
      * Returns the current invite status.
      *
      * @return invite status
      */
-    public inviteStatus getStatus() {
+    public InviteStatus getStatus() {
         return status;
     }
 
@@ -76,10 +79,10 @@ public class Invite {
     /**
      * Updates the associated event identifier.
      *
-     * @param eventID new event identifier
+     * @param eventId new event identifier
      */
-    public void setEvent(String eventID) {
-        this.eventID = eventID;
+    public void setEvent(String eventId) {
+        this.eventId = eventId;
     }
 
     /**
@@ -87,11 +90,11 @@ public class Invite {
      *
      * @param status new invite status
      */
-    public void setInviteStatus(inviteStatus status) {
+    public void setInviteStatus(InviteStatus status) {
         this.status = status;
     }
 
-    public void setOrganiser() {
+    public void setOrganizer() {
         this.role = Role.Organiser;
     }
 

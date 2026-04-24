@@ -27,7 +27,7 @@ import user.User;
  * @author AA NJ
  * @version 2
  */
-public class IO {
+public class Io {
 
     /**
      * Reads a list of users and calendar data from a JSON file.
@@ -39,7 +39,8 @@ public class IO {
     public List<User> readUsers(String filePath) {
         JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
             JsonObject jsonObject = json.getAsJsonObject();
-            boolean isImportedField = jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean();
+            boolean isImportedField = (jsonObject.has("isImportedField") && jsonObject.get("isImportedField").getAsBoolean())
+                    || (jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean());
 
             if (isImportedField) {
                 return context.deserialize(json, ImportedEvent.class);

@@ -68,7 +68,7 @@ public class UserRepository extends Repository<User> {
             return UserDeletionResult.NOT_AUTHENTICATED;
         }
 
-        User targetUser = getItemByID(username);
+        User targetUser = getItemById(username);
         if (targetUser == null) {
             return UserDeletionResult.NOT_PERMITTED;
         }
@@ -99,7 +99,7 @@ public class UserRepository extends Repository<User> {
      * @return matching user, or {@code null} when not found
      */
     @Override
-    public User getItemByID(String username) {
+    public User getItemById(String username) {
         for (User u : data) {
             if (u.getUsername().equals(username)) {
                 return u;
@@ -115,7 +115,7 @@ public class UserRepository extends Repository<User> {
      * @return {@code true} when a user with that username exists
      */
     public boolean isExistingUser(String username) {
-        return getItemByID(username) != null;
+        return getItemById(username) != null;
     }
 
     /**
@@ -132,8 +132,8 @@ public class UserRepository extends Repository<User> {
             }
 
             for (Event event : user.getCalendar().getEvents()) {
-                if (event != null && event.getEventID() != null) {
-                    eventsById.putIfAbsent(event.getEventID(), event);
+                if (event != null && event.getEventId() != null) {
+                    eventsById.putIfAbsent(event.getEventId(), event);
                 }
             }
         }
@@ -141,8 +141,8 @@ public class UserRepository extends Repository<User> {
         if (eventRepository != null) {
             for (User ignored : data) {
                 for (Event event : eventRepository.getAll()) {
-                    if (event != null && event.getEventID() != null) {
-                        eventsById.putIfAbsent(event.getEventID(), event);
+                    if (event != null && event.getEventId() != null) {
+                        eventsById.putIfAbsent(event.getEventId(), event);
                     }
                 }
                 break;
@@ -157,7 +157,7 @@ public class UserRepository extends Repository<User> {
             if (username.equals(event.getOrganizer())) {
                 removeEventFromAllCalendars(event);
                 if (eventRepository != null) {
-                    eventRepository.deleteItem(event.getEventID());
+                    eventRepository.deleteItem(event.getEventId());
                 }
                 continue;
             }

@@ -94,7 +94,7 @@ public class Scheduler {
             List<Event> busyEvents = new ArrayList<>();
 
             String organizerUsername = event.getOrganizer();
-            User organizer = userRepository.getItemByID(organizerUsername);
+            User organizer = userRepository.getItemById(organizerUsername);
             if (organizer != null && organizer.getCalendar() != null) {
                 for (Event e : organizer.getCalendar().getEvents()) {
                     if (e == null || e == event || e.getEventTime() == null) {
@@ -108,7 +108,7 @@ public class Scheduler {
 
             for (Invite invite : event.getInvites()) {
                 String inviteeUsername = invite.getRecipient();
-                User invitee = userRepository.getItemByID(inviteeUsername);
+                User invitee = userRepository.getItemById(inviteeUsername);
                 if (invitee != null && invitee.getCalendar() != null) {
                     for (Event e : invitee.getCalendar().getEvents()) {
                         if (e == null || e == event || e.getEventTime() == null) {
@@ -163,10 +163,10 @@ public class Scheduler {
 
         event.setEventTime(slot);
         String organizerUsername = event.getOrganizer();
-        User organizer = userRepository.getItemByID(organizerUsername);
+        User organizer = userRepository.getItemById(organizerUsername);
         if (organizer != null && organizer.getCalendar() != null) {
             organizer.getCalendar().addEvent(event);
-            if (eventRepository.getItemByID(event.getEventID()) == null) {
+            if (eventRepository.getItemById(event.getEventId()) == null) {
                 eventRepository.save(event);
             }
         }
@@ -174,10 +174,10 @@ public class Scheduler {
         List<Invite> currentInvites = new ArrayList<>(event.getInvites());
         for (Invite invite : currentInvites) {
             String inviteeUsername = invite.getRecipient();
-            User invitee = userRepository.getItemByID(inviteeUsername);
+            User invitee = userRepository.getItemById(inviteeUsername);
             if (invitee != null && invitee.getCalendar() != null) {
                 invitee.getCalendar().addEvent(event);
-                if (eventRepository.getItemByID(event.getEventID()) == null) {
+                if (eventRepository.getItemById(event.getEventId()) == null) {
                     eventRepository.save(event);
                 }
             }

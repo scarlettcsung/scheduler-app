@@ -8,9 +8,9 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.List;
 
-import GUI.AuthenticationPanel;
+import gui.AuthenticationPanel;
 import event.Event;
-import io.IO;
+import io.Io;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -20,7 +20,7 @@ import user.User;
 /**
  * The entry point for the SmartCalendar application.
  * <p>
- * This class is responsible for initializing the backend components (Repository, Scheduler, IO),
+ * This class is responsible for initializing the backend components (Repository, Scheduler, Io),
  * loading existing user data from storage, and launching the graphical interface.
  * It also puts data in storage to use for the next start of the program.
  * </p>
@@ -32,7 +32,7 @@ public class Main {
     /**
      * Main method that launches the application.
      * * <ol>
-     * <li>Initializes core services: {@link UserRepository}, {@link Scheduler}, and {@link IO}.</li>
+     * <li>Initializes core services: {@link UserRepository}, {@link Scheduler}, and {@link Io}.</li>
      * <li>Loads user data from a predefined JSON file path.</li>
      * <li>Sets up the main {@link JFrame} and attaches a {@link WindowAdapter} to handle 
      * data persistence upon closing.</li>
@@ -46,7 +46,7 @@ public class Main {
         EventRepository eventRepository = new EventRepository();
         repository.setEventRepository(eventRepository);
         Scheduler scheduler = new Scheduler(8, 23, 7, repository,eventRepository);
-        IO ioHandler = new IO(); 
+        Io ioHandler = new Io(); 
 
         String filePath = "src/filestorage/userStorage.json";
 
@@ -66,7 +66,7 @@ public class Main {
                 continue;
             }
             for (Event event : user.getCalendar().getEvents()) {
-            	if (eventRepository.getItemByID(String.valueOf(event.getEventID())) == null) {
+            	if (eventRepository.getItemById(String.valueOf(event.getEventId())) == null) {
             	
                     eventRepository.save(event);
                 }

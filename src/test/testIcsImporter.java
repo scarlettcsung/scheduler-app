@@ -20,7 +20,7 @@ import java.util.TimeZone;
  * @author SN AA NJ
  * @version 2
  */
-public class testIcsImporter extends TestCase {
+public class TestIcsImporter extends TestCase {
 
     private static final String SIMPLE_ICS = "src/test/resources/simpleImport.ics";
 
@@ -38,7 +38,7 @@ public class testIcsImporter extends TestCase {
     public void testParseICSReturnsImportedEvents() throws IOException, ParserException {
         IcsImporter importer = new IcsImporter();
 
-        List<Event> importedEvents = importer.parseICS(SIMPLE_ICS);
+        List<Event> importedEvents = importer.parseIcs(SIMPLE_ICS);
 
         assertEquals(1, importedEvents.size());
 
@@ -132,7 +132,7 @@ public class testIcsImporter extends TestCase {
     public void testParseICSHandlesZuluTime() throws IOException, ParserException {
         IcsImporter importer = new IcsImporter();
 
-        List<Event> events = importer.parseICS("src/test/resources/utcImport.ics");
+        List<Event> events = importer.parseIcs("src/test/resources/utcImport.ics");
 
         assertEquals(1, events.size());
 

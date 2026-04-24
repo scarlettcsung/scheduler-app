@@ -13,19 +13,19 @@ import java.io.*;
 import event.CreatedEvent;
 import event.Event;
 import invite.Invite;
-import io.IO;
+import io.Io;
 
 
 /**
- * Unit tests for {@link io.IO}.
+ * Unit tests for {@link io.Io}.
  *
  * @author AA NJ
  * @version 2
  */
-public class testIO extends TestCase {
+public class TestIo extends TestCase {
 	private UserRepository repository;
 	private UserCalendar calendar;
-	private IO input;
+	private Io input;
 	
 	//readUserList(String filePath)
 	//writeUserList(List<User> userList, String filePath)
@@ -34,7 +34,7 @@ public class testIO extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		input = new IO();
+		input = new Io();
 		calendar=new UserCalendar(null);
 		LocalDateTime eventTime = LocalDateTime.parse("2026-04-08T09:00:00");
 		Event fakeevent= new CreatedEvent("meeting", 2, "test event", "John", null);
@@ -47,7 +47,7 @@ public class testIO extends TestCase {
 	
 	//(String eventName, int eventDuration, String eventDescription,
     //String organizerUsername, Boolean isImported,  List<Invite> invites)
-	public void testreadcalendar() throws IOException {
+	public void testReadCalendar() throws IOException {
 		//write a file
 		input.writeUsers(repository.getAll(),"src/test/resources/testFileIO.json");
 		

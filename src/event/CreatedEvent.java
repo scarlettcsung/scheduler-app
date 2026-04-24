@@ -24,7 +24,7 @@ public class CreatedEvent extends Event {
     public CreatedEvent(String eventName, int eventDuration, String eventDescription, String organizerUsername,
             List<Invite> invites) {
         super(eventName, eventDuration, eventDescription, organizerUsername, invites);
-        this.isImportedField = false; // Just for IO
+        this.isImportedField = false; // Just for persistence
     }
 
     /**
@@ -37,4 +37,3 @@ public class CreatedEvent extends Event {
         return false;
     }
 }
-

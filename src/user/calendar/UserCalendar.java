@@ -56,8 +56,8 @@ public class UserCalendar {
             return;
         }
 
-        String targetEventId = event.getEventID();
+        String targetEventId = event.getEventId();
         events.removeIf(n -> n == event
-                || (n != null && targetEventId != null && targetEventId.equals(n.getEventID())));
+                || (n != null && targetEventId != null && targetEventId.equals(n.getEventId())));
     }
 }

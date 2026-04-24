@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  * @author EO SN
  * @version 1
  */
-public class testEventQueryService extends TestCase {
+public class TestEventQueryService extends TestCase {
 
 	private EventRepository eventRepository;
 	private EventQueryService eventQueryService;
@@ -41,12 +41,12 @@ public class testEventQueryService extends TestCase {
 
 	public void testVisibleEventsForAcceptedInvitee() {
 		Event acceptedEvent = new CreatedEvent("Demo", 45, "Accepted invite", "bob", null);
-		Invite acceptedInvite = new Invite("alice", acceptedEvent.getEventID());
+		Invite acceptedInvite = new Invite("alice", acceptedEvent.getEventId());
 		acceptedInvite.accept();
 		acceptedEvent.getInvites().add(acceptedInvite);
 
 		Event pendingEvent = new CreatedEvent("Workshop", 90, "Pending invite", "charlie", null);
-		pendingEvent.getInvites().add(new Invite("alice", pendingEvent.getEventID()));
+		pendingEvent.getInvites().add(new Invite("alice", pendingEvent.getEventId()));
 
 		eventRepository.save(acceptedEvent);
 		eventRepository.save(pendingEvent);
@@ -59,9 +59,9 @@ public class testEventQueryService extends TestCase {
 
 	public void testInvitesForUserDeduplicatesByRecipientAndEvent() {
 		Event event = new CreatedEvent("Design", 30, "Discuss design", "bob", null);
-		event.getInvites().add(new Invite("alice", event.getEventID()));
-		event.getInvites().add(new Invite("alice", event.getEventID()));
-		event.getInvites().add(new Invite("charlie", event.getEventID()));
+		event.getInvites().add(new Invite("alice", event.getEventId()));
+		event.getInvites().add(new Invite("alice", event.getEventId()));
+		event.getInvites().add(new Invite("charlie", event.getEventId()));
 		eventRepository.save(event);
 
 		List<EventInviteView> invites = eventQueryService.getInvitesForUser("alice");
@@ -87,9 +87,9 @@ public class testEventQueryService extends TestCase {
 
 	public void testInvitesForAdminIncludesAllRecipientsAndDeduplicates() {
 		Event event = new CreatedEvent("Design", 30, "Discuss design", "bob", null);
-		event.getInvites().add(new Invite("alice", event.getEventID()));
-		event.getInvites().add(new Invite("alice", event.getEventID()));
-		event.getInvites().add(new Invite("charlie", event.getEventID()));
+		event.getInvites().add(new Invite("alice", event.getEventId()));
+		event.getInvites().add(new Invite("alice", event.getEventId()));
+		event.getInvites().add(new Invite("charlie", event.getEventId()));
 		eventRepository.save(event);
 
 		List<EventInviteView> invites = eventQueryService.getInvitesForAdmin();

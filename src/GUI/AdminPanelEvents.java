@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 import com.github.lgooddatepicker.components.CalendarPanel;
 
@@ -149,12 +149,12 @@ public class AdminPanelEvents extends JPanel {
 
 	                for (Event event : existingEvents) {
 	                    if (event.isImported() && adminUser.getUsername().equals(event.getOrganizer())) {
-	                        eventRepository.deleteItem(event.getEventID());
+	                        eventRepository.deleteItem(event.getEventId());
 	                    }
 	                }
 	                if (status == ImportStatus.Succes) {
 	                    for (Event event : adminUser.getCalendar().getEvents()) {
-	                        if (eventRepository.getItemByID(event.getEventID()) == null) {
+	                        if (eventRepository.getItemById(event.getEventId()) == null) {
 	                            eventRepository.save(event);
 	                        }
 	                    }

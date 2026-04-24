@@ -28,18 +28,18 @@ public class Authentication {
     /**
      * Attempts to authenticate a user with the provided credentials.
      *
-     * @param UserName username to authenticate
-     * @param UserPassword password to validate for the user
+     * @param username username to authenticate
+     * @param password password to validate for the user
      * @return {@code true} when the credentials match an existing user
      */
-    public boolean login(String UserName, String UserPassword) {
-        User currentUser = repository.getItemByID(UserName);
+    public boolean login(String username, String password) {
+        User currentUser = repository.getItemById(username);
 
         if (currentUser == null) {
             return false;
         }
 
-        if (!currentUser.getPassword().equals(UserPassword)) {
+        if (!currentUser.getPassword().equals(password)) {
             return false;
         }
 
@@ -59,7 +59,7 @@ public class Authentication {
      *
      * @return the authenticated user, or {@code null} when nobody is logged in
      */
-    public User getauthenticatedUser() {
+    public User getAuthenticatedUser() {
         return authenticatedUser;
     }
 }

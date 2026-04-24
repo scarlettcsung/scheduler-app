@@ -1,4 +1,4 @@
-package GUI;
+package gui;
 
 // Util imports
 import java.util.List;
@@ -51,7 +51,7 @@ public class EventManagePanel extends JPanel {
 	// UI items
 	private static final long serialVersionUID = 1L;
 	private JTextField txtEventName;
-	private JTextField txtEventDurationminutes;
+	private JTextField txtEventDurationMinutes;
 	private JButton btnInvite; // Invite
 	private JButton btnSave; // Save
 	private JComboBox comboBoxEarliestTime; // Earliest time
@@ -162,16 +162,16 @@ public class EventManagePanel extends JPanel {
 		add(txtEventName, gbc_txtEventName);
 		txtEventName.setColumns(10);
 
-		txtEventDurationminutes = new JTextField();
-		txtEventDurationminutes.setText("30");
-		txtEventDurationminutes.setColumns(10);
-		GridBagConstraints gbc_txtEventDurationminutes = new GridBagConstraints();
-		gbc_txtEventDurationminutes.anchor = GridBagConstraints.NORTH;
-		gbc_txtEventDurationminutes.insets = new Insets(0, 0, 5, 5);
-		gbc_txtEventDurationminutes.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtEventDurationminutes.gridx = 3;
-		gbc_txtEventDurationminutes.gridy = 2;
-		add(txtEventDurationminutes, gbc_txtEventDurationminutes);
+		txtEventDurationMinutes = new JTextField();
+		txtEventDurationMinutes.setText("30");
+		txtEventDurationMinutes.setColumns(10);
+		GridBagConstraints gbcTxtEventDurationMinutes = new GridBagConstraints();
+		gbcTxtEventDurationMinutes.anchor = GridBagConstraints.NORTH;
+		gbcTxtEventDurationMinutes.insets = new Insets(0, 0, 5, 5);
+		gbcTxtEventDurationMinutes.fill = GridBagConstraints.HORIZONTAL;
+		gbcTxtEventDurationMinutes.gridx = 3;
+		gbcTxtEventDurationMinutes.gridy = 2;
+		add(txtEventDurationMinutes, gbcTxtEventDurationMinutes);
 
 		lblEventDescription = new JLabel("Event Description");
 		GridBagConstraints gbc_lblEventDescription = new GridBagConstraints();
@@ -301,7 +301,7 @@ public class EventManagePanel extends JPanel {
 		// Load existing event
 		if (!isNewEvent && event != null) {
 			txtEventName.setText(event.getEventName());
-			txtEventDurationminutes.setText(String.valueOf(event.getEventDuration()));
+			txtEventDurationMinutes.setText(String.valueOf(event.getEventDuration()));
 			txtEventDescription.setText(event.getEventDescription());
 			updateParticipantList();
 		}
@@ -324,7 +324,7 @@ public class EventManagePanel extends JPanel {
 				}
 
 				// Checks if invitee exists in repository and is not already in event
-				User invitee = repository.getItemByID(inviteeUsername);
+				User invitee = repository.getItemById(inviteeUsername);
 				if (invitee != null) {
 					// if statement adds the participant to the list
 					if (!tempInvites.contains(inviteeUsername) || !event.getParticipants().contains(inviteeUsername)) {
@@ -359,7 +359,7 @@ public class EventManagePanel extends JPanel {
 				}
 				
 
-				User invitee = repository.getItemByID(inviteeUsername);
+				User invitee = repository.getItemById(inviteeUsername);
 				if (invitee == null) {
 					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this, 
 							"User not found.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -405,7 +405,7 @@ public class EventManagePanel extends JPanel {
 				// Duration must be integer
 				int duration = 30;
 				try {
-					duration = Integer.parseInt(txtEventDurationminutes.getText());
+					duration = Integer.parseInt(txtEventDurationMinutes.getText());
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(EventManagePanel.this, "Please input integer number for Event Duration in minutes.");
 					return;
@@ -465,7 +465,7 @@ public class EventManagePanel extends JPanel {
 				}
 
 				for (String username: tempInvites) {
-					User invitee = repository.getItemByID(username);
+					User invitee = repository.getItemById(username);
 					if (invitee != null) {
 						EventManagePanel.this.eventManager.addInvite(EventManagePanel.this.event, invitee);
 					}

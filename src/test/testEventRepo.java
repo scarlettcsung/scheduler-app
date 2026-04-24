@@ -5,7 +5,7 @@ import event.Event;
 import junit.framework.TestCase;
 import repository.EventRepository;
 
-public class testEventRepo extends TestCase {
+public class TestEventRepo extends TestCase {
 	EventRepository repo = new EventRepository();
 	Event event = new CreatedEvent("Test", 60, "Desc", "admin", null);
 
@@ -23,14 +23,14 @@ public class testEventRepo extends TestCase {
     public void testGetItemByID()
     {
     	repo.save(event);
-    	assertEquals(repo.getItemByID(event.getEventID()), event);
+    	assertEquals(repo.getItemById(event.getEventId()), event);
     }
     
     public void testDeleteItem()
     {
     	EventRepository repo2 = new EventRepository();
     	Event event = new CreatedEvent("Test", 60, "Desc", "admin", null);
-    	repo2.deleteItem(event.getEventID());
+    	repo2.deleteItem(event.getEventId());
     	assertEquals(repo2.getAll().size(),0);
     }
     
@@ -44,4 +44,3 @@ public class testEventRepo extends TestCase {
     }
 
 }
-

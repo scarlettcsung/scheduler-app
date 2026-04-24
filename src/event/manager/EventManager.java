@@ -7,7 +7,7 @@ import java.util.List;
 import event.Event;
 import invite.Invite;
 import invite.Role;
-import invite.inviteStatus;
+import invite.InviteStatus;
 import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
@@ -98,7 +98,7 @@ public class EventManager {
             }
 
             if (eventRepository != null) {
-                eventRepository.deleteItem(event.getEventID());
+                eventRepository.deleteItem(event.getEventId());
             }
             return;
         }
@@ -115,7 +115,7 @@ public class EventManager {
             return;
         }
 
-        Invite invite = new Invite(recipient.getUsername(), event.getEventID());
+        Invite invite = new Invite(recipient.getUsername(), event.getEventId());
         event.getInvites().add(invite);
 
         if (recipient.getCalendar() != null) {
@@ -150,9 +150,9 @@ public class EventManager {
      * @param event event associated with the invite
      */
     public void rejectInvite(Invite invite, Event event) {
-        invite.setInviteStatus(inviteStatus.REJECTED);
+        invite.setInviteStatus(InviteStatus.REJECTED);
         if (this.repository != null) {
-            User invitee = repository.getItemByID(invite.getRecipient());
+            User invitee = repository.getItemById(invite.getRecipient());
 
             if (invitee != null) {
                 this.removeInvite(event, invitee);
@@ -185,7 +185,7 @@ public class EventManager {
      */
     public User getOrganizer(Event event) {
         String organizerUsername = event.getOrganizer();
-        return repository.getItemByID(organizerUsername);
+        return repository.getItemById(organizerUsername);
     }
 
     /**

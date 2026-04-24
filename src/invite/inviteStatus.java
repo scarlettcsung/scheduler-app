@@ -6,7 +6,7 @@ package invite;
  * @author SS NS
  * @version IT1
  */
-public enum inviteStatus {
+public enum InviteStatus {
     PENDING,
     ACCEPTED,
     REJECTED
