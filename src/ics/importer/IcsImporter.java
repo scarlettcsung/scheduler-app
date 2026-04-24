@@ -21,7 +21,7 @@ import user.calendar.*;
  * Holds import configuration and results as instance state so that all methods
  * are either accessors or mutators.
  *
- * @author AA SN
+ * @author AA SN NJ EO
  * @version 3
  */
 public class IcsImporter {
