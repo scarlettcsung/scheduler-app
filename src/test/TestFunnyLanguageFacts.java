@@ -1,17 +1,17 @@
 package test;
 
-import easter.egg.LanguageFacts;
+import easter.egg.FunnyLanguageFacts;
 import junit.framework.TestCase;
 import java.util.List;
 
-public class TestLanguageFacts extends TestCase {
+public class TestFunnyLanguageFacts extends TestCase {
 	
-	private LanguageFacts languageFacts;
+	private FunnyLanguageFacts languageFacts;
 	private List<String> allFacts;
 	private String languageFact;
 	
 	protected void setUp() {
-		languageFacts = new LanguageFacts();
+		languageFacts = new FunnyLanguageFacts();
 		allFacts = languageFacts.allFacts();
 		languageFact = languageFacts.randomFact();
 	}

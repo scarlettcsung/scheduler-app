@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JScrollPane;
 
-import easter.egg.LanguageFacts;
+import easter.egg.FunnyLanguageFacts;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -100,7 +100,7 @@ public class AdminPanelDeleteUser extends JPanel {
 
 		        UserDeletionResult result = userService.deleteUser(selectedUsername, adminUser);
 		        
-		        LanguageFacts languageFacts = new LanguageFacts();
+		        FunnyLanguageFacts languageFacts = new FunnyLanguageFacts();
 
 		        if (result.isSuccess()) {
 		            listModel.removeElement(selectedUsername);
