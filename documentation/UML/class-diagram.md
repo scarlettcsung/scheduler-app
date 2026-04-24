@@ -1,11 +1,12 @@
 ```mermaid
 classDiagram
     class Authentication {
-        +AuthenticatedUser: User
-        -repo: UserRepository
-        +login(username: String, password: String) : Boolean
+        -authenticatedUser: User
+        -repository: UserRepository
+        +Authentication(repository: UserRepository)
+        +login(UserName: String, UserPassword: String) : boolean
         +logout() : void
-        +getauthenticatedUser()
+        +getauthenticatedUser() : User
     }
 
     class Main {
@@ -21,37 +22,37 @@ classDiagram
 
     class Repository~T~ {
         <<abstract>>
-        -List~T~ data
+        #List~T~ data
         +Repository()
-        +save(item: T) void
-        +getAll() List~T~
-        +getRepositoryType() String
+        +getItemByID(itemID: String) : T
+        +save(item: T) : void
+        +getAll() : List~T~
+        +getRepositoryType() : String
     }
 
     class EventRepository {
         +EventRepository()
-        +findByEventID(eventID: String) Event
-        +deleteEvent(eventID: String) boolean
-        +getRepositoryType() String
-        +deleteEventsByOrganizer(username: String) void
+        +getItemByID(eventID: String) : Event
+        +deleteItem(eventID: String) : int
+        +getRepositoryType() : String
+        +deleteEventsByOrganizer(username: String) : void
     }
 
     class UserRepository {
-        -userList: List~User~
+        -eventRepository: EventRepository
         +saveUser(user: User) : void
-        +findUsername(username: String) : User
-        +deleteUserData(User) : Boolean
-        +deleteUserAsAdmin : Boolean
-        +isExistingUser(username: String) : Boolean
+        +setEventRepository(eventRepository: EventRepository) : void
+        +deleteUserData(username: String, currentUser: User) : UserDeletionResult
+        +getItemByID(username: String) : User
+        +isExistingUser(username: String) : boolean
+        +cleanupUserEventReferences(username: String) : void
+        +removeEventFromAllCalendars(event: Event) : void
+        +getRepositoryType() : String
     }
 
     class IO {
-        +userFilePath: String
-        +calenderDirectory: String
-        +readUserList(filePath): userList
-        +writeUserList(userList): void
-        +readCalenders(userList): void
-        +writeCalenders(userList): void
+        +readUsers(filePath: String) : List~User~
+        +writeUsers(userList: List~User~, filePath: String) : void
     }
 
     class User {
@@ -71,9 +72,20 @@ classDiagram
     }
 
     class EventManager {
-        +createEvent(eventName: String, owner: User, eventDuration: int, eventPart: string, eventDiscription: String) : boolean
-        +updateEvent(event: Event, updatParam: String, paramVal: String) : void
+        -repository: UserRepository
+        -eventRepository: EventRepository
+        +EventManager()
+        +EventManager(repository: UserRepository)
+        +EventManager(repository: UserRepository, eventRepository: EventRepository)
+        +updateEvent(event: Event, updateAspect: String, newValue: String) : void
         +deleteEvent(event: Event) : void
+        +addInvite(event: Event, recipient: User) : void
+        +removeInvite(event: Event, recipient: User) : void
+        +rejectInvite(invite: Invite, event: Event) : void
+        +setOrganizer(event: Event, organizer: User) : void
+        +getOrganizer(event: Event) : User
+        +returnParticipatingEvents(username: String, repo: EventRepository) : List~Event~
+        +returnOrganisedEvents(username: String, repo: EventRepository) : List~Event~
     }
 
     class UserCalendar {
@@ -85,7 +97,8 @@ classDiagram
         +getOwner() : User
     }
 
-    class ICSImportService {
+    class IcsImporter {
+        -ICS_DATE_TIME_FORMAT: DateTimeFormatter$
         +importCalendar(user: User, icsFile: String) : ImportStatus
         +parseICS(icsFile: String) : List~Event~
         +overwriteImportedEvents(calendar: UserCalendar, importedEvents: List~Event~) : void
@@ -118,23 +131,30 @@ classDiagram
     }
 
     class Invite {
-        -recipient: User
-        +event: Event
-        -status: InviteStatus
+        -recipientUsername: String
+        -eventID: String
+        -status: inviteStatus
+        -role: Role
         +accept() : void
-        +reject() : void
-        +getRecipient() : User
-        +getStatus() : InviteStatus
+        +getRecipient() : String
+        +getEventID() : String
+        +getStatus() : inviteStatus
+        +setRecipient(recipientUsername: String) : void
+        +setEvent(eventID: String) : void
+        +setInviteStatus(status: inviteStatus) : void
+        +setOrganiser() : void
+        +setGuest() : void
+        +getRole() : Role
     }
 
     class ImportStatus {
         <<enumeration>>
-        Success
+        Succes
         FileNotFound
         UserNotFound
     }
 
-    class InviteStatus {
+    class inviteStatus {
         <<enumeration>>
         PENDING
         ACCEPTED
@@ -149,30 +169,31 @@ classDiagram
     Main ..> User : uses
     Main ..> Event : uses
     Authentication ..> UserRepository : Use
+    UserService --> Authentication
     UserService ..> UserRepository
     UserService --> User
     UserRepository o-- User
     UserRepository --> IO : Relationship
     User *-- UserCalendar
-    User --> Event : owner
+    UserCalendar o-- Event
     User --> Invite : recipient
-    UserCalendar *-- Event
     Event *-- Invite
     CreatedEvent --|> Event
     ImportedEvent --|> Event
     Scheduler ..> User
     Scheduler ..> UserCalendar
     Scheduler ..> Event
+    Scheduler --> EventManager
     EventManager ..> Event
-    ICSImportService --> UserCalendar : Populates
-    ICSImportService --> Event : creates imported events
-    ICSImportService --> ImportStatus
-    Invite --> InviteStatus
+    IcsImporter --> UserCalendar : Populates
+    IcsImporter --> Event : creates imported events
+    IcsImporter --> ImportStatus
+    Invite --> inviteStatus
     Repository <|-- EventRepository
     Repository <|-- UserRepository
-    EventRepository --> Event : stores
+    EventRepository *-- Event
     UserRepository --> EventRepository : uses
     Scheduler --> EventRepository : uses
-    EventManager --> EventRepository : uses
-    EventManager --> UserRepository : uses
+    EventManager --> EventRepository
+    EventManager --> UserRepository
 ```
