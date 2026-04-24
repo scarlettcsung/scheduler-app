@@ -1,7 +1,6 @@
 package test;
 
 import junit.framework.TestCase;
-import user.User;
 import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;

@@ -6,7 +6,6 @@ import event.Event;
 import invite.Invite;
 import invite.InviteStatus;
 import junit.framework.TestCase;
-import user.User;
 import user.calendar.UserCalendar;
 
 /**

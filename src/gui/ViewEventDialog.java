@@ -13,14 +13,11 @@ import event.CreatedEvent;
 import event.Event;
 
 import java.awt.GridBagLayout;
-import javax.swing.JTextField;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextArea;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.swing.JList;

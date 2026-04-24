@@ -5,7 +5,6 @@ import javax.swing.SwingUtilities;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.List;
 
 import gui.AuthenticationPanel;

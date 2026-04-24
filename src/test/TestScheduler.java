@@ -3,7 +3,6 @@ package test;
 import event.CreatedEvent;
 import event.Event;
 import event.manager.EventManager;
-import invite.Invite;
 import invite.InviteStatus;
 import junit.framework.TestCase;
 import repository.EventRepository;

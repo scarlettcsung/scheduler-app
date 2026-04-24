@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import event.Event;
-import invite.Invite;
 import user.User;
 import user.service.UserDeletionResult;
 
