@@ -115,7 +115,7 @@ public class EventManager {
             return;
         }
 
-        Invite invite = new Invite(recipient.getUsername(), event.getEventId());
+        Invite invite = new Invite(recipient.getUsername(), event.getEventId(), null);
         event.getInvites().add(invite);
 
         if (recipient.getCalendar() != null) {

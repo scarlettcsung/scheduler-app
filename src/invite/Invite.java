@@ -21,8 +21,9 @@ public class Invite {
      *
      * @param recipientUsername username of the invite recipient
      * @param eventId identifier of the related event
+     * @param role TODO
      */
-    public Invite(String recipientUsername, String eventId) {
+    public Invite(String recipientUsername, String eventId, Role role) {
         this.recipientUsername = recipientUsername;
         this.eventId = eventId;
         this.status = InviteStatus.PENDING;

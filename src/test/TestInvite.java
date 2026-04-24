@@ -31,7 +31,7 @@ public class TestInvite extends TestCase{
         event = new CreatedEvent("testEvent", 60,"testEvent", exampleOrganizer, null);
         eventId = event.getEventId();
         exampleInvitee = "Joe";
-        invite = new Invite(exampleInvitee,eventId);
+        invite = new Invite(exampleInvitee,eventId, null);
         newInvitee = "James";
     }
 

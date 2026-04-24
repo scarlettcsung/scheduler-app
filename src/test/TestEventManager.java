@@ -37,7 +37,7 @@ public class TestEventManager extends TestCase {
 	// Set up repository
 	User exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
 	User exampleNewOrganizer = new User("Jennifer","1234", new UserCalendar(null));
-	Invite invite = new Invite(exampleInvitee.getUsername(),event.getEventId());
+	Invite invite = new Invite(exampleInvitee.getUsername(),event.getEventId(), null);
 	
 	public void setUp() {
 		repository = new UserRepository();
@@ -115,7 +115,7 @@ public class TestEventManager extends TestCase {
         
         //add event to calendar
         orgCal.addEvent(e);
-        e.getInvites().add(new Invite("ghostUser", e.getEventId()));
+        e.getInvites().add(new Invite("ghostUser", e.getEventId(), null));
         
         //test
         new EventManager(repo, eventRepo).deleteEvent(e);
@@ -135,7 +135,7 @@ public class TestEventManager extends TestCase {
         
         //add event to calendar
         orgCal.addEvent(e);
-        e.getInvites().add(new Invite("inviteeUser", e.getEventId()));
+        e.getInvites().add(new Invite("inviteeUser", e.getEventId(), null));
         
         //test
         new EventManager(repo, eventRepo).deleteEvent(e);
@@ -158,7 +158,7 @@ public class TestEventManager extends TestCase {
         //add to calendar
         orgCal.addEvent(e);
         inviteeCal.addEvent(e);
-        e.getInvites().add(new Invite("inviteeUser", e.getEventId()));
+        e.getInvites().add(new Invite("inviteeUser", e.getEventId(), null));
         
         //test
         new EventManager(repo, eventRepo).deleteEvent(e);
@@ -184,7 +184,7 @@ public class TestEventManager extends TestCase {
         
         //add to calendar
         orgCal.addEvent(e);
-        e.getInvites().add(new Invite(null, e.getEventId()));
+        e.getInvites().add(new Invite(null, e.getEventId(), null));
 
         //test
         new EventManager(repo, eventRepo).deleteEvent(e);
@@ -273,7 +273,7 @@ public class TestEventManager extends TestCase {
     // Test removeInvite when user is not found in repository
     public void testRemoveInviteUserNotInRepo() {
         User ghostUser = new User("ghostUser","1234",new UserCalendar(null));
-        Invite ghostInvite = new Invite(ghostUser.getUsername(),event.getEventId());
+        Invite ghostInvite = new Invite(ghostUser.getUsername(),event.getEventId(), null);
         event.getInvites().add(ghostInvite);
         eveUpdateEvent.removeInvite(event, ghostUser); 
         assertEquals(0, event.getInvites().size()); 
@@ -317,17 +317,17 @@ public class TestEventManager extends TestCase {
     
     public void testReturnOrganizedEvents() {
         Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", exampleNewOrganizer.getUsername(), null);
-        Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventId());
+        Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventId(), null);
         invite1.setOrganizer(); 
         event1.getInvites().add(invite1);
         
         Event event2 = new CreatedEvent("Project Deadline", 120, "Work session", exampleNewOrganizer.getUsername(), null);
-        Invite invite2 = new Invite(exampleNewOrganizer.getUsername(), event2.getEventId());
+        Invite invite2 = new Invite(exampleNewOrganizer.getUsername(), event2.getEventId(), null);
         invite2.setOrganizer();
         event2.getInvites().add(invite2);
         
         Event event3 = new CreatedEvent("Lunch", 45, "Food", "Charles", null);
-        Invite invite3 = new Invite("Charles", event3.getEventId());
+        Invite invite3 = new Invite("Charles", event3.getEventId(), null);
         invite3.setOrganizer();
         event3.getInvites().add(invite3);
         
@@ -344,11 +344,11 @@ public class TestEventManager extends TestCase {
     public void testReturnParticipatingEvents() {
         Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", exampleNewOrganizer.getUsername(), null);
         
-        Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventId());
+        Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventId(), null);
         invite1.setOrganizer();
         event1.getInvites().add(invite1);
 
-        Invite invite2 = new Invite(exampleInvitee.getUsername(), event1.getEventId());
+        Invite invite2 = new Invite(exampleInvitee.getUsername(), event1.getEventId(), null);
         invite2.setGuest(); 
         event1.getInvites().add(invite2); 
         

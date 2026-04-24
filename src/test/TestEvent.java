@@ -44,7 +44,7 @@ public class TestEvent extends TestCase {
 
         exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new CreatedEvent("testEvent", 60, "testEvent", exampleOrganizer, null);
-        invite = new Invite(exampleInvitee.getUsername(), event.getEventId());
+        invite = new Invite(exampleInvitee.getUsername(), event.getEventId(), null);
     }
 
     // Test Getters
