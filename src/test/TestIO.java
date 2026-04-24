@@ -13,7 +13,7 @@ import java.io.*;
 import event.CreatedEvent;
 import event.Event;
 import invite.Invite;
-import io.iO;
+import io.IO;
 
 
 /**
@@ -25,7 +25,7 @@ import io.iO;
 public class TestIO extends TestCase {
 	private UserRepository repository;
 	private UserCalendar calendar;
-	private iO input;
+	private IO input;
 	
 	//readUserList(String filePath)
 	//writeUserList(List<User> userList, String filePath)
@@ -34,7 +34,7 @@ public class TestIO extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		input = new iO();
+		input = new IO();
 		calendar=new UserCalendar(null);
 		LocalDateTime eventTime = LocalDateTime.parse("2026-04-08T09:00:00");
 		Event fakeevent= new CreatedEvent("meeting", 2, "test event", "John", null);

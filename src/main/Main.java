@@ -9,7 +9,7 @@ import java.util.List;
 
 import gui.AuthenticationPanel;
 import event.Event;
-import io.iO;
+import io.IO;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -45,7 +45,7 @@ public class Main {
         EventRepository eventRepository = new EventRepository();
         repository.setEventRepository(eventRepository);
         Scheduler scheduler = new Scheduler(8, 23, 7, repository,eventRepository);
-        iO ioHandler = new iO(); 
+        IO ioHandler = new IO(); 
 
         String filePath = "src/filestorage/userStorage.json";
 
