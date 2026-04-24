@@ -15,7 +15,7 @@ import user.service.UserDeletionResult;
  * @author SN GI NJ
  * @version 1
  */
-public class testUserService extends TestCase {
+public class TestUserService extends TestCase {
 
     private UserService userService;
     private UserRepository testRepo;

@@ -3,7 +3,7 @@ package test;
 import junit.framework.TestCase;
 import main.Main;
 
-public class testMain extends TestCase {
+public class TestMain extends TestCase {
 
     public void testMainRunsAndCoversLoadingAndSaving() throws Exception {
 

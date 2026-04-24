@@ -4,7 +4,7 @@ import event.CreatedEvent;
 import event.Event;
 import event.manager.EventManager;
 import invite.Invite;
-import invite.inviteStatus;
+import invite.InviteStatus;
 import junit.framework.TestCase;
 import repository.EventRepository;
 import repository.UserRepository;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * @author SN SS NJ
  * @version 2
  */
-public class testScheduler extends TestCase {
+public class TestScheduler extends TestCase {
 
     private Scheduler scheduler;
     private UserRepository userRepository;
@@ -113,8 +113,8 @@ public class testScheduler extends TestCase {
         assertTrue(invitee.getCalendar().getEvents().contains(event));
         assertEquals(1, event.getInvites().size());
         assertEquals(invitee.getUsername(), event.getInvites().get(0).getRecipient());
-        assertEquals(inviteStatus.PENDING, event.getInvites().get(0).getStatus());
-        assertNotNull(eventRepository.getItemByID(event.getEventID()));
+        assertEquals(InviteStatus.PENDING, event.getInvites().get(0).getStatus());
+        assertNotNull(eventRepository.getItemById(event.getEventId()));
     }
 
     public void testScheduleEventReturnsFalseWhenNoSlotInLookahead() {

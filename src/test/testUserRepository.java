@@ -18,7 +18,7 @@ import user.service.UserDeletionResult;
  * @author CR EO NJ
  * @version 3 and 4
  */
-public class testUserRepository extends TestCase {
+public class TestUserRepository extends TestCase {
     
     private UserRepository repository;
     private User testUser;
@@ -34,14 +34,14 @@ public class testUserRepository extends TestCase {
     public void testSaveAndFindUser() {
         repository.saveUser(testUser);
         
-        User found = repository.getItemByID("testUser");
+        User found = repository.getItemById("testUser");
         
         assertNotNull(found);
         assertEquals("testUser", found.getUsername());
     }
 
     public void testFindNonExistentUser() {
-        User found = repository.getItemByID("nonExistent");
+        User found = repository.getItemById("nonExistent");
         assertNull(found);
     }
     	// Delete Checks :EO GI

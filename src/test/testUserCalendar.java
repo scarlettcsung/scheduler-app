@@ -17,7 +17,7 @@ import event.Event;
  * @author NJ
  * @version 1
  */
-public class testUserCalendar extends TestCase {
+public class TestUserCalendar extends TestCase {
     
     private LocalDateTime exampleTime;
     private Event event;

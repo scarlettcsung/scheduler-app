@@ -11,7 +11,7 @@ import authentication.Authentication;
  * @author NJ
  * @version TODO
  */
-public class testAuthentication extends TestCase {
+public class TestAuthentication extends TestCase {
 	public Authentication auth;
 	private UserRepository repository;
 
@@ -23,7 +23,7 @@ public class testAuthentication extends TestCase {
 	}
 
 	//test for succesfull login
-	public void testlogin() {
+	public void testLogin() {
 	 	assertFalse(auth.login("John","password"));
 	 	assertTrue(auth.login("John","Pork"));
 	}
@@ -35,16 +35,16 @@ public class testAuthentication extends TestCase {
 	}
 	
 	//test for get autorized user
-	public void testauthorisedUser() {
+	public void testAuthenticatedUser() {
 		assertTrue(auth.login("John","Pork"));
-		assertEquals("John", auth.getauthenticatedUser().getUsername());
+		assertEquals("John", auth.getAuthenticatedUser().getUsername());
 	}
 
 	//test logout
-	public void testlogout() {
+	public void testLogout() {
 		assertTrue(auth.login("John","Pork"));
 		auth.logout();
-		assertNull(auth.getauthenticatedUser());
+		assertNull(auth.getAuthenticatedUser());
 	}
 	
 	

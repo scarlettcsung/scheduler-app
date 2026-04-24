@@ -24,7 +24,7 @@ public class ImportedEvent extends Event {
     public ImportedEvent(String eventName, int eventDuration, String eventDescription, String organizerUsername,
             List<Invite> invites) {
         super(eventName, eventDuration, eventDescription, organizerUsername, invites);
-        this.isImportedField = true; // Just for IO
+        this.isImportedField = true; // Just for persistence
     }
 
     /**
@@ -37,4 +37,3 @@ public class ImportedEvent extends Event {
         return true;
     }
 }
-

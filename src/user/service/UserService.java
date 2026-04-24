@@ -61,7 +61,7 @@ public class UserService {
             return null;
         }
 
-        return authentication.getauthenticatedUser();
+        return authentication.getAuthenticatedUser();
     }
 
     /**

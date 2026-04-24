@@ -27,7 +27,7 @@ import user.User;
  * @author AA NJ
  * @version 2
  */
-public class IO {
+public class Io {
 
     /**
      * Reads a list of users and calendar data from a JSON file.

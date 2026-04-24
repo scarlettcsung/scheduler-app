@@ -50,7 +50,7 @@ public class IcsImporter {
                 user.setCalendar(new UserCalendar(null));
             }
 
-            List<Event> importedEvents = parseICS(icsFile);
+            List<Event> importedEvents = parseIcs(icsFile);
             // Imported events should belong to the user who initiated the import.
             for (Event event : importedEvents) {
                 event.setOrganizer(user.getUsername());
@@ -74,7 +74,7 @@ public class IcsImporter {
      * @throws IOException when the file cannot be read
      * @throws ParserException when the ICS content cannot be parsed
      */
-    public List<Event> parseICS(String icsFile) throws IOException, ParserException {
+    public List<Event> parseIcs(String icsFile) throws IOException, ParserException {
         // Keep parameter parsing minimal: we only need TZID support from our test ICS files.
         CalendarBuilder calendarBuilder = new CalendarBuilder(
                 new CalendarParserImpl(),

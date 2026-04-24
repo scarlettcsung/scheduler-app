@@ -7,7 +7,7 @@ import java.util.Set;
 
 import event.Event;
 import invite.Invite;
-import invite.inviteStatus;
+import invite.InviteStatus;
 import repository.EventRepository;
 
 /**
@@ -87,7 +87,7 @@ public class EventQueryService {
         }
 
         for (Invite invite : event.getInvites()) {
-            if (username.equals(invite.getRecipient()) && invite.getStatus() == inviteStatus.ACCEPTED) {
+            if (username.equals(invite.getRecipient()) && invite.getStatus() == InviteStatus.ACCEPTED) {
                 return true;
             }
         }
@@ -109,7 +109,7 @@ public class EventQueryService {
                     continue;
                 }
 
-                String key = invite.getRecipient() + "|" + invite.getEventID();
+                String key = invite.getRecipient() + "|" + invite.getEventId();
                 if (seen.add(key)) {
                     inviteViews.add(new EventInviteView(event, invite));
                 }

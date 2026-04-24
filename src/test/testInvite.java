@@ -4,7 +4,7 @@ import event.CreatedEvent;
 import invite.Role;
 import event.Event;
 import invite.Invite;
-import invite.inviteStatus;
+import invite.InviteStatus;
 import junit.framework.TestCase;
 import user.User;
 import user.calendar.UserCalendar;
@@ -15,7 +15,7 @@ import user.calendar.UserCalendar;
  * @author NJ
  * @version TODO
  */
-public class testInvite extends TestCase{
+public class TestInvite extends TestCase{
 
     private String exampleOrganizer;
     private UserCalendar calendar;
@@ -23,29 +23,29 @@ public class testInvite extends TestCase{
     private Invite invite;
     private String exampleInvitee;
     private String newInvitee;
-    private String eventID;
+    private String eventId;
 
     protected void setUp() {
         exampleOrganizer = "Charles";
         calendar = new UserCalendar(null);
         event = new CreatedEvent("testEvent", 60,"testEvent", exampleOrganizer, null);
-        eventID = event.getEventID();
+        eventId = event.getEventId();
         exampleInvitee = "Joe";
-        invite = new Invite(exampleInvitee,eventID);
+        invite = new Invite(exampleInvitee,eventId);
         newInvitee = "James";
     }
 
     // Test Getters
     public void testGetRecipient() {assertEquals(exampleInvitee,invite.getRecipient());}
     public void testGetEvent() {
-        assertEquals(eventID,invite.getEventID());
+        assertEquals(eventId,invite.getEventId());
     }
 
     // Test Update Status
-    public void testStatusPending() {assertEquals(inviteStatus.PENDING,invite.getStatus());}
+    public void testStatusPending() {assertEquals(InviteStatus.PENDING,invite.getStatus());}
     public void testStatusAccept() {
         invite.accept();
-        assertEquals(inviteStatus.ACCEPTED,invite.getStatus());
+        assertEquals(InviteStatus.ACCEPTED,invite.getStatus());
     }
 
     // Test Setters
@@ -58,20 +58,20 @@ public class testInvite extends TestCase{
     public void testSetEvent() {
         String newEventID = "newEventID";
         invite.setEvent(newEventID);
-        assertEquals(newEventID, invite.getEventID());
+        assertEquals(newEventID, invite.getEventId());
     }
     
     //test setEventStatus
     public void testSetInviteStatus() {
-        invite.setInviteStatus(inviteStatus.REJECTED);
-        assertEquals(inviteStatus.REJECTED, invite.getStatus());
+        invite.setInviteStatus(InviteStatus.REJECTED);
+        assertEquals(InviteStatus.REJECTED, invite.getStatus());
     }
-    //test setOrganiser 
-    public void testSetOrganizerandgetRole() {
-    	invite.setOrganiser();
+    // test setOrganizer
+    public void testSetOrganizerAndGetRole() {
+    	invite.setOrganizer();
     	assertEquals(Role.Organiser,invite.getRole());
     }
-    public void testSetGuestandgetRole() {
+    public void testSetGuestAndGetRole() {
     	invite.setGuest();
     	assertEquals(Role.Guest,invite.getRole());
     }

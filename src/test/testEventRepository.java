@@ -14,12 +14,12 @@ import java.util.List;
  * @author CR EO
  * @version 3
  */
-public class testEventRepository extends TestCase {
+public class TestEventRepository extends TestCase {
 
     private EventRepository eventRepo;
     private Event testEvent;
 
-    public testEventRepository(String name) {
+    public TestEventRepository(String name) {
         super(name);
     }
 
@@ -31,9 +31,9 @@ public class testEventRepository extends TestCase {
 
     public void testSaveAndFindEvent() {
         eventRepo.save(testEvent);
-        String id = testEvent.getEventID();
+        String id = testEvent.getEventId();
         
-        Event found = eventRepo.getItemByID(id);
+        Event found = eventRepo.getItemById(id);
         
         assertNotNull("Event should be found by ID", found);
         assertEquals("Project", found.getEventName());
@@ -50,12 +50,12 @@ public class testEventRepository extends TestCase {
 
     public void testDeleteEvent() {
         eventRepo.save(testEvent);
-        String id = testEvent.getEventID();
+        String id = testEvent.getEventId();
         
         int deleted = eventRepo.deleteItem(id);
         
         assertEquals(1, deleted);
-        assertNull("Event should no longer exist in repo", eventRepo.getItemByID(id));
+        assertNull("Event should no longer exist in repo", eventRepo.getItemById(id));
     }
     
     public void testDeleteEventsByOrganizer() {

@@ -19,7 +19,7 @@ import java.util.Locale;
  * @author NJ
  * @version TODO
  */
-public class testEvent extends TestCase {
+public class TestEvent extends TestCase {
 
     private String exampleOrganizer;
     private Event event;
@@ -44,13 +44,13 @@ public class testEvent extends TestCase {
 
         exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
         event = new CreatedEvent("testEvent", 60, "testEvent", exampleOrganizer, null);
-        invite = new Invite(exampleInvitee.getUsername(), event.getEventID());
+        invite = new Invite(exampleInvitee.getUsername(), event.getEventId());
     }
 
     // Test Getters
     public void testEventName() {assertEquals("testEvent", event.getEventName());}
     public void testEventTime() {assertNull(event.getEventTime());}
-    public void testEventID() {assertNotNull(event.getEventID());}
+    public void testEventId() {assertNotNull(event.getEventId());}
     public void testOrganizer() {
         assertEquals(exampleOrganizer,event.getOrganizer());
     }

@@ -19,7 +19,7 @@ public abstract class Repository<T> {
     public Repository() {
         this.data = new ArrayList<>();
     }
-    public abstract T getItemByID(String itemID);
+    public abstract T getItemById(String itemId);
     
     
     /**

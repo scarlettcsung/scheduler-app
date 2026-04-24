@@ -11,7 +11,7 @@ import user.calendar.UserCalendar;
  * @author SN GI NJ
  * @version 1
  */
-public class testUser extends TestCase {
+public class TestUser extends TestCase {
     private User normalUser;
     private User adminUser;
     private UserCalendar myCalendar;
