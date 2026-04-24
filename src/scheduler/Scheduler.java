@@ -187,13 +187,8 @@ public class Scheduler {
 
             // Recreate invites so they reset to default PENDING status.
             if (invitee != null) {
-<<<<<<< HEAD
-                inviteManager.removeInvite(event, invitee);
-                inviteManager.addInvite(event, invitee);
-=======
-                this.eventManager.removeInvite(event, invitee);
-                this.eventManager.addInvite(event, invitee);
->>>>>>> 77b30563a8e4b02b6267faadbc70fafefeb3c58a
+                this.inviteManager.removeInvite(event, invitee);
+                this.inviteManager.addInvite(event, invitee);
             }
         }
         return true;
