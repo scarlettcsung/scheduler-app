@@ -2,6 +2,8 @@ package test;
 
 import easter.egg.FunnyLanguageFacts;
 import junit.framework.TestCase;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestFunnyLanguageFacts extends TestCase {
@@ -24,6 +26,21 @@ public class TestFunnyLanguageFacts extends TestCase {
 	public void testListIsNotEmpty() {
 		assertFalse(allFacts.isEmpty());
 		assertNotSame(allFacts, languageFacts.allFacts());
+	}
+	
+	public void testRandomFactThrowsWhenFactsEmpty() {
+	    FunnyLanguageFacts emptyFacts = new FunnyLanguageFacts() {
+	        public List<String> allFacts() {
+	            return new ArrayList<String>();
+	        }
+	    };
+
+	    try {
+	        emptyFacts.randomFact();
+	        fail();
+	    } catch (IllegalStateException e) {
+	        // expected path
+	    }
 	}
 
 }
