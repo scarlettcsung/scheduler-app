@@ -14,11 +14,17 @@ classDiagram
     }
 
     class UserService {
-        -_userRepository: UserRepository
-        -authentication: Authentication
-        +registerUser(String, String): boolean
-        +login(String, String)
+        -userRepository: UserRepository
+		-authentication: Authentication
+        +UserService(userRepository: UserRepository)
+		+registerUser(username: String, password: String) : Boolean
+		+authenticateUser(username: String, password: String) : User
+		+login(username: String, password: String) : boolean
+		+listUsernames() : List<String>
+		+deleteUser(username: String, currentUser: User) : UserDeletionResult
+		+deleteOwnAccount(currentUser: User) : UserDeletionResult
     }
+
 
     class Repository~T~ {
         <<abstract>>
@@ -60,10 +66,9 @@ classDiagram
         -password: String
         -isAdmin: Boolean
         -myCalendar: Calendar
-        +getUsername() : String
-        +getPassword() : String
-        +getCalendar() : UserCalendar
-        +isAdmin() : Boolean
+        +canAccessAdminPanel() : Boolean
+        +canDeleteUser() : Boolean
+
     }
 
     class Scheduler {
