@@ -33,7 +33,7 @@ public class User {
      * @return username
      */
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     /**
@@ -42,7 +42,7 @@ public class User {
      * @return password
      */
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     /**
@@ -51,7 +51,7 @@ public class User {
      * @return user calendar
      */
     public UserCalendar getCalendar() {
-        return myCalendar;
+        return this.myCalendar;
     }
 
     /**
@@ -82,6 +82,6 @@ public class User {
         if (targetUser == null) {
             return false;
         }
-        return username.equals(targetUser.getUsername());
+        return this.username.equals(targetUser.getUsername());
     }
 }

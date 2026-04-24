@@ -28,7 +28,7 @@ public abstract class Repository<T> {
      * @param item item to store
      */
     public void save(T item) {
-        data.add(item);
+        this.data.add(item);
     }
 
     /**
@@ -37,7 +37,7 @@ public abstract class Repository<T> {
      * @return repository contents
      */
     public List<T> getAll() {
-        return new ArrayList<>(data);
+        return new ArrayList<>(this.data);
     }
 
     /**

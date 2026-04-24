@@ -107,7 +107,7 @@ public abstract class Event {
      * @return event name
      */
     public String getEventName() {
-        return eventName;
+        return this.eventName;
     }
 
     /**
@@ -116,7 +116,7 @@ public abstract class Event {
      * @return event start time
      */
     public LocalDateTime getEventTime() {
-        return eventTime;
+        return this.eventTime;
     }
 
     /**
@@ -125,7 +125,7 @@ public abstract class Event {
      * @return organizer username
      */
     public String getOrganizer() {
-        return organizerUsername;
+        return this.organizerUsername;
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class Event {
      * @return event description
      */
     public String getEventDescription() {
-        return eventDescription;
+        return this.eventDescription;
     }
 
     /**
@@ -143,7 +143,7 @@ public abstract class Event {
      * @return duration in minutes
      */
     public int getEventDuration() {
-        return eventDuration;
+        return this.eventDuration;
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class Event {
      * @return event identifier
      */
     public String getEventId() {
-        return eventId;
+        return this.eventId;
     }
 
     /**
@@ -161,7 +161,7 @@ public abstract class Event {
      * @return invite list
      */
     public List<Invite> getInvites() {
-        return invites;
+        return this.invites;
     }
 
     /**
@@ -171,7 +171,7 @@ public abstract class Event {
      */
     public List<String> getParticipants() {
         List<String> participantUsernames = new ArrayList<>();
-        for (Invite invite : invites) {
+        for (Invite invite : this.invites) {
             String participantUsername = invite.getRecipient();
             participantUsernames.add(participantUsername);
         }
@@ -185,8 +185,8 @@ public abstract class Event {
      */
     public String getTimeString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
-        String stringDateTime = eventTime.format(formatter);
-        LocalDateTime endTime = eventTime.plusMinutes(eventDuration);
+        String stringDateTime = this.eventTime.format(formatter);
+        LocalDateTime endTime = this.eventTime.plusMinutes(this.eventDuration);
         String endTimeStr = endTime.format(DateTimeFormatter.ofPattern("HH:mm"));
 
         return String.format("%s - %s", stringDateTime, endTimeStr);

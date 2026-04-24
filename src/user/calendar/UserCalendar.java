@@ -34,7 +34,7 @@ public class UserCalendar {
      * @return event list
      */
     public List<Event> getEvents() {
-        return events;
+        return this.events;
     }
 
     /**
@@ -43,7 +43,7 @@ public class UserCalendar {
      * @param event event to add
      */
     public void addEvent(Event event) {
-        events.add(event);
+        this.events.add(event);
     }
 
     /**
@@ -57,7 +57,7 @@ public class UserCalendar {
         }
 
         String targetEventId = event.getEventId();
-        events.removeIf(n -> n == event
+        this.events.removeIf(n -> n == event
                 || (n != null && targetEventId != null && targetEventId.equals(n.getEventId())));
     }
 }

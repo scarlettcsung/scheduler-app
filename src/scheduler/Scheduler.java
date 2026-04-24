@@ -72,18 +72,18 @@ public class Scheduler {
      */
     public LocalDateTime findAvailableSlot(Event event) {
         int duration = event.getEventDuration();
-        int minutesInDay = (dayEnd - dayStart) * 60;
+        int minutesInDay = (this.dayEnd - this.dayStart) * 60;
         if (duration > minutesInDay) {
             return null;
         }
 
-        LocalDateTime now = LocalDateTime.now(clock);
+        LocalDateTime now = LocalDateTime.now(this.clock);
         LocalDateTime dayCursor = now;
 
         // Check each day in the search window and return the first fitting gap.
-        for (int i = 0; i < maxLookaheadDays; i++) {
-            LocalDateTime dayStartTime = dayCursor.with(LocalTime.of(dayStart, 0));
-            LocalDateTime dayEndTime = dayCursor.with(LocalTime.of(dayEnd, 0));
+        for (int i = 0; i < this.maxLookaheadDays; i++) {
+            LocalDateTime dayStartTime = dayCursor.with(LocalTime.of(this.dayStart, 0));
+            LocalDateTime dayEndTime = dayCursor.with(LocalTime.of(this.dayEnd, 0));
 
             LocalDateTime candidate = dayStartTime;
             if (dayCursor.toLocalDate().equals(now.toLocalDate()) && now.isAfter(candidate)) {
@@ -94,7 +94,7 @@ public class Scheduler {
             List<Event> busyEvents = new ArrayList<>();
 
             String organizerUsername = event.getOrganizer();
-            User organizer = userRepository.getItemById(organizerUsername);
+            User organizer = this.userRepository.getItemById(organizerUsername);
             if (organizer != null && organizer.getCalendar() != null) {
                 for (Event e : organizer.getCalendar().getEvents()) {
                     if (e == null || e == event || e.getEventTime() == null) {
@@ -108,7 +108,7 @@ public class Scheduler {
 
             for (Invite invite : event.getInvites()) {
                 String inviteeUsername = invite.getRecipient();
-                User invitee = userRepository.getItemById(inviteeUsername);
+                User invitee = this.userRepository.getItemById(inviteeUsername);
                 if (invitee != null && invitee.getCalendar() != null) {
                     for (Event e : invitee.getCalendar().getEvents()) {
                         if (e == null || e == event || e.getEventTime() == null) {
@@ -163,29 +163,29 @@ public class Scheduler {
 
         event.setEventTime(slot);
         String organizerUsername = event.getOrganizer();
-        User organizer = userRepository.getItemById(organizerUsername);
+        User organizer = this.userRepository.getItemById(organizerUsername);
         if (organizer != null && organizer.getCalendar() != null) {
             organizer.getCalendar().addEvent(event);
-            if (eventRepository.getItemById(event.getEventId()) == null) {
-                eventRepository.save(event);
+            if (this.eventRepository.getItemById(event.getEventId()) == null) {
+                this.eventRepository.save(event);
             }
         }
 
         List<Invite> currentInvites = new ArrayList<>(event.getInvites());
         for (Invite invite : currentInvites) {
             String inviteeUsername = invite.getRecipient();
-            User invitee = userRepository.getItemById(inviteeUsername);
+            User invitee = this.userRepository.getItemById(inviteeUsername);
             if (invitee != null && invitee.getCalendar() != null) {
                 invitee.getCalendar().addEvent(event);
-                if (eventRepository.getItemById(event.getEventId()) == null) {
-                    eventRepository.save(event);
+                if (this.eventRepository.getItemById(event.getEventId()) == null) {
+                    this.eventRepository.save(event);
                 }
             }
 
             // Recreate invites so they reset to default PENDING status.
             if (invitee != null) {
-                eventManager.removeInvite(event, invitee);
-                eventManager.addInvite(event, invitee);
+                this.eventManager.removeInvite(event, invitee);
+                this.eventManager.addInvite(event, invitee);
             }
         }
         return true;

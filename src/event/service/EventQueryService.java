@@ -44,7 +44,7 @@ public class EventQueryService {
             return new ArrayList<>(visibleEvents);
         }
 
-        for (Event event : eventRepository.getAll()) {
+        for (Event event : this.eventRepository.getAll()) {
             if (username.equals(event.getOrganizer()) || hasAcceptedInvite(event, username)) {
                 visibleEvents.add(event);
             }
@@ -59,7 +59,7 @@ public class EventQueryService {
      * @return all events in repository order
      */
     public List<Event> getEventsForAdmin() {
-        return new ArrayList<>(eventRepository.getAll());
+        return new ArrayList<>(this.eventRepository.getAll());
     }
 
     /**
@@ -99,7 +99,7 @@ public class EventQueryService {
         Set<String> seen = new LinkedHashSet<>();
         List<EventInviteView> inviteViews = new ArrayList<>();
 
-        for (Event event : eventRepository.getAll()) {
+        for (Event event : this.eventRepository.getAll()) {
             if (event.getInvites() == null) {
                 continue;
             }

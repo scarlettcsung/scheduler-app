@@ -22,7 +22,7 @@ public class FunnyLanguageFacts {
 			""");
 	
 	public List<String> allFacts() {
-		return new ArrayList<>(facts);
+		return new ArrayList<>(this.facts);
 		}
 	
 	public String randomFact() {
