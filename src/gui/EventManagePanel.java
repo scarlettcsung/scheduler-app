@@ -25,6 +25,7 @@ import com.github.lgooddatepicker.components.DatePicker;
 
 import event.Event;
 import event.manager.EventManager;
+import event.manager.InviteManager;
 import invite.Invite;
 import repository.EventRepository;
 import repository.UserRepository;
@@ -64,6 +65,7 @@ public class EventManagePanel extends JPanel {
 	private Event event;
 	private Scheduler scheduler;
 	private EventManager eventManager;
+	private InviteManager inviteManager;
 	private Runnable onSaveSuccess;
 	private List<String> tempInvites = new ArrayList<>();
 	private JLabel lblInvite;
@@ -98,6 +100,7 @@ public class EventManagePanel extends JPanel {
 		this.scheduler = scheduler;
 		this.onSaveSuccess = onSaveSuccess;
 		this.eventManager = new EventManager(repository, eventRepository);
+		this.inviteManager = new InviteManager(repository);
 		
 
 		// Layout
@@ -301,74 +304,49 @@ public class EventManagePanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				String inviteeUsername = txtInviteeUsername.getText().trim();
 
-				// Error message for empty invitee input
-				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
-					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
-							"Please enter a username.");
-					return;
-				}
-				
-				if (inviteeUsername.equals(currentUser.getUsername())) {
-					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
-							"Event organizer already invited to this event.");
-					return;
-				}
+				String errorMessage = inviteManager.addTemporaryInvite(
+		                currentUser,
+		                event,
+		                tempInvites,
+		                inviteeUsername
+		        );
 
-				// Checks if invitee exists in repository and is not already in event
-				User invitee = repository.getItemById(inviteeUsername);
-				if (invitee != null) {
-					// if statement adds the participant to the list
-					if (!tempInvites.contains(inviteeUsername) || !event.getParticipants().contains(inviteeUsername)) {
-						tempInvites.add(inviteeUsername);
-						updateParticipantList();
-						txtInviteeUsername.setText("");
-						// Clear input so user can input new username
-					} else {
-						javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
-								"User is already invited to this event!");
-					}
-				} else {
-					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
-							"User not found.", "Error" , JOptionPane.ERROR_MESSAGE);
-				}}
+		        if (errorMessage != null) {
+		            javax.swing.JOptionPane.showMessageDialog(
+		                    EventManagePanel.this,
+		                    errorMessage,
+		                    "Validation Error",
+		                    javax.swing.JOptionPane.WARNING_MESSAGE
+		            );
+		        } else {
+		            updateParticipantList();
+		            txtInviteeUsername.setText("");
+		        }
+			}
 		});
 		
 		btnUninvite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String inviteeUsername = txtInviteeUsername.getText().trim();
 
-				// Error message for empty invitee input
-				if (inviteeUsername.isEmpty() || inviteeUsername.equalsIgnoreCase("Invitee username")) {
-					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
-							"Please enter a username.");
-					return;
-				}
-				if (inviteeUsername.equals(currentUser.getUsername())) {
-					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
-							"You cannot uninvite the organizer.");
-					return;
-				}
-				
+				String errorMessage = inviteManager.removeInviteFromForm(
+		                currentUser,
+		                event,
+		                tempInvites,
+		                inviteeUsername
+		        );
 
-				User invitee = repository.getItemById(inviteeUsername);
-				if (invitee == null) {
-					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this, 
-							"User not found.", "Error", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				
-				if (tempInvites.contains(inviteeUsername)) {
-					tempInvites.remove(inviteeUsername);
-				} else if (!isNewEvent && event != null) {
-					eventManager.removeInvite(event,invitee);			
-				} else {
-					javax.swing.JOptionPane.showMessageDialog(EventManagePanel.this,
-							"User is not in this event!");
-					return;
-				}
-				
-				updateParticipantList();
-				txtInviteeUsername.setText("");
+		        if (errorMessage != null) {
+		            javax.swing.JOptionPane.showMessageDialog(
+		                    EventManagePanel.this,
+		                    errorMessage,
+		                    "Validation Error",
+		                    javax.swing.JOptionPane.WARNING_MESSAGE
+		            );
+		        } else {
+		            updateParticipantList();
+		            txtInviteeUsername.setText("");
+		        }
 			}
 		});
 		
@@ -444,56 +422,29 @@ public class EventManagePanel extends JPanel {
 				int earliestHour = Integer.parseInt(earliestTime);
 				int latestHour = Integer.parseInt(latestTime);
 
-				boolean wasNewEvent = isNewEvent;
-				String oldEventName = null;
-				int oldEventDuration = 0;
-				String oldEventDescription = null;
-				java.time.LocalDateTime oldEventTime = null;
-
 				if (isNewEvent) {
 					EventManagePanel.this.event = new CreatedEvent(eventName,duration,eventDescription,currentUser.getUsername(), new ArrayList<>());
+					EventManagePanel.this.isNewEvent = false;
 
 				} else {
-					oldEventName = EventManagePanel.this.event.getEventName();
-					oldEventDuration = EventManagePanel.this.event.getEventDuration();
-					oldEventDescription = EventManagePanel.this.event.getEventDescription();
-					oldEventTime = EventManagePanel.this.event.getEventTime();
 
 					EventManagePanel.this.event.setEventName(eventName);
 					EventManagePanel.this.event.setEventDuration(duration);
 					EventManagePanel.this.event.setEventDescription(eventDescription);
 				}
-
-				List<Invite> addedInvites = new ArrayList<>();
+				
 				for (String username: tempInvites) {
 					User invitee = repository.getItemById(username);
 					if (invitee != null) {
-						Invite invite = new Invite(invitee.getUsername(), EventManagePanel.this.event.getEventId(), null);
-						EventManagePanel.this.event.getInvites().add(invite);
-						addedInvites.add(invite);
+						EventManagePanel.this.inviteManager.addInvite(EventManagePanel.this.event, invitee);
 					}
 				}
+				tempInvites.clear();
+
 
 				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository,eventRepository);
-				boolean scheduled = scheduler.scheduleEvent(EventManagePanel.this.event);
-				if (!scheduled) {
-					EventManagePanel.this.event.getInvites().removeAll(addedInvites);
-					if (wasNewEvent) {
-						EventManagePanel.this.event = null;
-						EventManagePanel.this.isNewEvent = true;
-					} else {
-						EventManagePanel.this.event.setEventName(oldEventName);
-						EventManagePanel.this.event.setEventDuration(oldEventDuration);
-						EventManagePanel.this.event.setEventDescription(oldEventDescription);
-						EventManagePanel.this.event.setEventTime(oldEventTime);
-					}
-					JOptionPane.showMessageDialog(EventManagePanel.this, "No available time slot found.");
-					updateParticipantList();
-					return;
-				}
+				scheduler.scheduleEvent(EventManagePanel.this.event);
 
-				EventManagePanel.this.isNewEvent = false;
-				tempInvites.clear();
 				JOptionPane.showMessageDialog(EventManagePanel.this, "Event Saved.");
 				updateParticipantList();
 				if (onSaveSuccess != null) {

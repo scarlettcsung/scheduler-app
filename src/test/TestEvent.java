@@ -2,6 +2,7 @@ package test;
 
 import event.*;
 import event.manager.EventManager;
+import event.manager.InviteManager;
 import invite.Invite;
 import junit.framework.TestCase;
 import repository.EventRepository;
@@ -29,6 +30,7 @@ public class TestEvent extends TestCase {
     private UserRepository repository;
     private EventRepository eventRepository;
     private EventManager eventManager;
+    private InviteManager inviteManager;
     
     protected void setUp() {
     	Locale.setDefault(Locale.ENGLISH);       
@@ -39,6 +41,7 @@ public class TestEvent extends TestCase {
         repository = new UserRepository();
         eventRepository = new EventRepository();
     	eventManager = new EventManager(repository, eventRepository);
+    	inviteManager = new InviteManager(repository);
         repository.saveUser(new User("Charles", "12345", calendar));
         repository.saveUser(exampleInvitee); // CHANGE
 
@@ -60,7 +63,7 @@ public class TestEvent extends TestCase {
     public void testDuration() {assertEquals(60,event.getEventDuration()); }
     
     public void testGetParticipants() {
-    	eventManager.addInvite(event,exampleInvitee);
+    	inviteManager.addInvite(event,exampleInvitee);
     	List<String> expected = List.of(invite.getRecipient());
     	assertEquals(expected, event.getParticipants());
     }

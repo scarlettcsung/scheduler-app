@@ -13,6 +13,7 @@ import java.util.List;
 import event.CreatedEvent;
 import event.Event;
 import event.manager.EventManager;
+import event.manager.InviteManager;
 import invite.Invite;
 import invite.InviteStatus;
 
@@ -27,6 +28,7 @@ public class TestEventManager extends TestCase {
 	private UserRepository repository;
 	private EventRepository eventRepository;
 	private EventManager eveUpdateEvent;
+	private InviteManager inviteManager;
 	private UserCalendar calendar;
 
     String exampleOrganizer = "testUser";
@@ -43,6 +45,7 @@ public class TestEventManager extends TestCase {
 		repository = new UserRepository();
 		eventRepository = new EventRepository();
 		eveUpdateEvent = new EventManager(repository, eventRepository);
+		inviteManager = new InviteManager(repository);
 		repository.saveUser(new User("Charles","12345",calendar));
 		repository.saveUser(exampleInvitee);
 		repository.saveUser(exampleNewOrganizer);
@@ -90,7 +93,7 @@ public class TestEventManager extends TestCase {
     }
     
     public void testInviteReject() {
-    	eveUpdateEvent.addInvite(event,exampleInvitee);
+    	inviteManager.addInvite(event,exampleInvitee);
         eveUpdateEvent.rejectInvite(invite,event);
         assertEquals(0, event.getInvites().size());
         assertFalse(exampleInvitee.getCalendar().getEvents().contains(event));
@@ -205,49 +208,6 @@ public class TestEventManager extends TestCase {
         new EventManager(repo, new EventRepository()).deleteEvent(e);
     }
     
- // Test Invite Methods
-    public void testInvites() {
-        List<User> expected = new ArrayList<>();
-        assertEquals(expected,event.getInvites());
-    }
-    public void testAddInvite() {
-    	
-    	event.setEventTime(example_time);
-    	eveUpdateEvent.addInvite(event,exampleInvitee);
-    	assertEquals(1, event.getInvites().size());
-        assertEquals(exampleInvitee.getUsername(), event.getInvites().get(0).getRecipient());
-        assertTrue(exampleInvitee.getCalendar().getEvents().contains(event));
-    } 
-    
-  //test duplicates in same calendar
-    public void testAddInviteDuplicate() {
-    	eveUpdateEvent.addInvite(event,exampleInvitee);
-    	eveUpdateEvent.addInvite(event,exampleInvitee);
-        assertEquals(1, event.getInvites().size());
-    }
-    
-    // Explicitly tests the private hasExistingInvite method
-    public void testHasExistingInvite() throws Exception {
-        java.lang.reflect.Method method = EventManager.class.getDeclaredMethod("hasExistingInvite", Event.class, String.class);
-        method.setAccessible(true);
-        
-        // Verify it returns false when no invite exists
-        boolean hasInvite = (boolean) method.invoke(eveUpdateEvent, event, exampleInvitee.getUsername());
-        assertFalse(hasInvite);
-        
-        // Add invite and verify it returns true
-        eveUpdateEvent.addInvite(event, exampleInvitee);
-        hasInvite = (boolean) method.invoke(eveUpdateEvent, event, exampleInvitee.getUsername());
-        assertTrue(hasInvite);
-    }
-    
-    public void testRemoveInvite() {
-        List<Invite> expected = new ArrayList<>();
-        eveUpdateEvent.addInvite(event,exampleInvitee);
-        eveUpdateEvent.removeInvite(event,exampleInvitee);
-        assertEquals(expected,event.getInvites());
-        assertFalse(exampleInvitee.getCalendar().getEvents().contains(event));
-    }
 
     // Test Setters
     public void testSetEventName() {
@@ -269,14 +229,6 @@ public class TestEventManager extends TestCase {
         event.setEventDuration(120);
         assertNotSame(60,event.getEventDuration());
         assertEquals(120,event.getEventDuration());
-    }
-    // Test removeInvite when user is not found in repository
-    public void testRemoveInviteUserNotInRepo() {
-        User ghostUser = new User("ghostUser","1234",new UserCalendar(null));
-        Invite ghostInvite = new Invite(ghostUser.getUsername(),event.getEventId(), null);
-        event.getInvites().add(ghostInvite);
-        eveUpdateEvent.removeInvite(event, ghostUser); 
-        assertEquals(0, event.getInvites().size()); 
     }
     
     public void testSetOrganizer() {

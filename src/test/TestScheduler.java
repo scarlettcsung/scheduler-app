@@ -3,6 +3,7 @@ package test;
 import event.CreatedEvent;
 import event.Event;
 import event.manager.EventManager;
+import event.manager.InviteManager;
 import invite.InviteStatus;
 import junit.framework.TestCase;
 import repository.EventRepository;
@@ -29,6 +30,7 @@ public class TestScheduler extends TestCase {
     private User invitee;
     private LocalDateTime baseNow;
     private EventManager eventManager;
+    private InviteManager inviteManager;
     
 
     protected void setUp() {
@@ -48,6 +50,7 @@ public class TestScheduler extends TestCase {
         scheduler = new Scheduler(0, 23, 7, userRepository, eventRepository);
         
         eventManager = new EventManager(userRepository, eventRepository);
+        inviteManager = new InviteManager(userRepository);
     }
 
     public void testFindAvailableSlotReturnsNullWhenDurationExceedsDayWindow() {
@@ -102,7 +105,7 @@ public class TestScheduler extends TestCase {
                 new ArrayList<>()
         );
     	
-        eventManager.addInvite(event, invitee);
+        inviteManager.addInvite(event, invitee);
 
         boolean scheduled = scheduler.scheduleEvent(event);
 

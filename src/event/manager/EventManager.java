@@ -22,6 +22,7 @@ public class EventManager {
 
     private UserRepository repository;
     private EventRepository eventRepository;
+    private InviteManager inviteManager;
 
     /**
      * Creates an event manager without repository-backed delete behaviour.
@@ -29,6 +30,7 @@ public class EventManager {
     public EventManager() {
         this.repository = null;
         this.eventRepository = null;
+        this.inviteManager = new InviteManager(null);
     }
 
     /**
@@ -39,6 +41,7 @@ public class EventManager {
     public EventManager(UserRepository repository) {
         this.repository = repository;
         this.eventRepository = null;
+        this.inviteManager = new InviteManager(repository);
     }
 
     /**
@@ -50,6 +53,7 @@ public class EventManager {
     public EventManager(UserRepository repository, EventRepository eventRepository) {
         this.repository = repository;
         this.eventRepository = eventRepository;
+        this.inviteManager = new InviteManager(repository);
     }
 
     /**
@@ -104,58 +108,13 @@ public class EventManager {
         }
     }
 
-    /**
-     * Adds invite to event if not already invited.
-     *
-     * @param event event to add invite to
-     * @param recipient user associated with invite
-     */
-    public void addInvite(Event event, User recipient) {
-        if (hasExistingInvite(event, recipient.getUsername())) {
-            return;
-        }
-
-        Invite invite = new Invite(recipient.getUsername(), event.getEventId(), null);
-        event.getInvites().add(invite);
-
-        if (recipient.getCalendar() != null) {
-            recipient.getCalendar().addEvent(event);
-        }
-    }
-
-    /**
-     * Removes invite from event.
-     *
-     * @param event event to remove invite from
-     * @param recipient user associated with invite
-     */
-    public void removeInvite(Event event, User recipient) {
-        String username = recipient.getUsername();
-
-        if (!hasExistingInvite(event, username)) {
-            return;
-        }
-
-        event.getInvites().removeIf(i -> i.getRecipient().equals(username));
-        if (recipient.getCalendar() != null) {
-            recipient.getCalendar().removeEvent(event);
-        }
-    }
-
-    /**
-     * Marks an invite as rejected and removes the event from the invitee's
-     * calendar.
-     *
-     * @param invite invite to reject
-     * @param event event associated with the invite
-     */
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(InviteStatus.REJECTED);
         if (this.repository != null) {
             User invitee = this.repository.getItemById(invite.getRecipient());
 
             if (invitee != null) {
-                this.removeInvite(event, invitee);
+                this.inviteManager.removeInvite(event, invitee);
             }
         }
     }
@@ -188,21 +147,6 @@ public class EventManager {
         return this.repository.getItemById(organizerUsername);
     }
 
-    /**
-     * Checks if an event already has an invite for the given username.
-     *
-     * @param event event to check
-     * @param username username to look for
-     * @return {@code true} when an invite for that username exists
-     */
-    private boolean hasExistingInvite(Event event, String username) {
-        for (Invite invite : event.getInvites()) {
-            if (invite.getRecipient().equals(username)) {
-                return true;
-            }
-        }
-        return false;
-    }
     
     public List<Event> returnParticipatingEvents(String username,EventRepository repo) {
     	List<Event> pEvents= new ArrayList<>();

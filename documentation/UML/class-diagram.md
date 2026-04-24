@@ -78,6 +78,8 @@ classDiagram
     
 
     class Scheduler {
+        -eventManager: EventManager
+        -inviteManager: InviteManager
         +findAvailableSlot(event: Event) : String
         +scheduleEvent(event: Event, calendar: UserCalendar) : Void
     }
@@ -85,18 +87,27 @@ classDiagram
     class EventManager {
         -repository: UserRepository
         -eventRepository: EventRepository
+        -inviteManager: InviteManager
         +EventManager()
         +EventManager(repository: UserRepository)
         +EventManager(repository: UserRepository, eventRepository: EventRepository)
         +updateEvent(event: Event, updateAspect: String, newValue: String) : void
         +deleteEvent(event: Event) : void
-        +addInvite(event: Event, recipient: User) : void
-        +removeInvite(event: Event, recipient: User) : void
         +rejectInvite(invite: Invite, event: Event) : void
         +setOrganizer(event: Event, organizer: User) : void
         +getOrganizer(event: Event) : User
         +returnParticipatingEvents(username: String, repo: EventRepository) : List~Event~
         +returnOrganisedEvents(username: String, repo: EventRepository) : List~Event~
+    }
+
+    class InviteManager {
+        -repository: UserRepository
+        +InviteManager(repository: UserRepository)
+        +addTemporaryInvite(currentUser: User, event: Event, tempInvites: List~String~, inviteeUsername: String) : String
+        +removeInviteFromForm(currentUser: User, event: Event, tempInvites: List~String~, inviteeUsername: String) : String
+        +removeInvite(event: Event, recipient: User) : void
+        +addInvite(event: Event, recipient: User) : void
+        -hasExistingInvite(event: Event, username: String) : boolean
     }
 
     class UserCalendar {
@@ -186,7 +197,12 @@ classDiagram
     Scheduler ..> UserCalendar
     Scheduler ..> Event
     Scheduler --> EventManager
+    Scheduler --> InviteManager
     EventManager ..> Event
+    EventManager --> InviteManager
+    InviteManager ..> User
+    InviteManager ..> Event
+    InviteManager ..> UserRepository
     IcsImporter --> UserCalendar : Populates
     IcsImporter --> Event : creates imported events
     IcsImporter --> ImportStatus
