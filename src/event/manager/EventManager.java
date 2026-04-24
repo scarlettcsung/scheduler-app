@@ -94,15 +94,15 @@ public class EventManager {
             return;
         }
 
-        if (repository != null) {
-            for (User user : repository.getAll()) {
+        if (this.repository != null) {
+            for (User user : this.repository.getAll()) {
                 if (user.getCalendar() != null) {
                     user.getCalendar().removeEvent(event);
                 }
             }
 
-            if (eventRepository != null) {
-                eventRepository.deleteItem(event.getEventId());
+            if (this.eventRepository != null) {
+                this.eventRepository.deleteItem(event.getEventId());
             }
             return;
         }
@@ -111,7 +111,7 @@ public class EventManager {
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(InviteStatus.REJECTED);
         if (this.repository != null) {
-            User invitee = repository.getItemById(invite.getRecipient());
+            User invitee = this.repository.getItemById(invite.getRecipient());
 
             if (invitee != null) {
                 this.inviteManager.removeInvite(event, invitee);
@@ -144,7 +144,7 @@ public class EventManager {
      */
     public User getOrganizer(Event event) {
         String organizerUsername = event.getOrganizer();
-        return repository.getItemById(organizerUsername);
+        return this.repository.getItemById(organizerUsername);
     }
 
     

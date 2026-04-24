@@ -69,34 +69,34 @@ public class IcsImporter {
      * {@link #lastImportStatus} with the outcome.
      */
     public void runImport() {
-        if (targetUser == null) {
-            lastImportStatus = ImportStatus.UserNotFound;
+        if (this.targetUser == null) {
+            this.lastImportStatus = ImportStatus.UserNotFound;
             return;
         }
 
-        if (icsFilePath == null) {
-            lastImportStatus = ImportStatus.FileNotFound;
+        if (this.icsFilePath == null) {
+            this.lastImportStatus = ImportStatus.FileNotFound;
             return;
         }
 
         try {
             // Create a calendar on first import so imported events always have a target list.
-            if (targetUser.getCalendar() == null) {
-                targetUser.setCalendar(new UserCalendar(null));
+            if (this.targetUser.getCalendar() == null) {
+                this.targetUser.setCalendar(new UserCalendar(null));
             }
 
-            lastImportedEvents = parseIcs();
+            this.lastImportedEvents = parseIcs();
 
             // Imported events should belong to the user who initiated the import.
-            for (Event event : lastImportedEvents) {
-                event.setOrganizer(targetUser.getUsername());
+            for (Event event : this.lastImportedEvents) {
+                event.setOrganizer(this.targetUser.getUsername());
             }
 
             // Replace old imported events but keep manually created events.
-            overwriteImportedEvents(targetUser.getCalendar(), lastImportedEvents);
-            lastImportStatus = ImportStatus.Succes;
+            overwriteImportedEvents(this.targetUser.getCalendar(), this.lastImportedEvents);
+            this.lastImportStatus = ImportStatus.Succes;
         } catch (FileNotFoundException e) {
-            lastImportStatus = ImportStatus.FileNotFound;
+            this.lastImportStatus = ImportStatus.FileNotFound;
         } catch (IOException | ParserException e) {
             throw new IllegalStateException("Calendar import failed", e);
         }
@@ -124,7 +124,7 @@ public class IcsImporter {
      * @return target user, or {@code null} if not set
      */
     public User getTargetUser() {
-        return targetUser;
+        return this.targetUser;
     }
 
     /**
@@ -133,7 +133,7 @@ public class IcsImporter {
      * @return ICS file path, or {@code null} if not set
      */
     public String getIcsFilePath() {
-        return icsFilePath;
+        return this.icsFilePath;
     }
 
     /**
@@ -142,7 +142,7 @@ public class IcsImporter {
      * @return last imported events, or {@code null} if no import has run yet
      */
     public List<Event> getLastImportedEvents() {
-        return lastImportedEvents;
+        return this.lastImportedEvents;
     }
 
     /**
@@ -151,7 +151,7 @@ public class IcsImporter {
      * @return last import status, or {@code null} if no import has run yet
      */
     public ImportStatus getLastImportStatus() {
-        return lastImportStatus;
+        return this.lastImportStatus;
     }
 
     /**
@@ -173,7 +173,7 @@ public class IcsImporter {
         );
 
         net.fortuna.ical4j.model.Calendar calendar;
-        try (InputStream inputStream = new FileInputStream(icsFilePath)) {
+        try (InputStream inputStream = new FileInputStream(this.icsFilePath)) {
             calendar = calendarBuilder.build(inputStream);
         }
 

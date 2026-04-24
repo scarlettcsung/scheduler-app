@@ -87,5 +87,18 @@ public class TestUserService extends TestCase {
 
         assertEquals(UserDeletionResult.DELETED_SELF, result);
     }
+    
+    public void testIsSuccessAllCases() {
+        assertTrue(UserDeletionResult.DELETED_BY_ADMIN.isSuccess());
+        assertTrue(UserDeletionResult.DELETED_SELF.isSuccess());
+        assertFalse(UserDeletionResult.NOT_AUTHENTICATED.isSuccess());
+        assertFalse(UserDeletionResult.NOT_PERMITTED.isSuccess());
+    }
+    
+    public void testLoginReturnsFalseForUnknownUser() {
+        boolean result = userService.login("unknownUser", "password");
+
+        assertFalse(result);
+    }
 
 }

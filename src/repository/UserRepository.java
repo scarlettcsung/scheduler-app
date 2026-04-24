@@ -82,7 +82,7 @@ public class UserRepository extends Repository<User> {
 
         cleanupUserEventReferences(targetUser.getUsername());
 
-        data.removeIf(u -> u.getUsername().equals(username));
+        this.data.removeIf(u -> u.getUsername().equals(username));
 
         if (currentUser.canAccessAdminPanel()) {
             return UserDeletionResult.DELETED_BY_ADMIN;
@@ -99,7 +99,7 @@ public class UserRepository extends Repository<User> {
      */
     @Override
     public User getItemById(String username) {
-        for (User u : data) {
+        for (User u : this.data) {
             if (u.getUsername().equals(username)) {
                 return u;
             }
@@ -125,7 +125,7 @@ public class UserRepository extends Repository<User> {
     public void cleanupUserEventReferences(String username) {
         Map<String, Event> eventsById = new LinkedHashMap<>();
 
-        for (User user : data) {
+        for (User user : this.data) {
             if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
                 continue;
             }
@@ -137,9 +137,9 @@ public class UserRepository extends Repository<User> {
             }
         }
 
-        if (eventRepository != null) {
-            for (User ignored : data) {
-                for (Event event : eventRepository.getAll()) {
+        if (this.eventRepository != null) {
+            for (User ignored : this.data) {
+                for (Event event : this.eventRepository.getAll()) {
                     if (event != null && event.getEventId() != null) {
                         eventsById.putIfAbsent(event.getEventId(), event);
                     }
@@ -155,8 +155,8 @@ public class UserRepository extends Repository<User> {
 
             if (username.equals(event.getOrganizer())) {
                 removeEventFromAllCalendars(event);
-                if (eventRepository != null) {
-                    eventRepository.deleteItem(event.getEventId());
+                if (this.eventRepository != null) {
+                    this.eventRepository.deleteItem(event.getEventId());
                 }
                 continue;
             }
@@ -173,7 +173,7 @@ public class UserRepository extends Repository<User> {
      * @param event event to remove from calendars
      */
     public void removeEventFromAllCalendars(Event event) {
-        for (User user : data) {
+        for (User user : this.data) {
             if (user.getCalendar() != null) {
                 user.getCalendar().removeEvent(event);
             }

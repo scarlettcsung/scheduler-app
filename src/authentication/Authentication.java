@@ -33,7 +33,7 @@ public class Authentication {
      * @return {@code true} when the credentials match an existing user
      */
     public boolean login(String username, String password) {
-        User currentUser = repository.getItemById(username);
+        User currentUser = this.repository.getItemById(username);
 
         if (currentUser == null) {
             return false;
@@ -43,7 +43,7 @@ public class Authentication {
             return false;
         }
 
-        authenticatedUser = currentUser;
+        this.authenticatedUser = currentUser;
         return true;
     }
 
@@ -51,7 +51,7 @@ public class Authentication {
      * Clears the currently authenticated user.
      */
     public void logout() {
-        authenticatedUser = null;
+        this.authenticatedUser = null;
     }
 
     /**
@@ -60,6 +60,6 @@ public class Authentication {
      * @return the authenticated user, or {@code null} when nobody is logged in
      */
     public User getAuthenticatedUser() {
-        return authenticatedUser;
+        return this.authenticatedUser;
     }
 }

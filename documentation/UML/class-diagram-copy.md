@@ -57,13 +57,19 @@ classDiagram
     class User {
         -username: String
         -password: String
-        -isAdmin: Boolean
-        -myCalendar: Calendar
+        -myCalendar: UserCalendar
         +getUsername() : String
         +getPassword() : String
         +getCalendar() : UserCalendar
-        +isAdmin() : Boolean
+        setCalendar(calendar: UserCalendar) : void
+        +canAccessAdminPanel() : boolean
+        +canDeleteUser(targetUser: User) : boolean    
+        
     }
+    class AdminUser {
+    +canAccessAdminPanel() : boolean
+    +canDeleteUser(targetUser: User) : boolean
+}
 
     class Scheduler {
         +findAvailableSlot(event: Event) : String
@@ -85,14 +91,13 @@ classDiagram
         +getOwner() : User
     }
 
-    class ICSImportService {
+    class ICSImporter {
         +importCalendar(user: User, icsFile: String) : ImportStatus
         +parseICS(icsFile: String) : List~Event~
         +overwriteImportedEvents(calendar: UserCalendar, importedEvents: List~Event~) : void
     }
 
     class Event {
-         <<abstract>>
         -eventName: String
         -eventTime: LocalDateTime
         -eventDuration: int
@@ -109,22 +114,23 @@ classDiagram
         +getTimeString(): String
     }
     
-    class CreatedEvent {
-         +isImported() boolean
-    }
+    
+    
     
     class ImportedEvent {
         +isImported() boolean
     }
 
     class Invite {
-        -recipient: User
-        +event: Event
-        -status: InviteStatus
-        +accept() : void
-        +reject() : void
-        +getRecipient() : User
-        +getStatus() : InviteStatus
+    -eventID: String
+    -status: inviteStatus
+    +getRecipient() : String
+    +getEventID() : String
+    +getStatus() : inviteStatus
+    +setRecipient(recipientUsername: String) : void
+    +setEvent(eventID: String) : void
+    +setInviteStatus(status: inviteStatus) : void
+
     }
 
     class ImportStatus {
@@ -158,8 +164,6 @@ classDiagram
     User --> Invite : recipient
     UserCalendar *-- Event
     Event *-- Invite
-    CreatedEvent --|> Event
-    ImportedEvent --|> Event
     Scheduler ..> User
     Scheduler ..> UserCalendar
     Scheduler ..> Event
@@ -175,4 +179,6 @@ classDiagram
     Scheduler --> EventRepository : uses
     EventManager --> EventRepository : uses
     EventManager --> UserRepository : uses
+    AdminUser --|> User
+
 ```

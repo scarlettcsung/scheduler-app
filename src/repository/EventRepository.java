@@ -24,7 +24,7 @@ public class EventRepository extends Repository<Event> {
      */
     @Override
     public Event getItemById(String eventId) {
-        for (Event e : data) {
+        for (Event e : this.data) {
             String currentEventId = e.getEventId();
             if (currentEventId != null && currentEventId.equals(eventId)) {
                 return e;
@@ -40,7 +40,7 @@ public class EventRepository extends Repository<Event> {
      * @return {@code 1} when an event was removed, otherwise {@code 0}
      */
     public int deleteItem(String eventId) {
-        if (data.removeIf(e -> {
+        if (this.data.removeIf(e -> {
             String currentEventId = e.getEventId();
             return currentEventId != null && currentEventId.equals(eventId);
         })) {
@@ -65,7 +65,7 @@ public class EventRepository extends Repository<Event> {
      * @param username organizer username whose events should be removed
      */
     public void deleteEventsByOrganizer(String username) {
-        for (Event e : data) {
+        for (Event e : this.data) {
             if (e.getOrganizer().equals(username)) {
                 deleteItem(e.getEventId());
             }

@@ -37,13 +37,13 @@ public class UserService {
      * @return {@code true} when the user was created
      */
     public boolean registerUser(String username, String password) {
-        if (userRepository.isExistingUser(username)) {
+        if (this.userRepository.isExistingUser(username)) {
             return false;
         }
 
         User newUser = new User(username, password, null);
         newUser.setCalendar(new UserCalendar(null));
-        userRepository.saveUser(newUser);
+        this.userRepository.saveUser(newUser);
 
         return true;
     }
@@ -57,11 +57,11 @@ public class UserService {
      * @return authenticated user, or {@code null} when authentication failed
      */
     public User authenticateUser(String username, String password) {
-        if (!authentication.login(username, password)) {
+        if (!this.authentication.login(username, password)) {
             return null;
         }
 
-        return authentication.getAuthenticatedUser();
+        return this.authentication.getAuthenticatedUser();
     }
 
     /**
@@ -84,7 +84,7 @@ public class UserService {
     public List<String> listUsernames() {
         List<String> usernames = new ArrayList<>();
 
-        for (User user : userRepository.getAll()) {
+        for (User user : this.userRepository.getAll()) {
             usernames.add(user.getUsername());
         }
 
@@ -99,7 +99,7 @@ public class UserService {
      * @return named deletion result for the request
      */
     public UserDeletionResult deleteUser(String username, User currentUser) {
-        return userRepository.deleteUserData(username, currentUser);
+        return this.userRepository.deleteUserData(username, currentUser);
     }
 
     /**

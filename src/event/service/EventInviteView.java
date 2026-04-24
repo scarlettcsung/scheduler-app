@@ -31,7 +31,7 @@ public class EventInviteView {
      * @return event to display
      */
     public Event getEvent() {
-        return event;
+        return this.event;
     }
 
     /**
@@ -40,6 +40,6 @@ public class EventInviteView {
      * @return invite to display
      */
     public Invite getInvite() {
-        return invite;
+        return this.invite;
     }
 }

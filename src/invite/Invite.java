@@ -34,7 +34,7 @@ public class Invite {
      * Marks the invite as accepted.
      */
     public void accept() {
-        status = InviteStatus.ACCEPTED;
+        this.status = InviteStatus.ACCEPTED;
     }
 
     // reject moved to EventManager to avoid circularity
@@ -47,7 +47,7 @@ public class Invite {
      * @return recipient username
      */
     public String getRecipient() {
-        return recipientUsername;
+        return this.recipientUsername;
     }
 
     /**
@@ -56,7 +56,7 @@ public class Invite {
      * @return event identifier
      */
     public String getEventId() {
-        return eventId;
+        return this.eventId;
     }
     /**
      * Returns the current invite status.
@@ -64,7 +64,7 @@ public class Invite {
      * @return invite status
      */
     public InviteStatus getStatus() {
-        return status;
+        return this.status;
     }
 
     // Setter methods
@@ -104,6 +104,6 @@ public class Invite {
     }
 
     public Role getRole() {
-        return role;
+        return this.role;
     }
 }
