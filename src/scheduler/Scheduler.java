@@ -9,6 +9,7 @@ import java.util.List;
 
 import event.Event;
 import event.manager.EventManager;
+import event.manager.InviteManager;
 import invite.Invite;
 import repository.EventRepository;
 import repository.UserRepository;
@@ -28,6 +29,7 @@ public class Scheduler {
     private Clock clock;
     private UserRepository userRepository;
     private EventManager eventManager;
+    private InviteManager inviteManager;
     private EventRepository eventRepository;
 
     /**
@@ -45,6 +47,7 @@ public class Scheduler {
         this(dayStart, dayEnd, maxLookaheadDays, Clock.systemDefaultZone());
         this.userRepository = userRepository;
         this.eventManager = new EventManager(userRepository, eventRepository);
+        this.inviteManager = new InviteManager(userRepository);
         this.eventRepository = eventRepository;
     }
 
@@ -184,8 +187,8 @@ public class Scheduler {
 
             // Recreate invites so they reset to default PENDING status.
             if (invitee != null) {
-                eventManager.removeInvite(event, invitee);
-                eventManager.addInvite(event, invitee);
+                inviteManager.removeInvite(event, invitee);
+                inviteManager.addInvite(event, invitee);
             }
         }
         return true;
