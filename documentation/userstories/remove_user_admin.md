@@ -1,14 +1,17 @@
-Title: remove user
-As a... admin
-I want to... remove a user from the system
-So that... the active user list stays up to date when someone leaves
-
-Acceptance criteria:
+**Title** : remove user 
+**ID** : 0  
+**As a...** admin
+**I want to ...** remove a user from the system 
+**So that...** the active user list stays up date when someone leaves
+  
+**Acceptance criteria:**  
 
 Admin can remove a normal user from the system
 Removed user no longer appears in the user list
 A normal user cannot remove another user
 The active user list stays up to date after a user is removed
+  
+**Acceptance Test:**  
 
 Acceptance Test:
 
