@@ -64,12 +64,18 @@ classDiagram
     class User {
         -username: String
         -password: String
-        -isAdmin: Boolean
         -myCalendar: Calendar
         +canAccessAdminPanel() : Boolean
         +canDeleteUser() : Boolean
-
+        +setCalendar(calendar: UserCalendar) : void
+        +canAccessAdminPanel() : boolean
+        +canDeleteUser(targetUser: User) : boolean 
     }
+        class AdminUser {
+    +canAccessAdminPanel() : boolean
+    +canDeleteUser(targetUser: User) : boolean
+}
+    
 
     class Scheduler {
         +findAvailableSlot(event: Event) : String
@@ -141,15 +147,6 @@ classDiagram
         -status: inviteStatus
         -role: Role
         +accept() : void
-        +getRecipient() : String
-        +getEventID() : String
-        +getStatus() : inviteStatus
-        +setRecipient(recipientUsername: String) : void
-        +setEvent(eventID: String) : void
-        +setInviteStatus(status: inviteStatus) : void
-        +setOrganiser() : void
-        +setGuest() : void
-        +getRole() : Role
     }
 
     class ImportStatus {
@@ -201,4 +198,5 @@ classDiagram
     Scheduler --> EventRepository : uses
     EventManager --> EventRepository
     EventManager --> UserRepository
+    AdminUser --|> User
 ```
