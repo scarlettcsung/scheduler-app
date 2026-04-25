@@ -1,6 +1,10 @@
 package repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import event.Event;
+import invite.Invite;
 
 /**
  * In-memory repository for {@link event} instances.
@@ -70,5 +74,18 @@ public class EventRepository extends Repository<Event> {
                 deleteItem(e.getEventId());
             }
         }
+    }
+    
+    public List<Event> getUserCalendar(String username) {
+    	List<Event> userEvents = new ArrayList<>();
+    	for (Event e: this.data) {
+    		for (Invite i : e.getInvites()) {
+    			if (i.getRecipient().equals(username)) {
+    				userEvents.add(e);
+    				break;
+    			}		
+    		}
+    	}
+    	return userEvents;
     }
 }

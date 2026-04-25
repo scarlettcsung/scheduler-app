@@ -1,7 +1,5 @@
 package user;
 
-import user.calendar.UserCalendar;
-
 /**
  * Represents an application user and their personal calendar.
  *
@@ -12,7 +10,6 @@ public class User {
 
     private String username;
     private String password;
-    private UserCalendar myCalendar;
 
     /**
      * Creates a user account.
@@ -21,10 +18,9 @@ public class User {
      * @param password password for the account
      * @param myCalendar calendar owned by the user
      */
-    public User(String username, String password, UserCalendar myCalendar) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.myCalendar = myCalendar;
     }
 
     /**
@@ -43,24 +39,6 @@ public class User {
      */
     public String getPassword() {
         return this.password;
-    }
-
-    /**
-     * Returns the user's calendar.
-     *
-     * @return user calendar
-     */
-    public UserCalendar getCalendar() {
-        return this.myCalendar;
-    }
-
-    /**
-     * Replaces the user's calendar.
-     *
-     * @param calendar new calendar instance
-     */
-    public void setCalendar(UserCalendar calendar) {
-        this.myCalendar = calendar;
     }
 
     /**

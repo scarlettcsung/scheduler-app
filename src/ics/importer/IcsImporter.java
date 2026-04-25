@@ -16,7 +16,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.property.*;
 import user.*;
-import user.calendar.*;
 
 /**
  * Imports events from ICS calendar files into the application's event model.
@@ -82,11 +81,6 @@ public class IcsImporter {
         }
 
         try {
-            // Create a calendar on first import so imported events always have a target list.
-            if (this.targetUser.getCalendar() == null) {
-                this.targetUser.setCalendar(new UserCalendar(null));
-            }
-
             this.lastImportedEvents = parseIcs();
 
             // Imported events should belong to the user who initiated the import.
@@ -94,9 +88,6 @@ public class IcsImporter {
                 Invite organizerInvite = new Invite(this.targetUser.getUsername(), event.getEventId(), Role.ORGANIZER);
                 event.getInvites().add(organizerInvite);
             }
-
-            // Replace old imported events but keep manually created events.
-            overwriteImportedEvents(this.targetUser.getCalendar(), this.lastImportedEvents);
             this.lastImportStatus = ImportStatus.Succes;
         } catch (FileNotFoundException e) {
             this.lastImportStatus = ImportStatus.FileNotFound;
@@ -108,19 +99,6 @@ public class IcsImporter {
         }
     }
 
-    /**
-     * Replaces previously imported events in a calendar with a fresh set of
-     * imported events while preserving manually created events.
-     *
-     * @param calendar       calendar to update
-     * @param importedEvents events produced by the latest import
-     */
-    public void overwriteImportedEvents(UserCalendar calendar, List<Event> importedEvents) {
-        // Only remove events that came from a previous import.
-        calendar.getEvents().removeIf(event -> event.isImported());
-        // Then append the latest import result.
-        calendar.getEvents().addAll(importedEvents);
-    }
 
     // ── Accessors ─────────────────────────────────────────────────────────────
 

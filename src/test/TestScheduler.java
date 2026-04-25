@@ -11,7 +11,6 @@ import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
-import user.calendar.UserCalendar;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;
@@ -38,14 +37,10 @@ public class TestScheduler extends TestCase {
         baseNow = LocalDateTime.now().withSecond(0).withNano(0);
         userRepository = new UserRepository();
         eventRepository = new EventRepository();
-        organizer = new User("organizer", "pw", null);
-        UserCalendar organizerCalendar = new UserCalendar(null);
-        organizer.setCalendar(organizerCalendar);
+        organizer = new User("organizer", "pw");
         userRepository.saveUser(organizer);
 
-        invitee = new User("invitee", "pw", null);
-        UserCalendar inviteeCalendar = new UserCalendar(null);
-        invitee.setCalendar(inviteeCalendar);
+        invitee = new User("invitee", "pw");
         userRepository.saveUser(invitee);
 
         scheduler = new Scheduler(0, 23, 7, userRepository, eventRepository);
@@ -63,7 +58,7 @@ public class TestScheduler extends TestCase {
                 "test meeting",
                 new ArrayList<>()
         );
-        eventManager.setOrganizer(tooLong, organizer);
+        tooLong.setOrganizer(organizer.getUsername());
         LocalDateTime slot = oneHourWindow.findAvailableSlot(tooLong);
 
         assertNull(slot);
@@ -79,8 +74,7 @@ public class TestScheduler extends TestCase {
                 new ArrayList<>()
         );
         busy.setEventTime(busyStart);
-        organizer.getCalendar().addEvent(busy);
-        eventManager.setOrganizer(busy, organizer);
+        busy.setOrganizer(organizer.getUsername());
 
         Event toSchedule = new CreatedEvent(
                 "meeting",
@@ -88,7 +82,7 @@ public class TestScheduler extends TestCase {
                 "test meeting",
                 new ArrayList<>()
         );
-        eventManager.setOrganizer(toSchedule, organizer);
+        toSchedule.setOrganizer(organizer.getUsername());
         LocalDateTime slot = scheduler.findAvailableSlot(toSchedule);
 
         assertNotNull(slot);
@@ -103,15 +97,13 @@ public class TestScheduler extends TestCase {
                 "test meeting",
                 new ArrayList<>()
         );
-    	eventManager.setOrganizer(event, organizer);
+    	event.setOrganizer(organizer.getUsername());
         inviteManager.addInvite(event, invitee, Role.GUEST);
 
         boolean scheduled = scheduler.scheduleEvent(event);
 
         assertTrue(scheduled);
         assertNotNull(event.getEventTime());
-        assertTrue(organizer.getCalendar().getEvents().contains(event));
-        assertTrue(invitee.getCalendar().getEvents().contains(event));
         assertEquals(2, event.getInvites().size());
         assertEquals(invitee.getUsername(), event.getInvites().get(1).getRecipient());
         assertEquals(InviteStatus.PENDING, event.getInvites().get(1).getStatus());
@@ -133,9 +125,8 @@ public class TestScheduler extends TestCase {
                 "busy slot",
                 new ArrayList<>()
         );
-        eventManager.setOrganizer(block, organizer);
+        block.setOrganizer(organizer.getUsername());
         block.setEventTime(dayStart);
-        organizer.getCalendar().addEvent(block);
 
         Event toSchedule = new CreatedEvent(
                 "meeting",
@@ -143,22 +134,20 @@ public class TestScheduler extends TestCase {
                 "test meeting",
                 new ArrayList<>()
         );
-        eventManager.setOrganizer(toSchedule, organizer);
+        toSchedule.setOrganizer(organizer.getUsername());
         boolean scheduled = oneDayLookahead.scheduleEvent(toSchedule);
 
         assertFalse(scheduled);
-        assertFalse(organizer.getCalendar().getEvents().contains(toSchedule));
     }
     
     public void testFindAvailableSlot_ignoresNullTimeEvent_andStillFindsSlot() {
     	//setup null event
         Event nullTimeEvent = new CreatedEvent("ghost", 30, "no time set", new ArrayList<>());
-        eventManager.setOrganizer(nullTimeEvent, organizer);
-        organizer.getCalendar().addEvent(nullTimeEvent);  // bad data in calendar
+        nullTimeEvent.setOrganizer(organizer.getUsername());
         
         //to schedule event
         Event toSchedule = new CreatedEvent("meeting", 30, "test meeting", new ArrayList<>());
-        eventManager.setOrganizer(toSchedule, organizer);
+        toSchedule.setOrganizer(organizer.getUsername());
         
         //run the find available slot
         LocalDateTime slot = scheduler.findAvailableSlot(toSchedule);

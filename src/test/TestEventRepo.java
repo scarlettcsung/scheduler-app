@@ -6,7 +6,6 @@ import event.manager.EventManager;
 import junit.framework.TestCase;
 import repository.EventRepository;
 import user.User;
-import user.calendar.UserCalendar;
 
 public class TestEventRepo extends TestCase {
 	EventRepository repo;
@@ -17,9 +16,9 @@ public class TestEventRepo extends TestCase {
 	protected void setUp() {
 		repo = new EventRepository();
 		event = new CreatedEvent("Test", 60, "Desc", null);
-		admin = new User("admin","admin",new UserCalendar(null));
+		admin = new User("admin","admin");
 		eventManager = new EventManager();
-		eventManager.setOrganizer(event,admin);
+		event.setOrganizer(admin.getUsername());
 	}
 
     public void testEventRepositoryType() {

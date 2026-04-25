@@ -98,9 +98,10 @@ public class Scheduler {
             List<Event> busyEvents = new ArrayList<>();
 
             String organizerUsername = event.getOrganizer();
-            User organizer = this.userRepository.getItemById(organizerUsername);
-            if (organizer != null && organizer.getCalendar() != null) {
-                for (Event e : organizer.getCalendar().getEvents()) {
+            List<Event> organizerEvents = eventRepository.getUserCalendar(organizerUsername);
+            
+            if (organizerUsername != null && organizerEvents != null) {
+                for (Event e : organizerEvents) {
                     if (e == null || e == event || e.getEventTime() == null) {
                         continue;
                     }
@@ -112,9 +113,12 @@ public class Scheduler {
 
             for (Invite invite : event.getInvites()) {
                 String inviteeUsername = invite.getRecipient();
-                User invitee = this.userRepository.getItemById(inviteeUsername);
-                if (invitee != null && invitee.getCalendar() != null) {
-                    for (Event e : invitee.getCalendar().getEvents()) {
+                if (inviteeUsername.equals(organizerUsername)) continue;
+                
+                List<Event> inviteeEvents = eventRepository.getUserCalendar(inviteeUsername);
+
+                if (inviteeUsername != null && inviteeEvents != null) {
+                    for (Event e : inviteeEvents) {
                         if (e == null || e == event || e.getEventTime() == null) {
                             continue;
                         }
@@ -162,35 +166,19 @@ public class Scheduler {
     public boolean scheduleEvent(Event event) {
         LocalDateTime slot = findAvailableSlot(event);
         if (slot == null) {
-            for (Invite invite : event.getInvites()) {
-                User invitee = this.userRepository.getItemById(invite.getRecipient());
-                if (invitee != null && invitee.getCalendar() != null) {
-                    invitee.getCalendar().getEvents().remove(event);
-                }
-            }
             return false;
         }
 
         event.setEventTime(slot);
-        String organizerUsername = event.getOrganizer();
-        User organizer = this.userRepository.getItemById(organizerUsername);
-        if (organizer != null && organizer.getCalendar() != null) {
-            organizer.getCalendar().addEvent(event);
-            if (this.eventRepository.getItemById(event.getEventId()) == null) {
-                this.eventRepository.save(event);
+        
+        if (this.eventRepository.getItemById(event.getEventId()) == null) {
+        	this.eventRepository.save(event);
             }
-        }
 
         List<Invite> currentInvites = new ArrayList<>(event.getInvites());
         for (Invite invite : currentInvites) {
             String inviteeUsername = invite.getRecipient();
             User invitee = this.userRepository.getItemById(inviteeUsername);
-            if (invitee != null && invitee.getCalendar() != null) {
-                invitee.getCalendar().addEvent(event);
-                if (this.eventRepository.getItemById(event.getEventId()) == null) {
-                    this.eventRepository.save(event);
-                }
-            }
 
             // Recreate invites so they reset to default PENDING status.
             if (invitee != null) {

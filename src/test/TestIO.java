@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import repository.UserRepository;
 import user.AdminUser;
 import user.User;
-import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +24,6 @@ import io.IO;
  */
 public class TestIO extends TestCase {
 	private UserRepository repository;
-	private UserCalendar calendar;
 	private IO input;
 	private EventManager eventManager;
 	private User john;
@@ -38,17 +36,15 @@ public class TestIO extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		input = new IO();
-		calendar=new UserCalendar(null);
 		LocalDateTime eventTime = LocalDateTime.parse("2026-04-08T09:00:00");
 		eventManager = new EventManager();
 		Event fakeevent= new CreatedEvent("meeting", 2, "test event", null);
-		john = new User("John","1234",null);
+		john = new User("John","1234");
 		fakeevent.setEventTime(eventTime);
-		eventManager.setOrganizer(fakeevent, john);
-		calendar.addEvent(fakeevent);
+		fakeevent.setOrganizer(john.getUsername());
 		repository = new UserRepository();
-		repository.saveUser(new User("John", "Pork", calendar));
-		repository.saveUser(new AdminUser("James", "Bond", calendar));
+		repository.saveUser(new User("John", "Pork"));
+		repository.saveUser(new AdminUser("James", "Bond"));
 	}
 	
 	//(String eventName, int eventDuration, String eventDescription,

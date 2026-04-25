@@ -52,22 +52,10 @@ public class Main {
         List<User> loadedUsers = ioHandler.readUsers(filePath);
         for (User user : loadedUsers) {
             if (user.getUsername().equals("admin")) {
-                AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
-                repository.saveUser(adminUser);
+            	AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword());
+            	repository.saveUser(adminUser);
             } else {
                 repository.saveUser(user);
-            }
-        }
-
-        for (User user : repository.getAll()) {
-            if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
-                continue;
-            }
-            for (Event event : user.getCalendar().getEvents()) {
-            	if (eventRepository.getItemById(String.valueOf(event.getEventId())) == null) {
-            	
-                    eventRepository.save(event);
-                }
             }
         }
 

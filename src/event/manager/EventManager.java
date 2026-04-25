@@ -11,14 +11,13 @@ import invite.InviteStatus;
 import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
-import user.calendar.UserCalendar;
 import ics.importer.IcsImporter;
 import ics.importer.ImportStatus;
 /**
  * Applies event mutations such as updates, deletion, and invite rejection.
  *
  * @author EO GI
- * @version TODO
+ * @version 2
  */
 public class EventManager {
 
@@ -96,19 +95,10 @@ public class EventManager {
             return;
         }
 
-        if (this.repository != null) {
-            for (User user : this.repository.getAll()) {
-                if (user.getCalendar() != null) {
-                    user.getCalendar().removeEvent(event);
-                }
-            }
-
-            if (this.eventRepository != null) {
-                this.eventRepository.deleteItem(event.getEventId());
-            }
-            return;
+        if (this.eventRepository != null) {
+        	this.eventRepository.deleteItem(event.getEventId());
+        	}
         }
-    }
 
     public void rejectInvite(Invite invite, Event event) {
         invite.setInviteStatus(InviteStatus.REJECTED);
@@ -118,28 +108,6 @@ public class EventManager {
             if (invitee != null) {
                 this.inviteManager.removeInvite(event, invitee);
             }
-        }
-    }
-
-    /**
-     * Sets event organizer, if change is necessary.
-     *
-     * @param event event to update
-     * @param organizer user to be set as organizer of event
-     */
-    public void setOrganizer(Event event, User organizer) {
-    	event.setOrganizer(organizer.getUsername());
-
-        if (organizer.getCalendar() == null) {
-            organizer.setCalendar(new UserCalendar(new ArrayList<>()));
-        }
-        
-        if (!organizer.getCalendar().getEvents().contains(event)) {
-            organizer.getCalendar().addEvent(event);
-        }
-        
-        if (!organizer.getCalendar().getEvents().contains(event)) {
-            organizer.getCalendar().addEvent(event);
         }
     }
 
@@ -209,14 +177,11 @@ public class EventManager {
             }
 
             // 2. Add newly imported events from the user's calendar to the central repository
-            if (user.getCalendar() != null) {
-                for (Event event : user.getCalendar().getEvents()) {
-                    if (event.isImported()) {
-                        // Avoid duplicates if they already exist for some reason
-                        if (this.eventRepository.getItemById(event.getEventId()) == null) {
-                            this.eventRepository.save(event);
-                        }
-                    }
+            List<Event> newlyImported = importer.getLastImportedEvents(); 
+            if (newlyImported != null) {
+                for (Event event : newlyImported) {
+                    // Since we cleared the old ones in Step 1, we can just save them
+                    this.eventRepository.save(event);
                 }
             }
         }

@@ -1,6 +1,5 @@
 package user;
 
-import user.calendar.UserCalendar;
 
 /**
  * Specialised user with administrative privileges.
@@ -17,8 +16,8 @@ public class AdminUser extends User {
      * @param password admin password
      * @param myCalendar calendar owned by the admin
      */
-    public AdminUser(String username, String password, UserCalendar myCalendar) {
-        super(username, password, myCalendar);
+    public AdminUser(String username, String password) {
+        super(username, password);
     }
 
     /**
