@@ -15,16 +15,16 @@ import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
 
-public class AdminPanel extends JPanel {
+public class AdminPanel extends BaseDashboardPanel {
 
 	private static final long serialVersionUID = 1L;
 	private UserRepository repository;
 	private EventRepository eventRepository;
 
 	// existing repository instance here EO GI: 5/4/2026
-	// EO G: 5/4/2026 23.37 adminUser as a parameter
-	public AdminPanel(UserRepository repository, User adminUser, Scheduler scheduler, EventRepository eventRepository) {
-		
+	// EO G: 5/4/2026 23.37 activeUser as a parameter
+	public AdminPanel(UserRepository repository, User activeUser, Scheduler scheduler, EventRepository eventRepository) {
+		super(repository,activeUser,scheduler,eventRepository);
 		this.repository = repository;
 		this.eventRepository = eventRepository;
 		setBackground(Color.MAGENTA);
@@ -77,7 +77,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
 				// chanelled right repository EO GI: 5/4/2026
-				topFrame.setContentPane(new AdminPanelEvents(repository, adminUser,scheduler,eventRepository));
+				topFrame.setContentPane(new AdminPanelEvents(repository, activeUser,scheduler,eventRepository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -105,7 +105,7 @@ public class AdminPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AdminPanel.this);
 				// chanelled right repository EO GI: 5/4/2026
-				topFrame.setContentPane(new AdminPanelDeleteUser(repository, adminUser, scheduler, eventRepository));
+				topFrame.setContentPane(new AdminPanelDeleteUser(repository, activeUser, scheduler, eventRepository));
 				topFrame.revalidate();
 				topFrame.repaint();
 			}
@@ -165,5 +165,11 @@ public class AdminPanel extends JPanel {
 		add(btnLogout, "flowy,cell 7 5");
 		JLabel label_32 = new JLabel("");
 		add(label_32, "cell 7 5,grow");	
+	}
+
+	@Override
+	protected BaseDashboardPanel createRefreshPanel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

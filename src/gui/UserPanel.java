@@ -32,14 +32,14 @@ import user.service.UserDeletionResult;
 import user.service.UserService;
 
 
-public class UserPanel extends JPanel {
+public class UserPanel extends BaseDashboardPanel {
     
-    private UserRepository repository;
-    private EventRepository eventRepository;
-    private User currentUser;
+  
+  
+   
     private Event event1;
     private Event event2;
-    private Scheduler scheduler;
+   
     private UserService userService;
     private EventQueryService eventQueryService;
     private final JPanel invitesPane;
@@ -53,9 +53,10 @@ public class UserPanel extends JPanel {
     }
     
     public UserPanel(UserRepository repository, User user, Scheduler scheduler,EventRepository eventRepository) {
+    	super(repository,user,scheduler,eventRepository);
         this.repository = repository;
         this.eventRepository = eventRepository;
-        this.currentUser = user;
+        this.activeUser = user;
         this.scheduler = scheduler;
         this.userService = new UserService(repository);
         this.eventQueryService = new EventQueryService(eventRepository);
@@ -99,7 +100,7 @@ public class UserPanel extends JPanel {
         calendarCard.setBounds(W/2+MARGIN/2, MARGIN, W/2-MARGIN*6/2, 340);
         add(calendarCard);
         
-        JLabel calendarTitle = new JLabel("Calendar (Welcome " + currentUser.getUsername() + ")");
+        JLabel calendarTitle = new JLabel("Calendar (Welcome " + activeUser.getUsername() + ")");
         calendarTitle.setFont(new Font("Dialog", Font.BOLD, 14));
         calendarTitle.setBounds(MARGIN, MARGIN, 300, 20);
         calendarCard.add(calendarTitle);
@@ -129,7 +130,7 @@ public class UserPanel extends JPanel {
         JButton btnDeleteAccount = new JButton("Delete Account");
         btnDeleteAccount.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		UserDeletionResult result = userService.deleteOwnAccount(currentUser);
+        		UserDeletionResult result = userService.deleteOwnAccount(activeUser);
 
         		if (result.isSuccess()) {
         			JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(UserPanel.this);
@@ -159,7 +160,7 @@ public class UserPanel extends JPanel {
                     String filePath = selectedFile.getAbsolutePath();
 
                     EventManager eventManager = new EventManager(repository, eventRepository);
-                    ImportStatus status = eventManager.importIcs(currentUser, filePath);
+                    ImportStatus status = eventManager.importIcs(activeUser, filePath);
                     
                     if (status == ImportStatus.Succes) {
                         JOptionPane.showMessageDialog(UserPanel.this, "Calendar imported successfully!");
@@ -191,7 +192,7 @@ public class UserPanel extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(UserPanel.this);
 					JDialog dialog = new JDialog(topFrame, "Create Event", true);
-					dialog.setContentPane(new EventManagePanel(repository, eventRepository, currentUser, true, null, scheduler, () -> {
+					dialog.setContentPane(new EventManagePanel(repository, eventRepository, activeUser, true, null, scheduler, () -> {
 					    dialog.dispose();
 					    refreshEvents();
 					}));
@@ -210,7 +211,7 @@ public class UserPanel extends JPanel {
 		eventsCardsPanel.setBackground(Color.WHITE);
 		eventsCardsPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		List<Event> events = eventQueryService.getVisibleEventsForUser(currentUser.getUsername());
+		List<Event> events = eventQueryService.getVisibleEventsForUser(activeUser.getUsername());
 		eventsCardsPanel.setPreferredSize(new Dimension(500, Math.max(1, events.size()) * 118));
 
 		for (Event event : events) {
@@ -274,14 +275,14 @@ public class UserPanel extends JPanel {
 		descLabel.setBounds(MARGIN, 55, 440, 16);
 		card.add(descLabel);
 
-		if (currentUser.getUsername().equals(event.getOrganizer())) {
+		if (activeUser.getUsername().equals(event.getOrganizer())) {
 			JButton updateButton = new JButton("Update Event");
 			updateButton.setBounds(MARGIN, 72, 120, 22);
 			updateButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
-						topFrame.setContentPane(new EventManagePanel(repository, eventRepository, currentUser, false, event, scheduler, () -> {
-							topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler,eventRepository));
+						topFrame.setContentPane(new EventManagePanel(repository, eventRepository, activeUser, false, event, scheduler, () -> {
+							topFrame.setContentPane(new UserPanel(repository, activeUser, scheduler,eventRepository));
 							topFrame.revalidate();
 							topFrame.repaint();
 					}));
@@ -316,7 +317,7 @@ public class UserPanel extends JPanel {
 		invitesCardsPanel.setLayout(null);
 		invitesCardsPanel.setBackground(Color.WHITE);
 
-		List<EventInviteView> invites = eventQueryService.getInvitesForUser(currentUser.getUsername());
+		List<EventInviteView> invites = eventQueryService.getInvitesForUser(activeUser.getUsername());
 		int inviteCardHeight = 50;
 		int inviteCardWidth = 560;
 		int inviteCardSpacing = 58;
@@ -379,10 +380,10 @@ public class UserPanel extends JPanel {
 		invitesPane.add(invitesScrollPane);
 	}
 
-    private void refreshEvents() {
-		JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-		topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler,eventRepository));
-		topFrame.revalidate();
-		topFrame.repaint();
+
+	@Override
+	protected BaseDashboardPanel createRefreshPanel() {
+		// TODO Auto-generated method stub
+		return null ;
 	}
 }
