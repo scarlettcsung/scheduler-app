@@ -62,27 +62,6 @@ public class UserPanel extends JPanel {
         this.invitesPane = new JPanel();
         
         cardBorder = cardBorder();
-
-        EventManager eventManager = new EventManager(repository, eventRepository);
-        event1 = new CreatedEvent(
-    	        "Team Meeting", 
-    	        60, 
-    	        "yappen met de bros", 
-    	        new ArrayList<>()
-    	    );
-        eventManager.setOrganizer(event1, currentUser);
-        event2 = new CreatedEvent(
-        		"Deadline", 
-        		120, 
-        		"strijden voor de deadline", 
-        		new ArrayList<>()
-        );  
-        eventManager.setOrganizer(event2, currentUser);
-        
-        LocalDateTime event1Time = LocalDateTime.of(2026, 4,20,16,20);
-        LocalDateTime event2Time = LocalDateTime.of(2026, 5,11,9,30);
-        event1.setEventTime(event1Time);
-        event2.setEventTime(event2Time);
         
         // UI Setup
         setBackground(Color.CYAN);
@@ -295,18 +274,6 @@ public class UserPanel extends JPanel {
 		descLabel.setBounds(MARGIN, 55, 440, 16);
 		card.add(descLabel);
 
-		JButton deleteButton = new JButton("Delete Event");
-		deleteButton.setBounds(MARGIN + 130, 72, 120, 22);
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventManager eventManager = new EventManager(repository, eventRepository);
-				eventManager.deleteEvent(event);
-				eventRepository.deleteItem(event.getEventId());
-				refreshEvents();
-			}
-		});
-
-		card.add(deleteButton);
 		if (currentUser.getUsername().equals(event.getOrganizer())) {
 			JButton updateButton = new JButton("Update Event");
 			updateButton.setBounds(MARGIN, 72, 120, 22);
@@ -323,6 +290,18 @@ public class UserPanel extends JPanel {
 				}
 			});
 			card.add(updateButton);
+			
+			JButton deleteButton = new JButton("Delete Event");
+		    deleteButton.setBounds(MARGIN + 130, 72, 120, 22);
+		    deleteButton.addActionListener(new ActionListener() {
+		        public void actionPerformed(ActionEvent e) {
+		            EventManager eventManager = new EventManager(repository, eventRepository);
+		            eventManager.deleteEvent(event);
+		            eventRepository.deleteItem(event.getEventId());
+		            refreshEvents();
+		        }
+		    });
+		    card.add(deleteButton);
 		}
 		return card;
 	}
