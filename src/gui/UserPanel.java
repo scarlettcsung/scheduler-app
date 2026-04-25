@@ -322,23 +322,24 @@ public class UserPanel extends JPanel {
 			}
 		});
 
-		JButton updateButton = new JButton("Update Event");
-		updateButton.setBounds(MARGIN, 72, 120, 22);
-		updateButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
-					topFrame.setContentPane(new EventManagePanel(repository, eventRepository, currentUser, false, event, scheduler, () -> {
-						topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler,eventRepository));
-						topFrame.revalidate();
-						topFrame.repaint();
-				}));
-				topFrame.revalidate();
-				topFrame.repaint();
-			}
-		});
-
 		card.add(deleteButton);
-		card.add(updateButton);
+		if (currentUser.getUsername().equals(event.getOrganizer())) {
+			JButton updateButton = new JButton("Update Event");
+			updateButton.setBounds(MARGIN, 72, 120, 22);
+			updateButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(card);
+						topFrame.setContentPane(new EventManagePanel(repository, eventRepository, currentUser, false, event, scheduler, () -> {
+							topFrame.setContentPane(new UserPanel(repository, currentUser, scheduler,eventRepository));
+							topFrame.revalidate();
+							topFrame.repaint();
+					}));
+					topFrame.revalidate();
+					topFrame.repaint();
+				}
+			});
+			card.add(updateButton);
+		}
 		return card;
 	}
 

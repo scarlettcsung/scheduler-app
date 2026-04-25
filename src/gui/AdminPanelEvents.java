@@ -283,6 +283,7 @@ public class AdminPanelEvents extends JPanel {
 			}
 		});
 
+		card.add(deleteButton);
 		JButton updateButton = new JButton("Update Event");
 		updateButton.setBounds(MARGIN, 72, 120, 22);
 		updateButton.addActionListener(new ActionListener() {
@@ -297,8 +298,6 @@ public class AdminPanelEvents extends JPanel {
 				topFrame.repaint();
 			}
 		});
-
-		card.add(deleteButton);
 		card.add(updateButton);
 		return card;
 	}

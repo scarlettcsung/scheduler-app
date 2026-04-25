@@ -302,6 +302,11 @@ public class EventManagePanel extends JPanel {
 
 		btnInvite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!isCurrentUserOrganizer()) {
+					showOrganizerOnlyMessage();
+					return;
+				}
+
 				String inviteeUsername = txtInviteeUsername.getText().trim();
 
 				String errorMessage = inviteManager.addTemporaryInvite(
@@ -327,6 +332,11 @@ public class EventManagePanel extends JPanel {
 		
 		btnUninvite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!isCurrentUserOrganizer()) {
+					showOrganizerOnlyMessage();
+					return;
+				}
+
 				String inviteeUsername = txtInviteeUsername.getText().trim();
 
 				String errorMessage = inviteManager.removeInviteFromForm(
@@ -358,6 +368,11 @@ public class EventManagePanel extends JPanel {
 		
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (!isCurrentUserOrganizer()) {
+					showOrganizerOnlyMessage();
+					return;
+				}
+
 				String eventName = txtEventName.getText();
 				if (eventName.isEmpty() || eventName.equalsIgnoreCase("Name")) {
 					JOptionPane.showMessageDialog(EventManagePanel.this,
@@ -453,6 +468,19 @@ public class EventManagePanel extends JPanel {
 
 			}
 		});
+	}
+
+	private boolean isCurrentUserOrganizer() {
+		if (isNewEvent || event == null) {
+			return true;
+		}
+
+		return currentUser != null
+				&& (currentUser.canAccessAdminPanel() || currentUser.getUsername().equals(event.getOrganizer()));
+	}
+
+	private void showOrganizerOnlyMessage() {
+		JOptionPane.showMessageDialog(EventManagePanel.this, "Only the event organizer or an admin can update this event.");
 	}
 
 	public void updateParticipantList() {
