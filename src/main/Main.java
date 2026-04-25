@@ -27,7 +27,6 @@ import user.User;
  * @version 3
  */
 public class Main {
-    
     /**
      * Main method that launches the application.
      * * <ol>
