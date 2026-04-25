@@ -177,28 +177,10 @@ public class UserPanel extends JPanel {
                     File selectedFile = fileChooser.getSelectedFile();
                     String filePath = selectedFile.getAbsolutePath();
 
-                    IcsImporter importer = new IcsImporter();
-                    importer.setTargetUser(currentUser);
-                    importer.setIcsFilePath(filePath);
-                    importer.runImport();
-                    ImportStatus status = importer.getLastImportStatus();
-
-	                List<Event> existingEvents = new ArrayList<>(eventRepository.getAll());
-
-	                for (Event event : existingEvents) {
-	                    if (event.isImported() && currentUser.getUsername().equals(event.getOrganizer())) {
-	                        eventRepository.deleteItem(event.getEventId());
-	                    }
-	                }
-                    
+                    EventManager eventManager = new EventManager(repository, eventRepository);
+                    ImportStatus status = eventManager.importIcs(currentUser, filePath);
                     
                     if (status == ImportStatus.Succes) {
-                        for (Event event : currentUser.getCalendar().getEvents()) {
-                            if (eventRepository.getItemById(event.getEventId()) == null) {
-                                eventRepository.save(event);
-                            }
-                        }
-
                         JOptionPane.showMessageDialog(UserPanel.this, "Calendar imported successfully!");
                         refreshEvents();
                     } else {

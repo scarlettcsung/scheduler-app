@@ -12,6 +12,8 @@ import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
 import user.calendar.UserCalendar;
+import ics.importer.IcsImporter;
+import ics.importer.ImportStatus;
 /**
  * Applies event mutations such as updates, deletion, and invite rejection.
  *
@@ -187,4 +189,45 @@ public class EventManager {
     	}
     	} return oEvents;
     }
+
+    /**
+     * Imports an ICS calendar for a user and synchronizes it with the central
+     * event repository.
+     *
+     * @param user user whose calendar should be updated
+     * @param filePath path to the ICS file
+     * @return status of the import operation
+     */
+    public ImportStatus importIcs(User user, String filePath) {
+        IcsImporter importer = new IcsImporter();
+        importer.setTargetUser(user);
+        importer.setIcsFilePath(filePath);
+        importer.runImport();
+
+        ImportStatus status = importer.getLastImportStatus();
+
+        if (status == ImportStatus.Succes && this.eventRepository != null) {
+            // 1. Remove old imported events for this user from the central repository
+            List<Event> existingEvents = new ArrayList<>(this.eventRepository.getAll());
+            for (Event event : existingEvents) {
+                if (event.isImported() && user.getUsername().equals(event.getOrganizer())) {
+                    this.eventRepository.deleteItem(event.getEventId());
+                }
+            }
+
+            // 2. Add newly imported events from the user's calendar to the central repository
+            if (user.getCalendar() != null) {
+                for (Event event : user.getCalendar().getEvents()) {
+                    if (event.isImported()) {
+                        // Avoid duplicates if they already exist for some reason
+                        if (this.eventRepository.getItemById(event.getEventId()) == null) {
+                            this.eventRepository.save(event);
+                        }
+                    }
+                }
+            }
+        }
+
+        return status;
     }
+}

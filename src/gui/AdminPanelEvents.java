@@ -141,26 +141,10 @@ public class AdminPanelEvents extends JPanel {
 	                File selectedFile = fileChooser.getSelectedFile();
 	                String filePath = selectedFile.getAbsolutePath();
 
-	                IcsImporter importer = new IcsImporter();
-	                importer.setTargetUser(adminUser);
-	                importer.setIcsFilePath(filePath);
-	                importer.runImport();
-	                ImportStatus status = importer.getLastImportStatus();
+	                EventManager eventManager = new EventManager(repository, eventRepository);
+	                ImportStatus status = eventManager.importIcs(adminUser, filePath);
 
-	                List<Event> existingEvents = new ArrayList<>(eventRepository.getAll());
-
-	                for (Event event : existingEvents) {
-	                    if (event.isImported() && adminUser.getUsername().equals(event.getOrganizer())) {
-	                        eventRepository.deleteItem(event.getEventId());
-	                    }
-	                }
 	                if (status == ImportStatus.Succes) {
-	                    for (Event event : adminUser.getCalendar().getEvents()) {
-	                        if (eventRepository.getItemById(event.getEventId()) == null) {
-	                            eventRepository.save(event);
-	                        }
-	                    }
-
 	                    JOptionPane.showMessageDialog(AdminPanelEvents.this, "Calendar imported successfully!");
 	                    refreshEvents();
 	                } else {

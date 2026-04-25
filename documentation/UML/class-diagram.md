@@ -98,6 +98,7 @@ classDiagram
         +getOrganizer(event: Event) : User
         +returnParticipatingEvents(username: String, repo: EventRepository) : List~Event~
         +returnOrganisedEvents(username: String, repo: EventRepository) : List~Event~
+        +importIcs(user: User, filePath: String) : ImportStatus
     }
 
     class InviteManager {
@@ -214,5 +215,6 @@ classDiagram
     Scheduler --> EventRepository : uses
     EventManager --> EventRepository
     EventManager --> UserRepository
+    EventManager ..> IcsImporter : uses
     AdminUser --|> User
 ```
