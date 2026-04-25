@@ -96,12 +96,18 @@ public abstract class Event {
      * @param organizerUsername username of the new organizer
      */
     public void setOrganizer(String organizerUsername) {
+    	boolean found = false;
     	for (Invite invite:invites) {
         	if (invite.getRecipient().equals(organizerUsername)) {
         		invite.setOrganizer();
+        		found = true;
         	} else if (invite.getRole().equals(Role.ORGANIZER)) {
         		invite.setGuest();
         		}
+        }
+    	
+    	if (!found) {
+            this.invites.add(new Invite(organizerUsername, this.eventId, Role.ORGANIZER));
         }
     }
 
