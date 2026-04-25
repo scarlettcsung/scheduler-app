@@ -87,7 +87,7 @@ public class InviteManager {
             return null;
         }
 
-        if (event != null) {
+        if (event != null && hasExistingInvite(event, inviteeUsername)) {
             removeInvite(event, invitee);
             return null;
         }
