@@ -4,6 +4,7 @@ import event.*;
 import event.manager.EventManager;
 import event.manager.InviteManager;
 import invite.Invite;
+import invite.Role;
 import junit.framework.TestCase;
 import repository.EventRepository;
 import repository.UserRepository;
@@ -17,12 +18,12 @@ import java.util.Locale;
 /**
  * Unit tests for {@link event.Event}, {@link event.CreatedEvent}, and {@link event.ImportedEvent}.
  *
- * @author NJ
- * @version TODO
+ * @author NJ/NS/SS
+ * @version 1
  */
 public class TestEvent extends TestCase {
 
-    private String exampleOrganizer;
+    private User exampleOrganizer;
     private Event event;
     private LocalDateTime exampleTime;
     private Invite invite;
@@ -34,7 +35,7 @@ public class TestEvent extends TestCase {
     
     protected void setUp() {
     	Locale.setDefault(Locale.ENGLISH);       
-    	exampleOrganizer = "Charles";
+    	exampleOrganizer = new User("Charles","12345",new UserCalendar(null));
         exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
 
         UserCalendar calendar = new UserCalendar(null);
@@ -42,12 +43,12 @@ public class TestEvent extends TestCase {
         eventRepository = new EventRepository();
     	eventManager = new EventManager(repository, eventRepository);
     	inviteManager = new InviteManager(repository);
-        repository.saveUser(new User("Charles", "12345", calendar));
+        repository.saveUser(exampleOrganizer);
         repository.saveUser(exampleInvitee); // CHANGE
 
         exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
-        event = new CreatedEvent("testEvent", 60, "testEvent", exampleOrganizer, null);
-        invite = new Invite(exampleInvitee.getUsername(), event.getEventId(), null);
+        event = new CreatedEvent("testEvent", 60, "testEvent", null);
+        invite = new Invite(exampleInvitee.getUsername(), event.getEventId(), Role.GUEST);
     }
 
     // Test Getters
@@ -55,7 +56,8 @@ public class TestEvent extends TestCase {
     public void testEventTime() {assertNull(event.getEventTime());}
     public void testEventId() {assertNotNull(event.getEventId());}
     public void testOrganizer() {
-        assertEquals(exampleOrganizer,event.getOrganizer());
+    	eventManager.setOrganizer(event, exampleOrganizer);
+        assertEquals(exampleOrganizer.getUsername(),event.getOrganizer());
     }
     public void testDescription() {
         assertEquals("testEvent",event.getEventDescription());
@@ -63,7 +65,7 @@ public class TestEvent extends TestCase {
     public void testDuration() {assertEquals(60,event.getEventDuration()); }
     
     public void testGetParticipants() {
-    	inviteManager.addInvite(event,exampleInvitee);
+    	inviteManager.addInvite(event,exampleInvitee,Role.GUEST);
     	List<String> expected = List.of(invite.getRecipient());
     	assertEquals(expected, event.getParticipants());
     }

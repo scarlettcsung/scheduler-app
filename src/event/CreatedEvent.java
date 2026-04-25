@@ -21,9 +21,8 @@ public class CreatedEvent extends Event {
      * @param organizerUsername username of the event organizer
      * @param invites invites associated with the event
      */
-    public CreatedEvent(String eventName, int eventDuration, String eventDescription, String organizerUsername,
-            List<Invite> invites) {
-        super(eventName, eventDuration, eventDescription, organizerUsername, invites);
+    public CreatedEvent(String eventName, int eventDuration, String eventDescription, List<Invite> invites) {
+        super(eventName, eventDuration, eventDescription, invites);
         this.isImportedField = false; // Just for persistence
     }
 

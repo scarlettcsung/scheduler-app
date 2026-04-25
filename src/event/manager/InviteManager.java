@@ -3,6 +3,7 @@ package event.manager;
 import java.util.List;
 import event.Event;
 import invite.Invite;
+import invite.Role;
 import user.User;
 import repository.UserRepository;
 
@@ -120,7 +121,7 @@ public class InviteManager {
      * @param event event to add invite to
      * @param recipient user to invite
      */
-    public void addInvite(Event event, User recipient) {
+    public void addInvite(Event event, User recipient, Role role) {
         if (event == null || recipient == null) {
             return;
         }
@@ -129,7 +130,12 @@ public class InviteManager {
             return;
         }
 
-        event.getInvites().add(new Invite(recipient.getUsername(), event.getEventId(), null));
+        if (role.equals(Role.ORGANIZER)) {
+        	event.getInvites().add(new Invite(recipient.getUsername(), event.getEventId(), Role.ORGANIZER));
+        } else {
+        	event.getInvites().add(new Invite(recipient.getUsername(), event.getEventId(), Role.GUEST));
+        }
+        
         if (recipient.getCalendar() != null) {
             recipient.getCalendar().addEvent(event);
         }

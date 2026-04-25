@@ -6,6 +6,7 @@ import java.util.List;
 import event.CreatedEvent;
 import event.Event;
 import invite.Invite;
+import invite.Role;
 import event.manager.InviteManager;
 import repository.UserRepository;
 import user.User;
@@ -31,7 +32,7 @@ public class TestInviteManager extends TestCase {
         exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
         exampleNewOrganizer = new User("Jennifer", "1234", new UserCalendar(null));
         
-        event = new CreatedEvent("osman", 60, "testEvent", exampleOrganizer, null);
+        event = new CreatedEvent("osman", 60, "testEvent", null);
         
         repository.saveUser(exampleInvitee);
         repository.saveUser(exampleNewOrganizer);
@@ -191,15 +192,15 @@ public class TestInviteManager extends TestCase {
         assertEquals("User is not in this event!", result);
     }
     public void testAddInvite() {
-        inviteManager.addInvite(event, exampleInvitee);
+        inviteManager.addInvite(event, exampleInvitee, Role.GUEST);
         assertEquals(1, event.getInvites().size());
         assertEquals(exampleInvitee.getUsername(), event.getInvites().get(0).getRecipient());
         assertTrue(exampleInvitee.getCalendar().getEvents().contains(event));
     }
 
     public void testAddInviteDuplicate() {
-        inviteManager.addInvite(event, exampleInvitee);
-        inviteManager.addInvite(event, exampleInvitee);
+        inviteManager.addInvite(event, exampleInvitee, Role.GUEST);
+        inviteManager.addInvite(event, exampleInvitee, Role.GUEST);
         assertEquals(1, event.getInvites().size());
     }
 
@@ -210,13 +211,13 @@ public class TestInviteManager extends TestCase {
         boolean hasInvite = (boolean) method.invoke(inviteManager, event, exampleInvitee.getUsername());
         assertFalse(hasInvite);
         
-        inviteManager.addInvite(event, exampleInvitee);
+        inviteManager.addInvite(event, exampleInvitee, Role.GUEST);
         hasInvite = (boolean) method.invoke(inviteManager, event, exampleInvitee.getUsername());
         assertTrue(hasInvite);
     }
 
     public void testRemoveInvite() {
-        inviteManager.addInvite(event, exampleInvitee);
+        inviteManager.addInvite(event, exampleInvitee, Role.GUEST);
         inviteManager.removeInvite(event, exampleInvitee);
         assertEquals(0, event.getInvites().size());
         assertFalse(exampleInvitee.getCalendar().getEvents().contains(event));

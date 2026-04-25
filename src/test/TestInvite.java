@@ -6,6 +6,7 @@ import event.Event;
 import invite.Invite;
 import invite.InviteStatus;
 import junit.framework.TestCase;
+import user.User;
 import user.calendar.UserCalendar;
 
 /**
@@ -16,7 +17,7 @@ import user.calendar.UserCalendar;
  */
 public class TestInvite extends TestCase{
 
-    private String exampleOrganizer;
+    private User exampleOrganizer;
     private UserCalendar calendar;
     private Event event;
     private Invite invite;
@@ -25,9 +26,9 @@ public class TestInvite extends TestCase{
     private String eventId;
 
     protected void setUp() {
-        exampleOrganizer = "Charles";
+        exampleOrganizer = new User("Charles","12345",new UserCalendar(null));
         calendar = new UserCalendar(null);
-        event = new CreatedEvent("testEvent", 60,"testEvent", exampleOrganizer, null);
+        event = new CreatedEvent("testEvent", 60,"testEvent", null);
         eventId = event.getEventId();
         exampleInvitee = "Joe";
         invite = new Invite(exampleInvitee,eventId, null);

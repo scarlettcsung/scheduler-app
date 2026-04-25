@@ -126,7 +126,19 @@ public class EventManager {
      * @param organizer user to be set as organizer of event
      */
     public void setOrganizer(Event event, User organizer) {
-        event.setOrganizer(organizer.getUsername());
+    	boolean found = false;
+    	for (Invite invite:event.getInvites()) {
+    		if (invite.getRecipient().equals(organizer.getUsername())) {
+    			event.setOrganizer(organizer.getUsername());
+    			found = true;
+    			break;
+    		}
+    	}
+    		
+    	if (!found) {
+    		inviteManager.addInvite(event, organizer, Role.ORGANIZER);
+    		}
+        
 
         UserCalendar calendar = new UserCalendar(null);
 

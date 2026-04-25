@@ -10,6 +10,7 @@ import java.util.UUID;
 import com.google.gson.annotations.SerializedName;
 
 import invite.Invite;
+import invite.Role;
 
 /**
  * Represents a schedulable event together with its organizer and invitees.
@@ -25,7 +26,6 @@ public abstract class Event {
     private String eventDescription;
     @SerializedName(value = "eventId", alternate = {"eventID"})
     private final String eventId = UUID.randomUUID().toString();
-    private String organizerUsername;
     private List<Invite> invites;
 
     @SerializedName(value = "isImportedField", alternate = {"isImported"})
@@ -40,12 +40,10 @@ public abstract class Event {
      * @param organizerUsername username of the event organizer
      * @param invites invites associated with the event, or {@code null} for an empty list
      */
-    public Event(String eventName, int eventDuration, String eventDescription,
-            String organizerUsername, List<Invite> invites) {
+    public Event(String eventName, int eventDuration, String eventDescription, List<Invite> invites) {
         this.eventName = eventName;
         this.eventDuration = eventDuration;
         this.eventDescription = eventDescription;
-        this.organizerUsername = organizerUsername;
         this.invites = Objects.requireNonNullElseGet(invites, () -> new ArrayList<>());
     }
 
@@ -98,7 +96,13 @@ public abstract class Event {
      * @param organizerUsername username of the new organizer
      */
     public void setOrganizer(String organizerUsername) {
-        this.organizerUsername = organizerUsername;
+    	for (Invite invite:invites) {
+        	if (invite.getRecipient().equals(organizerUsername)) {
+        		invite.setOrganizer();
+        	} else if (invite.getRole().equals(Role.ORGANIZER)) {
+        		invite.setGuest();
+        		}
+        }
     }
 
     /**
@@ -125,7 +129,12 @@ public abstract class Event {
      * @return organizer username
      */
     public String getOrganizer() {
-        return this.organizerUsername;
+        for (Invite invite:invites) {
+        	if (invite.getRole().equals(Role.ORGANIZER)) {
+        		return invite.getRecipient();
+        	}
+        }
+        return null;
     }
 
     /**
@@ -184,6 +193,10 @@ public abstract class Event {
      * @return formatted time range
      */
     public String getTimeString() {
+        if (this.eventTime == null) {
+        	return "Time not set";
+        }
+        
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
         String stringDateTime = this.eventTime.format(formatter);
         LocalDateTime endTime = this.eventTime.plusMinutes(this.eventDuration);
@@ -191,4 +204,5 @@ public abstract class Event {
 
         return String.format("%s - %s", stringDateTime, endTimeStr);
     }
+        
 }

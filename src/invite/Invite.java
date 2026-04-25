@@ -27,6 +27,7 @@ public class Invite {
         this.recipientUsername = recipientUsername;
         this.eventId = eventId;
         this.status = InviteStatus.PENDING;
+        this.role = role;
     }
 
     // Status update

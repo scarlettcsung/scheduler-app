@@ -16,6 +16,7 @@ import event.manager.EventManager;
 import event.manager.InviteManager;
 import invite.Invite;
 import invite.InviteStatus;
+import invite.Role;
 
 /**
  * Unit tests for {@link event.EventManager}.
@@ -31,9 +32,9 @@ public class TestEventManager extends TestCase {
 	private InviteManager inviteManager;
 	private UserCalendar calendar;
 
-    String exampleOrganizer = "testUser";
+    User exampleOrganizer = new User("Charles","12345",new UserCalendar(null));
     LocalDateTime example_date = LocalDateTime.of(2026, 4, 1, 12, 0);
-    Event event = new CreatedEvent("osman", 60, "testEvent", exampleOrganizer, null);
+    Event event = new CreatedEvent("osman", 60, "testEvent", null);
     LocalDateTime example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
     
 	// Set up repository
@@ -93,7 +94,7 @@ public class TestEventManager extends TestCase {
     }
     
     public void testInviteReject() {
-    	inviteManager.addInvite(event,exampleInvitee);
+    	inviteManager.addInvite(event,exampleInvitee,Role.GUEST);
         eveUpdateEvent.rejectInvite(invite,event);
         assertEquals(0, event.getInvites().size());
         assertFalse(exampleInvitee.getCalendar().getEvents().contains(event));
@@ -114,7 +115,7 @@ public class TestEventManager extends TestCase {
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
-        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
         
         //add event to calendar
         orgCal.addEvent(e);
@@ -134,7 +135,7 @@ public class TestEventManager extends TestCase {
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
         repo.saveUser(new User("inviteeUser", "password", null)); // no calendar
-        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
         
         //add event to calendar
         orgCal.addEvent(e);
@@ -156,7 +157,7 @@ public class TestEventManager extends TestCase {
         UserCalendar inviteeCal = new UserCalendar(null);
         User invitee = new User("inviteeUser", "password", inviteeCal);
         repo.saveUser(invitee);
-        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
         
         //add to calendar
         orgCal.addEvent(e);
@@ -171,7 +172,7 @@ public class TestEventManager extends TestCase {
     
     // Covers the path where repository is null, hitting the final closing bracket?
     public void testDeleteEventNoRepository() {
-        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
         new EventManager().deleteEvent(e); 
     }
     
@@ -183,7 +184,7 @@ public class TestEventManager extends TestCase {
         UserCalendar orgCal = new UserCalendar(null);
         User organizer = new User("testUser", "password", orgCal);
         repo.saveUser(organizer);
-        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
         
         //add to calendar
         orgCal.addEvent(e);
@@ -197,14 +198,14 @@ public class TestEventManager extends TestCase {
     // Test organizerUsername == null branch
     public void testDeleteEventNullOrganizerUsername() {
         UserRepository repo = new UserRepository();
-        Event e = new CreatedEvent("meeting", 60, "desc", null, null); // null organizer
+        Event e = new CreatedEvent("meeting", 60, "desc", null); // null organizer
         new EventManager(repo, new EventRepository()).deleteEvent(e);
     }
     
     // Covers organizer not found in repo (organizer == null) branch
     public void testDeleteEventOrganizerNotInRepo() {
         UserRepository repo = new UserRepository();
-        Event e = new CreatedEvent("meeting", 60, "desc", "unknownUser", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
         new EventManager(repo, new EventRepository()).deleteEvent(e);
     }
     
@@ -254,7 +255,7 @@ public class TestEventManager extends TestCase {
         User organizer = new User("testUser", "password", cal);
         repo.saveUser(organizer);
         
-        Event e = new CreatedEvent("meeting", 60, "desc", "testUser", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
         cal.addEvent(e);
         
         manager.deleteEvent(e);
@@ -262,23 +263,24 @@ public class TestEventManager extends TestCase {
     }
     
     public void testGetOrganizer() {
-        Event e = new CreatedEvent("meeting", 60, "desc", "Jennifer", null);
+        Event e = new CreatedEvent("meeting", 60, "desc", null);
+        eveUpdateEvent.setOrganizer(e, exampleNewOrganizer);
         User result = eveUpdateEvent.getOrganizer(e);
         assertEquals(exampleNewOrganizer, result);
     }
     
     public void testReturnOrganizedEvents() {
-        Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", exampleNewOrganizer.getUsername(), null);
+        Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", null);
         Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventId(), null);
         invite1.setOrganizer(); 
         event1.getInvites().add(invite1);
         
-        Event event2 = new CreatedEvent("Project Deadline", 120, "Work session", exampleNewOrganizer.getUsername(), null);
+        Event event2 = new CreatedEvent("Project Deadline", 120, "Work session", null);
         Invite invite2 = new Invite(exampleNewOrganizer.getUsername(), event2.getEventId(), null);
         invite2.setOrganizer();
         event2.getInvites().add(invite2);
         
-        Event event3 = new CreatedEvent("Lunch", 45, "Food", "Charles", null);
+        Event event3 = new CreatedEvent("Lunch", 45, "Food", null);
         Invite invite3 = new Invite("Charles", event3.getEventId(), null);
         invite3.setOrganizer();
         event3.getInvites().add(invite3);
@@ -294,7 +296,7 @@ public class TestEventManager extends TestCase {
     }
 
     public void testReturnParticipatingEvents() {
-        Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", exampleNewOrganizer.getUsername(), null);
+        Event event1 = new CreatedEvent("Team Meeting", 60, "Weekly sync", null);
         
         Invite invite1 = new Invite(exampleNewOrganizer.getUsername(), event1.getEventId(), null);
         invite1.setOrganizer();
