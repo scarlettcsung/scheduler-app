@@ -16,6 +16,7 @@ import event.manager.EventManager;
 import event.manager.InviteManager;
 import invite.Invite;
 import invite.InviteStatus;
+import ics.importer.ImportStatus;
 
 /**
  * Unit tests for {@link event.EventManager}.
@@ -314,5 +315,23 @@ public class TestEventManager extends TestCase {
         assertEquals(0, jennifersParticipatingEvents.size());
     }
 
+    public void testImportIcs() {
+        String testIcsPath = "src/test/resources/simpleImport.ics";
+        User user = new User("ImportUser", "pass", null);
+        repository.saveUser(user);
 
+        ImportStatus status = eveUpdateEvent.importIcs(user, testIcsPath);
+
+        assertEquals(ics.importer.ImportStatus.Succes, status);
+        assertNotNull(user.getCalendar());
+        
+        // Verify events are in the central repository
+        int importedCount = 0;
+        for (event.Event e : eventRepository.getAll()) {
+            if (e.isImported() && "ImportUser".equals(e.getOrganizer())) {
+                importedCount++;
+            }
+        }
+        assertTrue(importedCount > 0);
     }
+}

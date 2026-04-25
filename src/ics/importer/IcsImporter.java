@@ -97,8 +97,10 @@ public class IcsImporter {
             this.lastImportStatus = ImportStatus.Succes;
         } catch (FileNotFoundException e) {
             this.lastImportStatus = ImportStatus.FileNotFound;
-        } catch (IOException | ParserException e) {
-            throw new IllegalStateException("Calendar import failed", e);
+        } catch (Exception e) {
+            // Log or handle parsing errors without crashing the whole application
+            this.lastImportStatus = null; // Signal internal error or parsing failure
+            e.printStackTrace();
         }
     }
 
@@ -181,28 +183,59 @@ public class IcsImporter {
         // Convert each VEVENT entry in the .ics file into our Event model.
         for (Object component : calendar.getComponents(Component.VEVENT)) {
             VEvent calendarEvent = (VEvent) component;
+            
+            // Safe property access
             DateProperty startProperty = calendarEvent.getStartDate();
+            if (startProperty == null) continue;
+            
             String startValue = startProperty.getValue();
+            // Handle basic all-day events by adding a default time
+            if (!startValue.contains("T") && startValue.length() == 8) {
+                startValue += "T000000";
+            }
+            
             // All timestamps are treated as Amsterdam local time; timezone suffixes are ignored.
             if (startValue.endsWith("Z")) {
                 startValue = startValue.substring(0, startValue.length() - 1);
             }
-            LocalDateTime startTime = LocalDateTime.parse(startValue, ICS_DATE_TIME_FORMAT);
+            
+            LocalDateTime startTime;
+            try {
+                startTime = LocalDateTime.parse(startValue, ICS_DATE_TIME_FORMAT);
+            } catch (DateTimeParseException e) {
+                continue; // Skip malformed dates
+            }
 
             DtEnd endProperty = calendarEvent.getEndDate();
-            String endValue = endProperty.getValue();
-            if (endValue.endsWith("Z")) {
-                endValue = endValue.substring(0, endValue.length() - 1);
+            LocalDateTime endTime = null;
+            int durationMinutes = 60; // Default duration
+
+            if (endProperty != null) {
+                String endValue = endProperty.getValue();
+                if (!endValue.contains("T") && endValue.length() == 8) {
+                    endValue += "T000000";
+                }
+                if (endValue.endsWith("Z")) {
+                    endValue = endValue.substring(0, endValue.length() - 1);
+                }
+                try {
+                    endTime = LocalDateTime.parse(endValue, ICS_DATE_TIME_FORMAT);
+                    durationMinutes = (int) ChronoUnit.MINUTES.between(startTime, endTime);
+                } catch (DateTimeParseException e) {
+                    // fallback to default duration
+                }
             }
-            LocalDateTime endTime = LocalDateTime.parse(endValue, ICS_DATE_TIME_FORMAT);
-            int durationMinutes = (int) ChronoUnit.MINUTES.between(startTime, endTime);
 
             Summary summary = calendarEvent.getSummary();
+            String summaryText = (summary != null) ? summary.getValue() : "Imported Event";
+            
             Description description = calendarEvent.getDescription();
+            String descriptionText = (description != null) ? description.getValue() : "";
+
             Event event = new ImportedEvent(
-                    summary.getValue(),
+                    summaryText,
                     durationMinutes,
-                    description.getValue(),
+                    descriptionText,
                     null,
                     null
             );
