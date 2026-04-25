@@ -11,6 +11,7 @@ import event.Event;
 import event.manager.EventManager;
 import event.manager.InviteManager;
 import invite.Invite;
+import invite.Role;
 import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
@@ -161,6 +162,12 @@ public class Scheduler {
     public boolean scheduleEvent(Event event) {
         LocalDateTime slot = findAvailableSlot(event);
         if (slot == null) {
+            for (Invite invite : event.getInvites()) {
+                User invitee = this.userRepository.getItemById(invite.getRecipient());
+                if (invitee != null && invitee.getCalendar() != null) {
+                    invitee.getCalendar().getEvents().remove(event);
+                }
+            }
             return false;
         }
 
@@ -187,8 +194,9 @@ public class Scheduler {
 
             // Recreate invites so they reset to default PENDING status.
             if (invitee != null) {
+            	Role role = invite.getRole();
                 this.inviteManager.removeInvite(event, invitee);
-                this.inviteManager.addInvite(event, invitee);
+                this.inviteManager.addInvite(event, invitee, role);
             }
         }
         return true;

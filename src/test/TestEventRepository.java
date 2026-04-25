@@ -2,8 +2,11 @@ package test;
 
 import junit.framework.TestCase;
 import repository.EventRepository;
+import user.User;
+import user.calendar.UserCalendar;
 import event.CreatedEvent;
 import event.Event;
+import event.manager.EventManager;
 
 import java.util.List;
 
@@ -16,7 +19,9 @@ import java.util.List;
 public class TestEventRepository extends TestCase {
 
     private EventRepository eventRepo;
+    private EventManager eventManager;
     private Event testEvent;
+    private User admin;
 
     public TestEventRepository(String name) {
         super(name);
@@ -25,7 +30,10 @@ public class TestEventRepository extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         eventRepo = new EventRepository();
-        testEvent = new CreatedEvent("Project", 60, "test description", "admin", null);
+        testEvent = new CreatedEvent("Project", 60, "test description", null);
+        admin = new User("admin","admin", new UserCalendar(null));
+        eventManager = new EventManager();
+        eventManager.setOrganizer(testEvent, admin);
     }
 
     public void testSaveAndFindEvent() {
@@ -40,9 +48,9 @@ public class TestEventRepository extends TestCase {
 
     public void testGetAll() {
         eventRepo.save(testEvent);
-        eventRepo.save(new CreatedEvent("Lunch", 30, "Kaas", "user1", null));
+        eventRepo.save(new CreatedEvent("Lunch", 30, "Kaas", null));
         
-        List allEvents = eventRepo.getAll();
+        List<Event> allEvents = eventRepo.getAll();
         
         assertEquals("Repository should contain 2 events", 2, allEvents.size());
     }
@@ -58,8 +66,14 @@ public class TestEventRepository extends TestCase {
     }
     
     public void testDeleteEventsByOrganizer() {
-		eventRepo.save(new CreatedEvent("Project", 60, "test description", "John", null));
-		eventRepo.save(new CreatedEvent("Meeting", 45, "Discuss project", "user1", null));
+    	Event project = new CreatedEvent("Project", 60, "test description", null);
+    	User john = new User("John","12345",null);
+    	eventManager.setOrganizer(project, john);
+    	Event meeting = new CreatedEvent("Meeting", 45, "Discuss project",  null);
+    	User user1 = new User("user1","12345",null);
+    	eventManager.setOrganizer(meeting, user1);
+		eventRepo.save(project);
+		eventRepo.save(meeting);
 		
 		assertEquals("Repository should contain 2 events", 2, eventRepo.getAll().size());
 		

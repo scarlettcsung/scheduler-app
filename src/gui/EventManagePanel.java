@@ -27,6 +27,7 @@ import event.Event;
 import event.manager.EventManager;
 import event.manager.InviteManager;
 import invite.Invite;
+import invite.Role;
 import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
@@ -438,7 +439,8 @@ public class EventManagePanel extends JPanel {
 				int latestHour = Integer.parseInt(latestTime);
 
 				if (isNewEvent) {
-					EventManagePanel.this.event = new CreatedEvent(eventName,duration,eventDescription,currentUser.getUsername(), new ArrayList<>());
+					EventManagePanel.this.event = new CreatedEvent(eventName,duration,eventDescription,new ArrayList<>());
+					EventManagePanel.this.eventManager.setOrganizer(EventManagePanel.this.event, currentUser);
 					EventManagePanel.this.isNewEvent = false;
 
 				} else {
@@ -451,9 +453,12 @@ public class EventManagePanel extends JPanel {
 				for (String username: tempInvites) {
 					User invitee = repository.getItemById(username);
 					if (invitee != null) {
-						EventManagePanel.this.inviteManager.addInvite(EventManagePanel.this.event, invitee);
+						if (!invitee.equals(currentUser)) {
+							EventManagePanel.this.inviteManager.addInvite(EventManagePanel.this.event, invitee,Role.GUEST);
+						} 
 					}
 				}
+				
 				tempInvites.clear();
 
 

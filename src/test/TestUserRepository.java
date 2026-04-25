@@ -10,6 +10,7 @@ import user.AdminUser;
 import user.User;
 import user.calendar.UserCalendar;
 import event.Event;
+import event.manager.EventManager;
 import user.service.UserDeletionResult;
 
 /**
@@ -22,9 +23,11 @@ public class TestUserRepository extends TestCase {
     
     private UserRepository repository;
     private User testUser;
+    private EventManager eventManager;
 
     protected void setUp() throws Exception {
         super.setUp();
+        eventManager = new EventManager();
         repository = new UserRepository();
         testUser = new User("testUser", "pw123", null);
         UserCalendar testCalendar = new UserCalendar(null);
@@ -97,18 +100,20 @@ public class TestUserRepository extends TestCase {
     }
     
     public void testRemoveFromAllCalendars() {
-    	Event testEvent1 = new CreatedEvent("Test Event 1", 60, "Description 1", "testUser1", null);
-    	Event testEvent2 = new CreatedEvent("Test Event 2", 60, "Description 2", "testUser2", null);
+    	
+    	Event testEvent1 = new CreatedEvent("Test Event 1", 60, "Description 1", null);
+    	Event testEvent2 = new CreatedEvent("Test Event 2", 60, "Description 2", null);
     	ArrayList<Event> eventList = new ArrayList<>();
     	eventList.add(testEvent1);
     	eventList.add(testEvent2);
     	UserCalendar calendar1 = new UserCalendar(eventList);
     	UserCalendar calendar2 = new UserCalendar(eventList);
-    	User testUser1 = new User("testUser2","123",calendar1);
-    	User testUser2 = new User("testUser2","123",calendar2);
+    	User testUser1 = new User("testUser1","12345",calendar1);
+    	User testUser2 = new User("testUser2","12345",calendar2);
+    	eventManager.setOrganizer(testEvent1, testUser1);
+    	eventManager.setOrganizer(testEvent2, testUser2);
     	repository.saveUser(testUser1);
     	repository.saveUser(testUser2);
-    	
     	repository.removeEventFromAllCalendars(testEvent1);
     	
     	assertFalse(testUser1.getCalendar().getEvents().contains(testEvent1));
@@ -116,7 +121,8 @@ public class TestUserRepository extends TestCase {
     }
     
     public void testCleanupUserEventReferences() {
-    	Event testEvent = new CreatedEvent("Test Event", 60, "Description", "testUser", null);
+    	Event testEvent = new CreatedEvent("Test Event", 60, "Description", null);
+    	eventManager.setOrganizer(testEvent, testUser);
 		ArrayList<Event> eventList = new ArrayList<>();
 		eventList.add(testEvent);
 		UserCalendar calendar = new UserCalendar(eventList);

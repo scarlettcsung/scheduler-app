@@ -63,20 +63,22 @@ public class UserPanel extends JPanel {
         
         cardBorder = cardBorder();
 
+        EventManager eventManager = new EventManager(repository, eventRepository);
         event1 = new CreatedEvent(
     	        "Team Meeting", 
     	        60, 
     	        "yappen met de bros", 
-    	        currentUser.getUsername(), 
     	        new ArrayList<>()
     	    );
+        eventManager.setOrganizer(event1, currentUser);
         event2 = new CreatedEvent(
         		"Deadline", 
         		120, 
         		"strijden voor de deadline", 
-        		currentUser.getUsername(), 
         		new ArrayList<>()
         );  
+        eventManager.setOrganizer(event2, currentUser);
+        
         LocalDateTime event1Time = LocalDateTime.of(2026, 4,20,16,20);
         LocalDateTime event2Time = LocalDateTime.of(2026, 5,11,9,30);
         event1.setEventTime(event1Time);
@@ -281,7 +283,7 @@ public class UserPanel extends JPanel {
 		
 		card.add(nameButton);
 
-		JLabel metaLabel = new JLabel("Duration: " + event.getEventDuration() + " min  |  Organizer: " + event.getOrganizer());
+		JLabel metaLabel = new JLabel("Time: " + event.getTimeString() + " |  Organizer: " + event.getOrganizer());
 		metaLabel.setFont(new Font("Arial", Font.PLAIN, 11));
 		metaLabel.setForeground(Color.BLACK);
 		metaLabel.setBounds(MARGIN, 36, 440, 16);

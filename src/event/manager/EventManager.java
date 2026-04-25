@@ -140,14 +140,14 @@ public class EventManager {
     	if (!found) {
     		inviteManager.addInvite(event, organizer, Role.ORGANIZER);
     		}
-        
-
-        UserCalendar calendar = new UserCalendar(null);
 
         if (organizer.getCalendar() == null) {
-            organizer.setCalendar(calendar);
+            organizer.setCalendar(new UserCalendar(new ArrayList<>()));
         }
-        organizer.getCalendar().addEvent(event);
+        
+        if (!organizer.getCalendar().getEvents().contains(event)) {
+            organizer.getCalendar().addEvent(event);
+        }
     }
 
     /**

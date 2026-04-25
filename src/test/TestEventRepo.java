@@ -2,12 +2,25 @@ package test;
 
 import event.CreatedEvent;
 import event.Event;
+import event.manager.EventManager;
 import junit.framework.TestCase;
 import repository.EventRepository;
+import user.User;
+import user.calendar.UserCalendar;
 
 public class TestEventRepo extends TestCase {
-	EventRepository repo = new EventRepository();
-	Event event = new CreatedEvent("Test", 60, "Desc", "admin", null);
+	EventRepository repo;
+	Event event;
+	User admin;
+	EventManager eventManager; 
+	
+	protected void setUp() {
+		repo = new EventRepository();
+		event = new CreatedEvent("Test", 60, "Desc", null);
+		admin = new User("admin","admin",new UserCalendar(null));
+		eventManager = new EventManager();
+		eventManager.setOrganizer(event,admin);
+	}
 
     public void testEventRepositoryType() {
         
@@ -29,7 +42,6 @@ public class TestEventRepo extends TestCase {
     public void testDeleteItem()
     {
     	EventRepository repo2 = new EventRepository();
-    	Event event = new CreatedEvent("Test", 60, "Desc", "admin", null);
     	repo2.deleteItem(event.getEventId());
     	assertEquals(repo2.getAll().size(),0);
     }
@@ -37,7 +49,6 @@ public class TestEventRepo extends TestCase {
     public void testDeleteEventsByOrganizer()
     {
     	EventRepository repo2 = new EventRepository();
-    	Event event = new CreatedEvent("Test", 60, "Desc", "admin", null);
     	repo2.deleteEventsByOrganizer(event.getOrganizer());
     	assertEquals(repo2.getAll().size(),0);
     	

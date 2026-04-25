@@ -12,6 +12,7 @@ import java.io.*;
 
 import event.CreatedEvent;
 import event.Event;
+import event.manager.EventManager;
 import invite.Invite;
 import io.IO;
 
@@ -26,6 +27,8 @@ public class TestIO extends TestCase {
 	private UserRepository repository;
 	private UserCalendar calendar;
 	private IO input;
+	private EventManager eventManager;
+	private User john;
 	
 	//readUserList(String filePath)
 	//writeUserList(List<User> userList, String filePath)
@@ -37,8 +40,11 @@ public class TestIO extends TestCase {
 		input = new IO();
 		calendar=new UserCalendar(null);
 		LocalDateTime eventTime = LocalDateTime.parse("2026-04-08T09:00:00");
-		Event fakeevent= new CreatedEvent("meeting", 2, "test event", "John", null);
+		eventManager = new EventManager();
+		Event fakeevent= new CreatedEvent("meeting", 2, "test event", null);
+		john = new User("John","1234",null);
 		fakeevent.setEventTime(eventTime);
+		eventManager.setOrganizer(fakeevent, john);
 		calendar.addEvent(fakeevent);
 		repository = new UserRepository();
 		repository.saveUser(new User("John", "Pork", calendar));

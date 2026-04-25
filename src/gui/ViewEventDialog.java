@@ -11,6 +11,9 @@ import javax.swing.border.EmptyBorder;
 
 import event.CreatedEvent;
 import event.Event;
+import event.manager.EventManager;
+import user.User;
+import user.calendar.UserCalendar;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -32,7 +35,9 @@ public class ViewEventDialog extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			Event testEvent = new CreatedEvent("Event Name", 30,"Mendel","nisa",null);
+			Event testEvent = new CreatedEvent("Event Name", 30,"Mendel",null);
+			EventManager eventManager = new EventManager();
+			eventManager.setOrganizer(testEvent, new User("nisa","12345", new UserCalendar(null)));
 			LocalDateTime eventTimeTest = LocalDateTime.of(2026,04,20,16,00);
 			testEvent.setEventTime(eventTimeTest);
 			ViewEventDialog dialog = new ViewEventDialog(testEvent);

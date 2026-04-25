@@ -1,6 +1,7 @@
 package test;
 
 import junit.framework.TestCase;
+import user.User;
 import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import event.CreatedEvent;
 import event.Event;
+import event.manager.EventManager;
 
 /**
  * Unit tests for {@link user.UserCalendar}.
@@ -20,14 +22,16 @@ public class TestUserCalendar extends TestCase {
     
     private LocalDateTime exampleTime;
     private Event event;
-    private String exampleOwner;
-    private UserCalendar userCalendar; // Declareer de variabele hier
+    private User exampleOwner;
+    private EventManager eventManager;
+    private UserCalendar userCalendar;
     
     protected void setUp() {
-        // Maak eerst de calendar aan of gebruik null als de User constructor dat toestaat
-    	exampleOwner = "Charles";
+    	eventManager = new EventManager();
+    	exampleOwner = new User("Charles","12345",null);
     	exampleTime = LocalDateTime.of(2026, 1, 1, 11, 0);
-    	event = new CreatedEvent("testEvent",60,"testEvent",exampleOwner,null);
+    	event = new CreatedEvent("testEvent",60,"testEvent",null);
+    	eventManager.setOrganizer(event, exampleOwner);
         userCalendar = new UserCalendar(null); 
         
     }
@@ -52,7 +56,8 @@ public class TestUserCalendar extends TestCase {
     }
     
     public void testRemoveEventNotInCalendar() {
-        Event otherEvent = new CreatedEvent("otherEvent", 30, "otherDesc", exampleOwner, null);
+        Event otherEvent = new CreatedEvent("otherEvent", 30, "otherDesc", null);
+        eventManager.setOrganizer(otherEvent, exampleOwner);
         userCalendar.addEvent(event);
         userCalendar.removeEvent(otherEvent); // otherEvent is not in the calendar
         assertFalse(userCalendar.getEvents().isEmpty()); // original event should still be there
