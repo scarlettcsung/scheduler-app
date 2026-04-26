@@ -42,6 +42,7 @@ classDiagram
         +deleteItem(eventID: String) : int
         +getRepositoryType() : String
         +deleteEventsByOrganizer(username: String) : void
+        +getUserCalendar(String username) : List~Event~
     }
 
     class UserRepository {
@@ -184,14 +185,11 @@ classDiagram
     UserService --> User
     UserRepository o-- User
     UserRepository --> IO : Relationship
-    User *-- UserCalendar
-    UserCalendar o-- Event
     User --> Invite : recipient
     Event *-- Invite
     CreatedEvent --|> Event
     ImportedEvent --|> Event
     Scheduler ..> User
-    Scheduler ..> UserCalendar
     Scheduler ..> Event
     Scheduler --> EventManager
     Scheduler --> InviteManager
@@ -200,7 +198,6 @@ classDiagram
     InviteManager ..> User
     InviteManager ..> Event
     InviteManager ..> UserRepository
-    IcsImporter --> UserCalendar : Populates
     IcsImporter --> Event : creates imported events
     IcsImporter --> ImportStatus
     Invite --> inviteStatus
