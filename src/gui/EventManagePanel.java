@@ -464,6 +464,9 @@ public class EventManagePanel extends JPanel {
 
 				Scheduler scheduler = new Scheduler(earliestHour, latestHour, maxDaysAhead, repository,eventRepository);
 				scheduler.scheduleEvent(EventManagePanel.this.event);
+				
+				eventRepository.save(EventManagePanel.this.event);
+				
 
 				JOptionPane.showMessageDialog(EventManagePanel.this, "Event Saved.");
 				updateParticipantList();

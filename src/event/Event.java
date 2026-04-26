@@ -100,6 +100,7 @@ public abstract class Event {
     	for (Invite invite:invites) {
         	if (invite.getRecipient().equals(organizerUsername)) {
         		invite.setOrganizer();
+        		invite.accept();
         		found = true;
         	} else if (invite.getRole().equals(Role.ORGANIZER)) {
         		invite.setGuest();
@@ -107,7 +108,9 @@ public abstract class Event {
         }
     	
     	if (!found) {
-            this.invites.add(new Invite(organizerUsername, this.eventId, Role.ORGANIZER));
+    		Invite newInvite = new Invite(organizerUsername, this.eventId, Role.ORGANIZER);
+    		newInvite.accept();
+            this.invites.add(newInvite);
         }
     }
 

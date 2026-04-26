@@ -353,6 +353,7 @@ public class UserPanel extends BaseDashboardPanel {
 			acceptButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					invite.accept();
+					eventRepository.save(event);
 					refreshEvents();
 				}
 			});
@@ -367,6 +368,7 @@ public class UserPanel extends BaseDashboardPanel {
 				public void actionPerformed(ActionEvent e) {
 					EventManager eventManager = new EventManager(repository, eventRepository);
 					eventManager.rejectInvite(invite, event);
+					eventRepository.save(event);
 					refreshEvents();
 				}
 			});

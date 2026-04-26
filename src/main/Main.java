@@ -58,6 +58,12 @@ public class Main {
                 repository.saveUser(user);
             }
         }
+        
+        String filePathEvent = "src/filestorage/eventStorage.json";
+        List<Event> loadedEvents = ioHandler.readEvents(filePathEvent);
+        for (Event event : loadedEvents) {
+        	eventRepository.save(event);
+            }
 
         System.out.println("Data loaded successfully.");
 
@@ -79,7 +85,9 @@ public class Main {
                 public void windowClosing(WindowEvent e) {
                     System.out.println("Saving data...");
                     List<User> usersToSave = repository.getAll();
+                    List<Event> eventsToSave = eventRepository.getAll();
                     ioHandler.writeUsers(usersToSave, filePath);
+                    ioHandler.writeEvents(eventsToSave, filePathEvent);
                     System.out.println("Save successful.");
                     frame.dispose();
                     System.exit(0);
