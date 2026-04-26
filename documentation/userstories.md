@@ -7,12 +7,12 @@
 |TRUE|3|SN SS/GI SS||manage created events|1.5|S|1.5|0|
 |TRUE|2|EO AA||Login|1.0|M|1.0|0|
 |TRUE|2|EO AA||Logout|1.0|M|1.0|0|
-|TRUE|3|EO GI||delete event|1.0|S|1.0|1|
+|TRUE|3|EO GI||delete event|1.0|S|1.0|0|
 |TRUE|3|EO SS|---|Back button|0.5|C|0.5|0|
 |TRUE|3|EO SS|---|Date picker|0.5|C|0.5|0|
-|TRUE|3|EO GI||admin delete|admin|block removal of the admin form the delete user options|admin cant acedentaly remove it self|0.5|M|0.5|0|
-|TRUE|3|GI SN|-|Register|user|register to the system|I can be saved to the system and login later on|1|M|1|0|
-|TRUE|3|GI SN AA GI|-|Delete My Account|user|delete myself from the system|my previous data from the system will no longer stored|1|M|1|0|
+|TRUE|3|EO GI||admin delete|0.5|M|0.5|0|
+|TRUE|3|GI SN|-|Register|1|M|1|0|
+|TRUE|3|GI SN AA GI|-|Delete My Account|1|M|1|0|
 |TRUE|3|EI GI AA GI|-|Remove User|1|M|1|0|
 |True|3| NJ AA NS|-| Save Events|User|See my events after closing the application|I can refer to my events even after the application closes|2|S|2|0|
 |True|1|NS CR|-|Display Invites|User|see incoming invites on home page|I can accept or decline the invitation|1|M|1|0|
