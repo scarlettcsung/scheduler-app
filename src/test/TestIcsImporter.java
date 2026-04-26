@@ -198,4 +198,18 @@ public class TestIcsImporter extends TestCase {
  
         assertNull(importer.getLastImportedEvents());
     }
+    
+    public void testParseICSAllDay() throws IOException, ParserException {
+        IcsImporter importer = new IcsImporter();
+        importer.setIcsFilePath("src/test/resources/allDay.ics");
+
+        List<Event> events = importer.parseIcs();
+
+        assertEquals(1, events.size());
+        Event event = events.get(0);
+        
+        assertEquals(LocalDateTime.of(2026, 4, 10, 0, 0), event.getEventTime());
+        assertEquals(1440, event.getEventDuration());
+    }
+    
 }

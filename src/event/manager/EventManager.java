@@ -39,12 +39,15 @@ public class EventManager {
      *
      * @param repository repository used to update user calendars
      */
+    /**
+     * @deprecated Use EventManager(UserRepository, EventRepository) instead 
+     * to ensure global index synchronization.
+     */
+    @Deprecated
     public EventManager(UserRepository repository) {
-        this.repository = repository;
-        this.eventRepository = null;
-        this.inviteManager = new InviteManager(repository);
+        this(repository, null);
     }
-
+    
     /**
      * Creates an event manager backed by user and event repositories.
      *

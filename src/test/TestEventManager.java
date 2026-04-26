@@ -286,4 +286,14 @@ public class TestEventManager extends TestCase {
         }
         assertTrue(importedCount > 0);
     }
+    
+    public void testImportIcsUserRepoOnly() {
+    	
+    	String testIcsPath = "src/test/resources/simpleImport.ics";
+        EventManager eventManagerSimple = new EventManager(repository);
+        User testUser = new User("TestUser", "pass");
+        ImportStatus status = eventManagerSimple.importIcs(testUser, testIcsPath);
+        
+        assertEquals(ImportStatus.SUCCESS, status);
+    }
 }
