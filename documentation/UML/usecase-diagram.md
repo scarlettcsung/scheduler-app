@@ -7,10 +7,13 @@ flowchart LR
     Invitee[👤 Invitee role]
     Guest[👤 Guest]
 
-    %% Actor Inheritance / Generalization
+%% Actor Inheritance / Generalization
     Admin ---> AuthUser
     Organizer ---> AuthUser
     Invitee ---> AuthUser
+subgraph SystemBoundary[Event Scheduling System]
+    direction TB 
+   %%Use Cases
 
     UC_ManageUsers([Manage users])
     UC_ViewAllUsers([View all users])
@@ -18,8 +21,8 @@ flowchart LR
     UC_ViewAllEvents([View all events])
     UC_DeleteAnyEvent([Delete any event])
 
-    UC_ManageUsers -.->|includes| UC_ViewAllUsers
-    UC_ManageUsers -.->|includes| UC_DeleteUser
+    UC_ManageUsers <-.-|extends| UC_ViewAllUsers
+    UC_ManageUsers <-.-|extends| UC_DeleteUser
 
     UC_ViewInvites([View invitations])
     UC_AcceptInvite([Accept invitation])
@@ -32,7 +35,7 @@ flowchart LR
     UC_UninviteUser([Uninvite user])
     UC_ViewEventDetails([View event details])
 
-    UC_UpdateEvent -.->|includes| UC_UninviteUser
+    UC_UpdateEvent <-.-|extends| UC_UninviteUser
 
     UC_CreateEvent([Create event])
     UC_SetDuration([Set duration])
@@ -48,7 +51,12 @@ flowchart LR
     UC_CreateEvent -.->|includes| UC_SelectInvitees
     UC_CreateEvent -.->|includes| UC_FindSlot
     UC_CreateEvent -.->|includes| UC_SendInvites
-    UC_ViewVisibleEvents -.->|includes| UC_ViewEventDetails
+    UC_ViewVisibleEvents <-.-|extends| UC_ViewEventDetails
+
+    UC_ViewInvites <-.-|extends| UC_AcceptInvite
+    UC_ViewInvites <-.-|extends| UC_DeclineInvite
+
+
 
     UC_ViewCalendar([View calendar])
     UC_UploadICS([Upload .ics calendar])
@@ -57,6 +65,7 @@ flowchart LR
     UC_Register([Register])
     UC_LogIn([Log in])
     UC_LogOut([Log out])
+end
 
     %% Actor to Use Case Relationships
     Admin --> UC_ManageUsers
@@ -89,4 +98,4 @@ flowchart LR
     Guest --> UC_Register
     Guest --> UC_LogIn
 
-```
+
