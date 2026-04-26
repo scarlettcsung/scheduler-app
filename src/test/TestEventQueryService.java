@@ -1,6 +1,9 @@
 package test;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import event.CreatedEvent;
 import event.Event;
@@ -116,4 +119,12 @@ public class TestEventQueryService extends TestCase {
 		assertEquals(event, invites.get(0).getEvent());
 		assertEquals(event, invites.get(1).getEvent());
 	}
+	
+	public void testVisibleEventsforUser() {
+		Set<Event> expectedSet = new LinkedHashSet<>();
+		List<Event> expectedList = new ArrayList<>(expectedSet);
+		assertEquals(expectedList, eventQueryService.getVisibleEventsForUser(null));
+		
+	}
+	
 }

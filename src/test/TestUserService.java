@@ -100,5 +100,9 @@ public class TestUserService extends TestCase {
 
         assertFalse(result);
     }
-
+    
+    public void testDeleteOwnAccountNullUser() {
+    	assertEquals(UserDeletionResult.NOT_AUTHENTICATED, userService.deleteOwnAccount(null));
+    }
+    
 }
