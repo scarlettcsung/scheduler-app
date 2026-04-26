@@ -8,7 +8,6 @@
 |TRUE|2|EO AA||Login|1.0|M|1.0|0|
 |TRUE|2|EO AA||Logout|1.0|M|1.0|0|
 |TRUE|3|EO GI||delete event|1.0|S|1.0|1|
-|FALSE|4|NS CR||scrollbar|user|scroll up and down/left and right on larger pages|I can see the whole page|1|S|0.5|0.5|
 |TRUE|3|EO SS|---|Back button|user|leave event manage screen without saving|it's easy to leave if I no longer need to create or update event|0.5|C|0.5|0|
 |TRUE|3|EO SS|---|Date picker|user|pick a date using a calendar|I don't need to type the date in manually|0.5|C|0.5|0|
 ||3|||admin delete|admin|block removal of the admin form the delete user options|admin cant acedentaly remove it self|0.5|M|0.5|0|
