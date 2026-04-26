@@ -52,24 +52,21 @@ classDiagram
         +getItemByID(username: String) : User
         +isExistingUser(username: String) : boolean
         +cleanupUserEventReferences(username: String) : void
-        +removeEventFromAllCalendars(event: Event) : void
         +getRepositoryType() : String
     }
 
     class IO {
         +readUsers(filePath: String) : List~User~
         +writeUsers(userList: List~User~, filePath: String) : void
+        +readEvents(filePath: String) : List~Event~
+        +writeEvents(EventList: List~Event~, filePath: String) : void
     }
 
     class User {
         -username: String
         -password: String
-        -myCalendar: Calendar
         +canAccessAdminPanel() : Boolean
         +canDeleteUser() : Boolean
-        +setCalendar(calendar: UserCalendar) : void
-        +canAccessAdminPanel() : boolean
-        +canDeleteUser(targetUser: User) : boolean 
     }
         class AdminUser {
     +canAccessAdminPanel() : boolean
@@ -89,7 +86,6 @@ classDiagram
         -eventRepository: EventRepository
         -inviteManager: InviteManager
         +EventManager()
-        +EventManager(repository: UserRepository)
         +EventManager(repository: UserRepository, eventRepository: EventRepository)
         +updateEvent(event: Event, updateAspect: String, newValue: String) : void
         +deleteEvent(event: Event) : void
@@ -111,20 +107,10 @@ classDiagram
         -hasExistingInvite(event: Event, username: String) : boolean
     }
 
-    class UserCalendar {
-        -owner: User
-        -events: List~Event~
-        +addEvent(event: Event) : void
-        +removeEvent(event: Event) : void
-        +getEvents() : List~Event~
-        +getOwner() : User
-    }
-
     class IcsImporter {
         -ICS_DATE_TIME_FORMAT: DateTimeFormatter$
-        +importCalendar(user: User, icsFile: String) : ImportStatus
+        +runImport() : void
         +parseICS(icsFile: String) : List~Event~
-        +overwriteImportedEvents(calendar: UserCalendar, importedEvents: List~Event~) : void
     }
 
     class Event {
@@ -134,15 +120,17 @@ classDiagram
         -eventDuration: int
         -eventDescription: String
         -eventID: String 
-        -organizerUser: String
         -invites: List~Invite~
         -participantUsernames: List~String~
         #isImportedField: boolean
         
         +isImported(): boolean
+        +setOrganizer(String organizerUsername) : void
         +getParticipants() List~String~
         +hasExistingInvite(String username): boolean
         +getTimeString(): String
+        +getOrganizer(): String
+
     }
     
     class CreatedEvent {
@@ -163,7 +151,7 @@ classDiagram
 
     class ImportStatus {
         <<enumeration>>
-        Succes
+        SUCCESS
         FileNotFound
         UserNotFound
     }
@@ -173,6 +161,14 @@ classDiagram
         PENDING
         ACCEPTED
         REJECTED
+    }
+
+    class UserDeletionResult {
+        <<enumeration>>
+        NOT_AUTHENTICATED,
+        DELETED_BY_ADMIN,
+        DELETED_SELF,
+        NOT_PERMITTED;
     }
 
     %% Relationships
