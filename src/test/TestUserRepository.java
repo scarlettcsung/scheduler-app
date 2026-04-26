@@ -11,6 +11,8 @@ import user.AdminUser;
 import user.User;
 import event.Event;
 import event.manager.EventManager;
+import invite.Invite;
+import invite.Role;
 import user.service.UserDeletionResult;
 
 /**
@@ -108,5 +110,30 @@ public class TestUserRepository extends TestCase {
         assertEquals(UserDeletionResult.NOT_PERMITTED, result);
     }
     
-    
+    public void testCleanupUserEventReferences() {
+        EventRepository eventRepo = new EventRepository();
+        repository.setEventRepository(eventRepo); 
+
+        String organizer = "testUser";
+        
+        CreatedEvent organizedEvent = new CreatedEvent("Meeting", 60, "Work", new ArrayList<>());
+        organizedEvent.setOrganizer(organizer);
+        eventRepo.save(organizedEvent);
+
+        CreatedEvent invitedEvent = new CreatedEvent("Party", 120, "Fun", new ArrayList<>());
+        invitedEvent.setOrganizer("newOrganizer");
+        
+
+        Invite invite = new Invite(organizer,organizedEvent.getEventId(),Role.ORGANIZER); 
+        invitedEvent.getInvites().add(invite);
+        eventRepo.save(invitedEvent);
+
+        repository.cleanupUserEventReferences(organizer);
+        assertNull(eventRepo.getItemById(organizedEvent.getEventId()));
+        Event remainingEvent = eventRepo.getItemById(invitedEvent.getEventId());
+        assertNotNull(remainingEvent);
+        for (Invite i : remainingEvent.getInvites()) {
+            assertFalse(organizer.equals(i.getRecipient()));
+        }
+    }
 }
