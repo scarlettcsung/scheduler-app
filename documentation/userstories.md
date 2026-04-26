@@ -10,7 +10,7 @@
 |TRUE|3|EO GI||delete event|1.0|S|1.0|1|
 |TRUE|3|EO SS|---|Back button|0.5|C|0.5|0|
 |TRUE|3|EO SS|---|Date picker|0.5|C|0.5|0|
-|TRUE|3|EO GI||admin delete|admin|block removal of the admin form the delete user options|admin cant acedentaly remove it self|0.5|M|0.5|0|
+|TRUE|3|EO GI||admin delete|0.5|M|0.5|0|
 |TRUE|3|GI SN|-|Register|user|register to the system|I can be saved to the system and login later on|1|M|1|0|
 |TRUE|3|GI SN AA GI|-|Delete My Account|user|delete myself from the system|my previous data from the system will no longer stored|1|M|1|0|
 |TRUE|3|EI GI AA GI|-|Remove User|1|M|1|0|
