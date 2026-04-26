@@ -79,7 +79,7 @@ classDiagram
         -eventManager: EventManager
         -inviteManager: InviteManager
         +findAvailableSlot(event: Event) : String
-        +scheduleEvent(event: Event, calendar: UserCalendar) : Void
+        +scheduleEvent(event: Event) : Void
     }
 
     class EventManager {
@@ -183,9 +183,9 @@ classDiagram
     UserService --> Authentication
     UserService ..> UserRepository
     UserService --> User
-    UserRepository o-- User
+    UserRepository *-- User
     UserRepository --> IO : Relationship
-    User --> Invite : recipient
+    Invite ..> User
     Event *-- Invite
     CreatedEvent --|> Event
     ImportedEvent --|> Event
@@ -198,6 +198,7 @@ classDiagram
     InviteManager ..> User
     InviteManager ..> Event
     InviteManager ..> UserRepository
+    InviteManager --> EventRepository
     IcsImporter --> Event : creates imported events
     IcsImporter --> ImportStatus
     Invite --> inviteStatus
