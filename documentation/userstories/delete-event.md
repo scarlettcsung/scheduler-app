@@ -12,6 +12,7 @@
 - Invited users should no longer see the deleted event in their events
 
 **Acceptance Test:**
+Test 1: Event creator deletes an event
 Given: I am logged in as the creator of an event
 
 When: I click "Delete event" on the manage event screen and confirm the deletion
@@ -19,3 +20,9 @@ When: I click "Delete event" on the manage event screen and confirm the deletion
 Then: the event should be removed from my events list
 
 And: invited users should no longer see the event in their events
+
+Test 2: Non-creator cannot delete an event
+- Given: I am logged in as a user who did not create the event
+- When: I view the event in my events list
+- Then: I should not see a "Delete event" button for that event
+- And: the event remains visible to the creator
