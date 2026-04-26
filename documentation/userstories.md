@@ -8,14 +8,14 @@
 |TRUE|2|EO AA||Login|user|Enter the correct username and password of an existing account on the login page|The program checks if the username exists and the password is correct and logs the user into their account|1.0|M|1.0|0|
 |TRUE|2|EO AA||Logout|user|Click the logout button while logged in|Logs the current user out of their account and returns to the login screen|1.0|M|1.0|0|
 |TRUE|3|EO GI||delete event|user|delete my event|if the event is no longer happening I can remove it from everyone's schedule|1.0|S|1.0|1|
-|FALSE|4|NS CR||scrollbar|user|scroll up and down/left and right on larger pages|I can see the whole page||1.0|S|1|
+|FALSE|4|NS CR||scrollbar|user|scroll up and down/left and right on larger pages|I can see the whole page|1|S|0.5|0.5|
 |TRUE|3|EO SS|---|Back button|user|leave event manage screen without saving|it's easy to leave if I no longer need to create or update event|0.5|C|0.5|0|
 |TRUE|3|EO SS|---|Date picker|user|pick a date using a calendar|I don't need to type the date in manually|0.5|C|0.5|0|
 ||3|||admin delete|admin|block removal of the admin form the delete user options|admin cant acedentaly remove it self|0.5|M|0.5|0|
 |TRUE|3|GI SN|-|Register|user|register to the system|I can be saved to the system and login later on|1|M|1|0|
 |TRUE|3|GI SN AA GI|-|Delete My Account|user|delete myself from the system|my previous data from the system will no longer stored|1|M|1|0|
 |TRUE|3|EI GI AA GI|-|Remove User|admin|delete selected user other than admin|selected users stored data will be deleten|1|M|1|0|
-|True|3| NJ AA NS|-| Save Events|User|See my events after closing the application|2|S|2|0|
+|True|3| NJ AA NS|-| Save Events|User|See my events after closing the application|I can refer to my events even after the application closes|2|S|2|0|
 |True|1|NS CR|-|Display Invites|User|see incoming invites on home page|I can accept or decline the invitation|1|M|1|0|
 |TRUE|1|NJ SS|-|Add Time|User|add a time when creating event|I can set a time for my event|0.5|C|0.5|1|
 |TRUE|1|NS GI CR|-|Reject Invite|User|reject an event invite|I don't have to go to events I don't want to go to|0.5|C|0.5|1|
