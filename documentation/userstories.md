@@ -12,7 +12,7 @@
 |TRUE|3|EO SS|---|Date picker|0.5|C|0.5|0|
 |TRUE|3|EO GI||admin delete|0.5|M|0.5|0|
 |TRUE|3|GI SN|-|Register|1|M|1|0|
-|TRUE|3|GI SN AA GI|-|Delete My Account|user|delete myself from the system|my previous data from the system will no longer stored|1|M|1|0|
+|TRUE|3|GI SN AA GI|-|Delete My Account|1|M|1|0|
 |TRUE|3|EI GI AA GI|-|Remove User|1|M|1|0|
 |True|3| NJ AA NS|-| Save Events|User|See my events after closing the application|I can refer to my events even after the application closes|2|S|2|0|
 |True|1|NS CR|-|Display Invites|User|see incoming invites on home page|I can accept or decline the invitation|1|M|1|0|
