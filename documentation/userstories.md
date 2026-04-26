@@ -3,9 +3,9 @@
 |Done|Itr|Pair|ID|Title|As a...|I want to...|So that...|PP|priority|Progress|Remaining PP|
 |-|-|-|-|-|-|-|-|-|-|-|-|
 |TRUE|3|NS AA/ SN AA/ GI NJ||import calendar|2.0|M|1.0|0|
-|TRUE|3|NS SS/SN SS|edit invites|0.5|S|0.5|0|
-|TRUE|3|SN SS/GI SS|manage created events|1.5|S|1.5|0|
-|TRUE|2|EO AA||Login|user|Enter the correct username and password of an existing account on the login page|The program checks if the username exists and the password is correct and logs the user into their account|1.0|M|1.0|0|
+|TRUE|3|NS SS/SN SS||edit invites|0.5|S|0.5|0|
+|TRUE|3|SN SS/GI SS||manage created events|1.5|S|1.5|0|
+|TRUE|2|EO AA||Login|1.0|M|1.0|0|
 |TRUE|2|EO AA||Logout|user|Click the logout button while logged in|Logs the current user out of their account and returns to the login screen|1.0|M|1.0|0|
 |TRUE|3|EO GI||delete event|1.0|S|1.0|1|
 |FALSE|4|NS CR||scrollbar|user|scroll up and down/left and right on larger pages|I can see the whole page|1|S|0.5|0.5|
