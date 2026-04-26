@@ -1,16 +1,16 @@
 package test;
 
 import junit.framework.TestCase;
-import repository.UserRepository;
+import repository.*;
 import user.AdminUser;
 import user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
 
-import event.CreatedEvent;
-import event.Event;
+import event.*;
 import event.manager.EventManager;
 import invite.Invite;
 import io.IO;
@@ -46,6 +46,7 @@ public class TestIO extends TestCase {
 		repository.saveUser(new User("John", "Pork"));
 		repository.saveUser(new AdminUser("James", "Bond"));
 	}
+	
 	
 	//(String eventName, int eventDuration, String eventDescription,
     //String organizerUsername, Boolean isImported,  List<Invite> invites)
@@ -87,6 +88,73 @@ public class TestIO extends TestCase {
 	    }
 	}
 	
+	public void testWriteEventsSuccess() throws IOException {
+	    String path = "src/test/resources/writeTest.json";
+	    
+	    List<Event> events = new ArrayList<>();
+	    events.add(new ImportedEvent("Imported Meeting", 60, "From Google", new ArrayList<>()));
+	    events.add(new CreatedEvent("Local Meeting", 30, "Manual", new ArrayList<>()));
+
+	    input.writeEvents(events, path);
+
+	    File file = new File(path);
+	    assertTrue(file.exists());
+	}
+	
+	public void testReadEventsFail() {
+	    // Folder instead of file
+	    String directoryPath = "src/test/resources"; 
+	    
+	    List<Event> result = input.readEvents(directoryPath);
+	    assertNotNull(result);
+	    assertTrue(result.isEmpty());
+	}
+	
+	public void testWriteEventsFail() {
+	    String impossiblePath = ""; 
+
+	    List<Event> events = new ArrayList<>();
+	    input.writeEvents(events, impossiblePath);
+	}
+	
+	public void testPolymorphismRead() throws IOException {
+	    String path = "src/test/resources/polymorphismTest.json";
+	    
+	    String json = "[" +
+	        // isImportedField: true
+	        "{\"isImportedField\":true, \"eventName\":\"A\"}," +
+	        
+	        // legacy)
+	        "{\"isImportedField\":false, \"isImported\":true, \"eventName\":\"B\"}," +
+	        
+	        // false
+	        "{\"eventName\":\"C\"}" +
+	    "]";
+
+	    java.io.FileWriter fw = new java.io.FileWriter(path);
+	    fw.write(json);
+	    fw.close();
+
+	    List<Event> result = input.readEvents(path);
+
+	    assertTrue(result.get(0) instanceof ImportedEvent);
+	    assertTrue(result.get(1) instanceof ImportedEvent);
+	    assertTrue(result.get(2) instanceof CreatedEvent);
+	}
+	
+	public void testReadUsersIOError() throws IOException {
+	    java.io.File file = new java.io.File("src/test/resources/locked.json");
+	    file.createNewFile();
+	    file.setReadable(false); 
+
+	    try {
+	        List<User> result = input.readUsers(file.getPath());
+	        assertTrue(result.isEmpty());
+	    } finally {
+	        file.setReadable(true);
+	        file.delete();
+	    }
+	}
 	
 	
 }

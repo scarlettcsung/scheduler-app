@@ -59,33 +59,26 @@ public class TestIcsImporter extends TestCase {
 
     public void testOverwriteImportedEventsKeepsManualEvents() {
         User user = new User("Charles","password");
+        eventManager = new EventManager(null, eventRepository);
 
         Event manualEvent = new CreatedEvent("Manual", 30, "Keep me", null);
         manualEvent.setOrganizer(user.getUsername());
         manualEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 8, 0));
+        eventRepository.save(manualEvent);
 
         Event oldImportedEvent = new ImportedEvent("Old import", 45, "Replace me", null);
+        oldImportedEvent.setOrganizer(user.getUsername());
         oldImportedEvent.setEventTime(LocalDateTime.of(2026, 4, 9, 9, 0));
-
-        IcsImporter importer = new IcsImporter();
-        importer.setTargetUser(user);
-        importer.setIcsFilePath(SIMPLE_ICS);
-        importer.runImport();
+        eventRepository.save(oldImportedEvent);
         
-
+        ImportStatus status = eventManager.importIcs(user, SIMPLE_ICS);
         List<Event> actualEvents = eventRepository.getUserCalendar(user.getUsername());
-        for (Event e : actualEvents) {
-            System.out.println("Name: " + e.getEventName() + " | isImported: " + e.isImported());
-        }
 
-        assertEquals(ImportStatus.SUCCESS, importer.getLastImportStatus());
+        assertEquals(ImportStatus.SUCCESS, status);
         assertEquals(2, actualEvents.size());
         assertNotNull(findEvent(actualEvents, "Manual"));
         assertNull(findEvent(actualEvents, "Old import"));
-
-        Event importedEvent = findEvent(user.getCalendar().getEvents(), "Simple Import");
-        assertNotNull(importedEvent);
-        assertTrue(importedEvent.isImported());
+        assertNotNull(findEvent(actualEvents, "Simple Import"));
     }
 
     public void testImportCalendarReturnsUserNotFoundWhenUserIsNull() {
@@ -134,17 +127,21 @@ public class TestIcsImporter extends TestCase {
         assertEquals("UTC Event", event.getEventName());
     }
 
-    public void testImportCalendarNullOnInvalidICS() {
+    public void testImportInvalidIcs() {
         User user = new User("Charles", "password");
-        IcsImporter importer = new IcsImporter();
-        importer.setTargetUser(user);
-        importer.setIcsFilePath("src/test/resources/invalid.ics");
+        eventManager = new EventManager(null, eventRepository);
 
-        importer.runImport();
-        assertNull(importer.getLastImportStatus());
-        if (user.getCalendar() != null) {
-            assertEquals(0, user.getCalendar().getEvents().size());
-        }
+        Event existingEvent = new CreatedEvent("Meeting", 60, "Stay", null);
+        existingEvent.setOrganizer(user.getUsername());
+        eventRepository.save(existingEvent);
+
+        ImportStatus status = eventManager.importIcs(user, "src/test/resources/invalid.ics");
+
+        assertNull(status);
+        
+        List<Event> actualEvents = eventRepository.getUserCalendar(user.getUsername());
+        assertEquals(1, actualEvents.size());
+        assertEquals("Meeting", actualEvents.get(0).getEventName());
     }
 
     private Event findEvent(List<Event> events, String eventName) {

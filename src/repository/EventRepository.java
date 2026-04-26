@@ -69,11 +69,7 @@ public class EventRepository extends Repository<Event> {
      * @param username organizer username whose events should be removed
      */
     public void deleteEventsByOrganizer(String username) {
-        for (Event e : this.data) {
-            if (e.getOrganizer().equals(username)) {
-                deleteItem(e.getEventId());
-            }
-        }
+    	this.data.removeIf(e -> e.getOrganizer().equals(username));
     }
     
     public List<Event> getUserCalendar(String username) {

@@ -144,7 +144,7 @@ public class AdminPanelEvents extends JPanel {
 	                EventManager eventManager = new EventManager(repository, eventRepository);
 	                ImportStatus status = eventManager.importIcs(adminUser, filePath);
 
-	                if (status == ImportStatus.Succes) {
+	                if (status == ImportStatus.SUCCESS) {
 	                    JOptionPane.showMessageDialog(AdminPanelEvents.this, "Calendar imported successfully!");
 	                    refreshEvents();
 	                } else {

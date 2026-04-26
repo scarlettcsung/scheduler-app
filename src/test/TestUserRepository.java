@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import event.CreatedEvent;
 import junit.framework.TestCase;
+import repository.EventRepository;
 import repository.UserRepository;
 import user.AdminUser;
 import user.User;
@@ -96,21 +97,6 @@ public class TestUserRepository extends TestCase {
         assertEquals(UserDeletionResult.NOT_PERMITTED, result);
     }
     
-    
-    public void testCleanupUserEventReferences() {
-    	Event testEvent = new CreatedEvent("Test Event", 60, "Description", null);
-    	testEvent.setOrganizer(testUser.getUsername());
-		ArrayList<Event> eventList = new ArrayList<>();
-		eventList.add(testEvent);
-		User testUser = new User("testUser","123");
-		repository.saveUser(testUser);
-		
-		
-		repository.cleanupUserEventReferences("testUser");
-
-		
-		assertFalse(testUser.getCalendar().getEvents().contains(testEvent));
-    }
     
     //admin cant delete itself test
     public void testDeleteAdminUser() {

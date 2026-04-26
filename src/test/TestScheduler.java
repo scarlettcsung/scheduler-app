@@ -75,6 +75,7 @@ public class TestScheduler extends TestCase {
         );
         busy.setEventTime(busyStart);
         busy.setOrganizer(organizer.getUsername());
+        eventRepository.save(busy);
 
         Event toSchedule = new CreatedEvent(
                 "meeting",
@@ -127,6 +128,7 @@ public class TestScheduler extends TestCase {
         );
         block.setOrganizer(organizer.getUsername());
         block.setEventTime(dayStart);
+        eventRepository.save(block);
 
         Event toSchedule = new CreatedEvent(
                 "meeting",
