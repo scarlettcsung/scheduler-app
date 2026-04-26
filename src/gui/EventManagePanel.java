@@ -440,7 +440,7 @@ public class EventManagePanel extends JPanel {
 
 				if (isNewEvent) {
 					EventManagePanel.this.event = new CreatedEvent(eventName,duration,eventDescription,new ArrayList<>());
-					EventManagePanel.this.eventManager.setOrganizer(EventManagePanel.this.event, currentUser);
+					EventManagePanel.this.event.setOrganizer(currentUser.getUsername());
 					EventManagePanel.this.isNewEvent = false;
 
 				} else {

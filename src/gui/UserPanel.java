@@ -162,7 +162,7 @@ public class UserPanel extends BaseDashboardPanel {
                     EventManager eventManager = new EventManager(repository, eventRepository);
                     ImportStatus status = eventManager.importIcs(activeUser, filePath);
                     
-                    if (status == ImportStatus.Succes) {
+                    if (status == ImportStatus.SUCCESS) {
                         JOptionPane.showMessageDialog(UserPanel.this, "Calendar imported successfully!");
                         refreshEvents();
                     } else {

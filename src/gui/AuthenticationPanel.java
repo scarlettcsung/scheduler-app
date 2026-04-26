@@ -17,7 +17,6 @@ import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
-import user.calendar.UserCalendar;
 import user.service.UserService;
 
 import javax.swing.JOptionPane;
