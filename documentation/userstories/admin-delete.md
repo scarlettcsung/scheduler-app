@@ -1,5 +1,5 @@
 **Title** : admin delete 
-**ID** : 0  
+**ID** : 6  
 **As a...** admin  
 **I want to ...** block removal of the admin form the delete user options
 **So that...** I cant acedentaly remove it self

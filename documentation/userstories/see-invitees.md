@@ -1,5 +1,5 @@
 **Title** : See list of invitees  
-**ID** : 0  
+**ID** : 20  
 **As a...** user  
 **I want to ...** see the list of invitees   
 **So that...** I can see who else is attending the event

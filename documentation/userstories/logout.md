@@ -1,5 +1,5 @@
 **Title** : logout  
-**ID** : 0  
+**ID** : 2   
 **As a...** user  
 **I want to ...** Click the logout button while logged in  
 **So that...** Logs the current user out of their account and returns to the login screen  

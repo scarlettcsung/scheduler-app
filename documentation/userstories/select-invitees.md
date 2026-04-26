@@ -1,5 +1,5 @@
 **Title** : Select Invitees
-**ID** : 0
+**ID** : 18
 **As a...** user
 **I want to ...** select users from the system to invite to my event
 **So that...** I can select users from the system to invite to my event

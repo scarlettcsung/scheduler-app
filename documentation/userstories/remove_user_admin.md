@@ -1,5 +1,5 @@
 **Title** : remove user 
-**ID** : 0  
+**ID** : 8  
 **As a...** admin
 **I want to ...** remove a user from the system 
 **So that...** the active user list stays up date when someone leaves

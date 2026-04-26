@@ -1,5 +1,5 @@
 **Title** : Reject Invite
-**ID** : 0
+**ID** : 16
 **As a...** user
 **I want to ...** reject an event invite
 **So that...** I do not have to go to events I do not want to go to

@@ -1,5 +1,5 @@
 Title : Display Invites   
-ID : 0  
+ID : 9  
 As a... user   
 I want to ... see incoming invites on home page
 So that... I can accept or decline the invitation

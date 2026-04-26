@@ -1,5 +1,5 @@
-**Title** : View invited events
-**ID** : 1
+**Title** : View user's events
+**ID** : 23
 **As a...** Invited user
 **I want to ...** see all invites that I am invited to
 **So that...** I can accept/neglect an invite and make an educated decision.

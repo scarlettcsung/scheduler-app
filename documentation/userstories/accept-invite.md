@@ -1,7 +1,7 @@
-**Title** : Accept Invite
-**ID** : 0
-**As a...** user
-**I want to ...** accept an event invite
+**Title** : Accept Invite  
+**ID** : 17  
+**As a...** user  
+**I want to ...** accept an event invite  
 **So that...** I can accept the invitation and be added to the event
 
 **Acceptance criteria:**
