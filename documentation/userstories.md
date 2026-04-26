@@ -6,7 +6,7 @@
 |TRUE|3|NS SS/SN SS||edit invites|0.5|S|0.5|0|
 |TRUE|3|SN SS/GI SS||manage created events|1.5|S|1.5|0|
 |TRUE|2|EO AA||Login|1.0|M|1.0|0|
-|TRUE|2|EO AA||Logout|user|Click the logout button while logged in|Logs the current user out of their account and returns to the login screen|1.0|M|1.0|0|
+|TRUE|2|EO AA||Logout|1.0|M|1.0|0|
 |TRUE|3|EO GI||delete event|1.0|S|1.0|1|
 |FALSE|4|NS CR||scrollbar|user|scroll up and down/left and right on larger pages|I can see the whole page|1|S|0.5|0.5|
 |TRUE|3|EO SS|---|Back button|user|leave event manage screen without saving|it's easy to leave if I no longer need to create or update event|0.5|C|0.5|0|
