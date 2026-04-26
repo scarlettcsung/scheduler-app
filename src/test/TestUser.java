@@ -3,7 +3,6 @@ package test;
 import junit.framework.TestCase;
 import user.AdminUser;
 import user.User;
-import user.calendar.UserCalendar;
 
 /**
  * Unit tests for {@link user.User} and {@link user.AdminUser}.
@@ -14,14 +13,11 @@ import user.calendar.UserCalendar;
 public class TestUser extends TestCase {
     private User normalUser;
     private User adminUser;
-    private UserCalendar myCalendar;
 
     @Override
     protected void setUp() {
-        normalUser = new User("testUser", "testPassword", null);
-        myCalendar = new UserCalendar(null);
-        normalUser.setCalendar(myCalendar);
-        adminUser = new AdminUser("admin", "admin", null);
+        normalUser = new User("testUser", "testPassword");
+        adminUser = new AdminUser("admin", "admin");
     }
 
     //test the get username
@@ -32,11 +28,6 @@ public class TestUser extends TestCase {
     //test getpassword
     public void testGetPassword() {
         assertEquals("testPassword", normalUser.getPassword());
-    }
-
-    //test get calendar
-    public void testGetCalendar() {
-        assertEquals(myCalendar, normalUser.getCalendar());
     }
 
     //test acces to admin being denied as user
@@ -56,7 +47,7 @@ public class TestUser extends TestCase {
     
     //test the admin can delete user
     public void testAdminCanDeleteExistingUser() {
-        User targetUser = new User("targetUser", "password", null);
+        User targetUser = new User("targetUser", "password");
         assertTrue(adminUser.canDeleteUser(targetUser));
     }
     

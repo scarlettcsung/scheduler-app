@@ -110,9 +110,6 @@ public class InviteManager {
         }
 
         event.getInvites().removeIf(i -> i.getRecipient().equals(username));
-        if (recipient.getCalendar() != null) {
-            recipient.getCalendar().removeEvent(event);
-        }
     }
 
     /**
@@ -129,16 +126,7 @@ public class InviteManager {
         if (hasExistingInvite(event, recipient.getUsername())) {
             return;
         }
-
-        if (role.equals(Role.ORGANIZER)) {
-        	event.getInvites().add(new Invite(recipient.getUsername(), event.getEventId(), Role.ORGANIZER));
-        } else {
-        	event.getInvites().add(new Invite(recipient.getUsername(), event.getEventId(), Role.GUEST));
-        }
-        
-        if (recipient.getCalendar() != null) {
-            recipient.getCalendar().addEvent(event);
-        }
+        event.getInvites().add(new Invite(recipient.getUsername(), event.getEventId(), role));
     }
 
     /**

@@ -7,7 +7,6 @@ import invite.Invite;
 import invite.InviteStatus;
 import junit.framework.TestCase;
 import user.User;
-import user.calendar.UserCalendar;
 
 /**
  * Unit tests for {@link invite.Invite}.
@@ -18,7 +17,6 @@ import user.calendar.UserCalendar;
 public class TestInvite extends TestCase{
 
     private User exampleOrganizer;
-    private UserCalendar calendar;
     private Event event;
     private Invite invite;
     private String exampleInvitee;
@@ -26,8 +24,7 @@ public class TestInvite extends TestCase{
     private String eventId;
 
     protected void setUp() {
-        exampleOrganizer = new User("Charles","12345",new UserCalendar(null));
-        calendar = new UserCalendar(null);
+        exampleOrganizer = new User("Charles","12345");
         event = new CreatedEvent("testEvent", 60,"testEvent", null);
         eventId = event.getEventId();
         exampleInvitee = "Joe";

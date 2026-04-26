@@ -17,7 +17,6 @@ import repository.EventRepository;
 import repository.UserRepository;
 import scheduler.Scheduler;
 import user.User;
-import user.calendar.UserCalendar;
 import user.service.UserService;
 
 import javax.swing.JOptionPane;
@@ -96,10 +95,6 @@ public class AuthenticationPanel extends JPanel {
 			            JOptionPane.showMessageDialog(null, "Login successful!");
 			            // EO GI: Transition to the admin panel or user dashboard here
 			            JFrame topFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(AuthenticationPanel.this);
-			            if (currentUser.getCalendar() == null) {
-			            	currentUser.setCalendar(new UserCalendar(new ArrayList<>()));
-			            }
-
 			            if(currentUser.canAccessAdminPanel()) {
 			            	topFrame.setContentPane(new AdminPanel(repository,currentUser, scheduler,eventRepository));
 			            } else {

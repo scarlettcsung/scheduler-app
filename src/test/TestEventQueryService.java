@@ -1,6 +1,9 @@
 package test;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import event.CreatedEvent;
 import event.Event;
@@ -10,7 +13,6 @@ import event.service.EventQueryService;
 import invite.Invite;
 import repository.EventRepository;
 import user.User;
-import user.calendar.UserCalendar;
 import junit.framework.TestCase;
 
 /**
@@ -32,16 +34,16 @@ public class TestEventQueryService extends TestCase {
 		eventRepository = new EventRepository();
 		eventQueryService = new EventQueryService(eventRepository);
 		eventManager = new EventManager();
-		alice = new User("alice","12345",new UserCalendar(null));
-		bob = new User("bob","12345",new UserCalendar(null));
-		charlie = new User("charlie","12345",new UserCalendar(null));
+		alice = new User("alice","12345");
+		bob = new User("bob","12345");
+		charlie = new User("charlie","12345");
 	}
 
 	public void testVisibleEventsForOrganizer() {
 		Event ownEvent = new CreatedEvent("Planning", 60, "Sprint planning", null);
-		eventManager.setOrganizer(ownEvent, alice);
+		ownEvent.setOrganizer(alice.getUsername());
 		Event otherEvent = new CreatedEvent("Review", 30, "Project review", null);
-		eventManager.setOrganizer(otherEvent, bob);
+		otherEvent.setOrganizer(bob.getUsername());
 
 		eventRepository.save(ownEvent);
 		eventRepository.save(otherEvent);
@@ -54,13 +56,13 @@ public class TestEventQueryService extends TestCase {
 
 	public void testVisibleEventsForAcceptedInvitee() {
 		Event acceptedEvent = new CreatedEvent("Demo", 45, "Accepted invite", null);
-		eventManager.setOrganizer(acceptedEvent, bob);
+		acceptedEvent.setOrganizer(bob.getUsername());
 		Invite acceptedInvite = new Invite("alice", acceptedEvent.getEventId(), null);
 		acceptedInvite.accept();
 		acceptedEvent.getInvites().add(acceptedInvite);
 
 		Event pendingEvent = new CreatedEvent("Workshop", 90, "Pending invite", null);
-		eventManager.setOrganizer(pendingEvent, charlie);
+		pendingEvent.setOrganizer(charlie.getUsername());
 		pendingEvent.getInvites().add(new Invite("alice", pendingEvent.getEventId(), null));
 
 		eventRepository.save(acceptedEvent);
@@ -74,7 +76,7 @@ public class TestEventQueryService extends TestCase {
 
 	public void testInvitesForUserDeduplicatesByRecipientAndEvent() {
 		Event event = new CreatedEvent("Design", 30, "Discuss design", null);
-		eventManager.setOrganizer(event, bob);
+		event.setOrganizer(bob.getUsername());
 		event.getInvites().add(new Invite("alice", event.getEventId(), null));
 		event.getInvites().add(new Invite("alice", event.getEventId(), null));
 		event.getInvites().add(new Invite("charlie", event.getEventId(), null));
@@ -89,9 +91,9 @@ public class TestEventQueryService extends TestCase {
 
 	public void testEventsForAdminIncludesAllEvents() {
 		Event firstEvent = new CreatedEvent("Planning", 60, "Sprint planning", null);
-		eventManager.setOrganizer(firstEvent, alice);
+		firstEvent.setOrganizer(alice.getUsername());
 		Event secondEvent = new CreatedEvent("Review", 30, "Project review", null);
-		eventManager.setOrganizer(secondEvent, bob);
+		secondEvent.setOrganizer(bob.getUsername());
 
 		eventRepository.save(firstEvent);
 		eventRepository.save(secondEvent);
@@ -105,7 +107,7 @@ public class TestEventQueryService extends TestCase {
 
 	public void testInvitesForAdminIncludesAllRecipientsAndDeduplicates() {
 		Event event = new CreatedEvent("Design", 30, "Discuss design", null);
-		eventManager.setOrganizer(event, bob);
+		event.setOrganizer(bob.getUsername());
 		event.getInvites().add(new Invite("alice", event.getEventId(), null));
 		event.getInvites().add(new Invite("alice", event.getEventId(), null));
 		event.getInvites().add(new Invite("charlie", event.getEventId(), null));
@@ -117,4 +119,12 @@ public class TestEventQueryService extends TestCase {
 		assertEquals(event, invites.get(0).getEvent());
 		assertEquals(event, invites.get(1).getEvent());
 	}
+	
+	public void testVisibleEventsforUser() {
+		Set<Event> expectedSet = new LinkedHashSet<>();
+		List<Event> expectedList = new ArrayList<>(expectedSet);
+		assertEquals(expectedList, eventQueryService.getVisibleEventsForUser(null));
+		
+	}
+	
 }

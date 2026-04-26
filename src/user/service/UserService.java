@@ -6,7 +6,6 @@ import java.util.List;
 import authentication.Authentication;
 import repository.UserRepository;
 import user.User;
-import user.calendar.UserCalendar;
 
 /**
  * Coordinates user-facing operations such as registration, login, and account
@@ -41,8 +40,7 @@ public class UserService {
             return false;
         }
 
-        User newUser = new User(username, password, null);
-        newUser.setCalendar(new UserCalendar(null));
+        User newUser = new User(username, password);
         this.userRepository.saveUser(newUser);
 
         return true;

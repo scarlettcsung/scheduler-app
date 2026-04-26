@@ -52,24 +52,18 @@ public class Main {
         List<User> loadedUsers = ioHandler.readUsers(filePath);
         for (User user : loadedUsers) {
             if (user.getUsername().equals("admin")) {
-                AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword(), user.getCalendar());
-                repository.saveUser(adminUser);
+            	AdminUser adminUser = new AdminUser(user.getUsername(), user.getPassword());
+            	repository.saveUser(adminUser);
             } else {
                 repository.saveUser(user);
             }
         }
-
-        for (User user : repository.getAll()) {
-            if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
-                continue;
+        
+        String filePathEvent = "src/filestorage/eventStorage.json";
+        List<Event> loadedEvents = ioHandler.readEvents(filePathEvent);
+        for (Event event : loadedEvents) {
+        	eventRepository.save(event);
             }
-            for (Event event : user.getCalendar().getEvents()) {
-            	if (eventRepository.getItemById(String.valueOf(event.getEventId())) == null) {
-            	
-                    eventRepository.save(event);
-                }
-            }
-        }
 
         System.out.println("Data loaded successfully.");
 
@@ -91,7 +85,9 @@ public class Main {
                 public void windowClosing(WindowEvent e) {
                     System.out.println("Saving data...");
                     List<User> usersToSave = repository.getAll();
+                    List<Event> eventsToSave = eventRepository.getAll();
                     ioHandler.writeUsers(usersToSave, filePath);
+                    ioHandler.writeEvents(eventsToSave, filePathEvent);
                     System.out.println("Save successful.");
                     frame.dispose();
                     System.exit(0);

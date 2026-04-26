@@ -70,8 +70,8 @@ public class TestUserService extends TestCase {
     }
 
     public void testDeleteUserMapsAdminDeletionResult() {
-        User targetUser = new User("testUser", "pw123", null);
-        User adminUser = new AdminUser("admin", "admin", null);
+        User targetUser = new User("testUser", "pw123");
+        User adminUser = new AdminUser("admin", "admin");
         testRepo.saveUser(targetUser);
 
         UserDeletionResult result = userService.deleteUser("testUser", adminUser);
@@ -80,7 +80,7 @@ public class TestUserService extends TestCase {
     }
 
     public void testDeleteOwnAccountMapsSelfDeletionResult() {
-        User targetUser = new User("testUser", "pw123", null);
+        User targetUser = new User("testUser", "pw123");
         testRepo.saveUser(targetUser);
 
         UserDeletionResult result = userService.deleteOwnAccount(targetUser);
@@ -100,5 +100,9 @@ public class TestUserService extends TestCase {
 
         assertFalse(result);
     }
-
+    
+    public void testDeleteOwnAccountNullUser() {
+    	assertEquals(UserDeletionResult.NOT_AUTHENTICATED, userService.deleteOwnAccount(null));
+    }
+    
 }

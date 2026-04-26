@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
-import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,16 +30,15 @@ public class TestEventManager extends TestCase {
 	private EventRepository eventRepository;
 	private EventManager eveUpdateEvent;
 	private InviteManager inviteManager;
-	private UserCalendar calendar;
 
-    User exampleOrganizer = new User("Charles","12345",new UserCalendar(null));
+    User exampleOrganizer = new User("Charles","12345");
     LocalDateTime example_date = LocalDateTime.of(2026, 4, 1, 12, 0);
     Event event = new CreatedEvent("osman", 60, "testEvent", null);
     LocalDateTime example_time = LocalDateTime.of(2026, 1, 1, 11, 0);
     
 	// Set up repository
-	User exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
-	User exampleNewOrganizer = new User("Jennifer","1234", new UserCalendar(null));
+	User exampleInvitee = new User("Joe", "67890");
+	User exampleNewOrganizer = new User("Jennifer","1234");
 	Invite invite = new Invite(exampleInvitee.getUsername(),event.getEventId(), null);
 	
 	public void setUp() {
@@ -48,10 +46,9 @@ public class TestEventManager extends TestCase {
 		eventRepository = new EventRepository();
 		eveUpdateEvent = new EventManager(repository, eventRepository);
 		inviteManager = new InviteManager(repository);
-		repository.saveUser(new User("Charles","12345",calendar));
+		repository.saveUser(new User("Charles","12345"));
 		repository.saveUser(exampleInvitee);
 		repository.saveUser(exampleNewOrganizer);
-		calendar = new UserCalendar(null);
 	}
 	
     public void testUpdateEventShouldChangeEvent() {
@@ -73,32 +70,37 @@ public class TestEventManager extends TestCase {
         UserRepository repo = new UserRepository();
         EventRepository eventRepo = new EventRepository();
 
-        // Create organizer with a calendar
-        UserCalendar cal = new UserCalendar(null);
-        User organizer = new User("testUser", "password", cal);
-        cal.addEvent(event);
+        // Create organizer
+        User organizer = new User("testUser", "password");
 
         // Save organizer to repository
         repo.saveUser(organizer);
 
         // Create EventManager with the repository
+        Event event = new CreatedEvent("meeting", 60, "desc", null);
+        event.setOrganizer(organizer.getUsername());
+        eventRepo.save(event);
         EventManager managerWithRepo = new EventManager(repo, eventRepo);
 
-        // Verify event is in calendar before deletion
-        assertTrue(cal.getEvents().contains(event));
+        // Verify event is in calendar before deletion]
+        List<Event> cal = eventRepo.getUserCalendar(organizer.getUsername());
+        assertTrue(cal.contains(event));
 
         // Delete the event
         managerWithRepo.deleteEvent(event);
 
         // Verify event is removed from calendar after deletion
-        assertFalse(cal.getEvents().contains(event));
+        cal = eventRepo.getUserCalendar(organizer.getUsername());
+        assertFalse(cal.contains(event));
     }
     
     public void testInviteReject() {
     	inviteManager.addInvite(event,exampleInvitee,Role.GUEST);
+    	EventRepository eventRepo = new EventRepository();
         eveUpdateEvent.rejectInvite(invite,event);
         assertEquals(0, event.getInvites().size());
-        assertFalse(exampleInvitee.getCalendar().getEvents().contains(event));
+        List<Event> inviteeEvents = eventRepo.getUserCalendar(exampleInvitee.getUsername());
+        assertFalse(inviteeEvents.contains(event));
         assertEquals(InviteStatus.REJECTED,invite.getStatus());
     }
     
@@ -113,62 +115,37 @@ public class TestEventManager extends TestCase {
     	//setup Event for this test
     	UserRepository repo = new UserRepository();
         EventRepository eventRepo = new EventRepository();
-        UserCalendar orgCal = new UserCalendar(null);
-        User organizer = new User("testUser", "password", orgCal);
+        User organizer = new User("testUser", "password");
         repo.saveUser(organizer);
         Event e = new CreatedEvent("meeting", 60, "desc", null);
         
         //add event to calendar
-        orgCal.addEvent(e);
         e.getInvites().add(new Invite("ghostUser", e.getEventId(), null));
         
         //test
         new EventManager(repo, eventRepo).deleteEvent(e);
-        assertFalse(orgCal.getEvents().contains(e));
+        assertFalse(eventRepo.getUserCalendar(organizer.getUsername()).contains(e));
     }
  
-    //test invitee has no calendar
-    public void testDeleteEventInviteeHasNoCalendar() {
-    	//setup event for test
-    	UserRepository repo = new UserRepository();
-        EventRepository eventRepo = new EventRepository();
-        UserCalendar orgCal = new UserCalendar(null);
-        User organizer = new User("testUser", "password", orgCal);
-        repo.saveUser(organizer);
-        repo.saveUser(new User("inviteeUser", "password", null)); // no calendar
-        Event e = new CreatedEvent("meeting", 60, "desc", null);
-        
-        //add event to calendar
-        orgCal.addEvent(e);
-        e.getInvites().add(new Invite("inviteeUser", e.getEventId(), null));
-        
-        //test
-        new EventManager(repo, eventRepo).deleteEvent(e);
-        assertFalse(orgCal.getEvents().contains(e));
-    }
     
  // Covers invitee calendar removeEvent line
     public void testDeleteEventWithInvites() {
     	//setup
         UserRepository repo = new UserRepository();
         EventRepository eventRepo = new EventRepository();
-        UserCalendar orgCal = new UserCalendar(null);
-        User organizer = new User("testUser", "password", orgCal);
+        User organizer = new User("testUser", "password");
         repo.saveUser(organizer);
-        UserCalendar inviteeCal = new UserCalendar(null);
-        User invitee = new User("inviteeUser", "password", inviteeCal);
+        User invitee = new User("inviteeUser", "password");
         repo.saveUser(invitee);
         Event e = new CreatedEvent("meeting", 60, "desc", null);
         
         //add to calendar
-        orgCal.addEvent(e);
-        inviteeCal.addEvent(e);
         e.getInvites().add(new Invite("inviteeUser", e.getEventId(), null));
         
         //test
         new EventManager(repo, eventRepo).deleteEvent(e);
-        assertFalse(orgCal.getEvents().contains(e));
-        assertFalse(inviteeCal.getEvents().contains(e));
+        assertFalse(eventRepo.getUserCalendar(organizer.getUsername()).contains(e));
+        assertFalse(eventRepo.getUserCalendar(invitee.getUsername()).contains(e));
     }
     
     // Covers the path where repository is null, hitting the final closing bracket?
@@ -182,18 +159,16 @@ public class TestEventManager extends TestCase {
     	//setup
         UserRepository repo = new UserRepository();
         EventRepository eventRepo = new EventRepository();
-        UserCalendar orgCal = new UserCalendar(null);
-        User organizer = new User("testUser", "password", orgCal);
+        User organizer = new User("testUser", "password");
         repo.saveUser(organizer);
         Event e = new CreatedEvent("meeting", 60, "desc", null);
         
         //add to calendar
-        orgCal.addEvent(e);
         e.getInvites().add(new Invite(null, e.getEventId(), null));
 
         //test
         new EventManager(repo, eventRepo).deleteEvent(e);
-        assertFalse(orgCal.getEvents().contains(e));
+        assertFalse(eventRepo.getUserCalendar(null).contains(e));
     }
     
     // Test organizerUsername == null branch
@@ -234,38 +209,14 @@ public class TestEventManager extends TestCase {
     }
     
     public void testSetOrganizer() {
-    	eveUpdateEvent.setOrganizer(event, exampleNewOrganizer);
+    	event.setOrganizer(exampleNewOrganizer.getUsername());
     	assertEquals(exampleNewOrganizer.getUsername(),event.getOrganizer());
     }
     
-    public void testSetOrganizerNullCalendar() {
-        User noCalUser = new User("noCalUser", "pass", null); // null calendar
-        eveUpdateEvent.setOrganizer(event, noCalUser);
-        assertNotNull(noCalUser.getCalendar());
-        assertEquals("noCalUser", event.getOrganizer());
-        assertTrue(noCalUser.getCalendar().getEvents().contains(event));
-    }
-    
-    public void testConstructorWithRepositoryOnly() {
-        UserRepository repo = new UserRepository();
-        EventManager manager = new EventManager(repo);
-        
-        // Verify it doesn't crash and behaves correctly with null eventRepository
-        // deleteEvent should still work (repository is set, eventRepository is null)
-        UserCalendar cal = new UserCalendar(null);
-        User organizer = new User("testUser", "password", cal);
-        repo.saveUser(organizer);
-        
-        Event e = new CreatedEvent("meeting", 60, "desc", null);
-        cal.addEvent(e);
-        
-        manager.deleteEvent(e);
-        assertFalse(cal.getEvents().contains(e));
-    }
     
     public void testGetOrganizer() {
         Event e = new CreatedEvent("meeting", 60, "desc", null);
-        eveUpdateEvent.setOrganizer(e, exampleNewOrganizer);
+        e.setOrganizer(exampleNewOrganizer.getUsername());
         User result = eveUpdateEvent.getOrganizer(e);
         assertEquals(exampleNewOrganizer, result);
     }
@@ -319,13 +270,12 @@ public class TestEventManager extends TestCase {
 
     public void testImportIcs() {
         String testIcsPath = "src/test/resources/simpleImport.ics";
-        User user = new User("ImportUser", "pass", null);
+        User user = new User("ImportUser", "pass");
         repository.saveUser(user);
 
         ImportStatus status = eveUpdateEvent.importIcs(user, testIcsPath);
 
-        assertEquals(ics.importer.ImportStatus.Succes, status);
-        assertNotNull(user.getCalendar());
+        assertEquals(ics.importer.ImportStatus.SUCCESS, status);
         
         // Verify events are in the central repository
         int importedCount = 0;
@@ -335,5 +285,15 @@ public class TestEventManager extends TestCase {
             }
         }
         assertTrue(importedCount > 0);
+    }
+    
+    public void testImportIcsUserRepoOnly() {
+    	
+    	String testIcsPath = "src/test/resources/simpleImport.ics";
+        EventManager eventManagerSimple = new EventManager(repository);
+        User testUser = new User("TestUser", "pass");
+        ImportStatus status = eventManagerSimple.importIcs(testUser, testIcsPath);
+        
+        assertEquals(ImportStatus.SUCCESS, status);
     }
 }

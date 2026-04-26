@@ -3,7 +3,6 @@ package test;
 import junit.framework.TestCase;
 import repository.EventRepository;
 import user.User;
-import user.calendar.UserCalendar;
 import event.CreatedEvent;
 import event.Event;
 import event.manager.EventManager;
@@ -31,9 +30,9 @@ public class TestEventRepository extends TestCase {
         super.setUp();
         eventRepo = new EventRepository();
         testEvent = new CreatedEvent("Project", 60, "test description", null);
-        admin = new User("admin","admin", new UserCalendar(null));
+        admin = new User("admin","admin");
         eventManager = new EventManager();
-        eventManager.setOrganizer(testEvent, admin);
+        testEvent.setOrganizer(admin.getUsername());
     }
 
     public void testSaveAndFindEvent() {
@@ -67,11 +66,11 @@ public class TestEventRepository extends TestCase {
     
     public void testDeleteEventsByOrganizer() {
     	Event project = new CreatedEvent("Project", 60, "test description", null);
-    	User john = new User("John","12345",null);
-    	eventManager.setOrganizer(project, john);
+    	User john = new User("John","12345");
+    	project.setOrganizer(john.getUsername());
     	Event meeting = new CreatedEvent("Meeting", 45, "Discuss project",  null);
-    	User user1 = new User("user1","12345",null);
-    	eventManager.setOrganizer(meeting, user1);
+    	User user1 = new User("user1","12345");
+    	meeting.setOrganizer(user1.getUsername());
 		eventRepo.save(project);
 		eventRepo.save(meeting);
 		

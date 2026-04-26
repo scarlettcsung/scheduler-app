@@ -40,7 +40,7 @@ public class IO {
         JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
             JsonObject jsonObject = json.getAsJsonObject();
             boolean isImportedField = (jsonObject.has("isImportedField") && jsonObject.get("isImportedField").getAsBoolean())
-                    || (jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean());
+                    || (jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean()); // old
 
             if (isImportedField) {
                 return context.deserialize(json, ImportedEvent.class);
@@ -57,7 +57,7 @@ public class IO {
 
         try (FileReader reader = new FileReader(filePath)) {
             User[] users = gson.fromJson(reader, User[].class);
-            return Arrays.asList(users);
+            return (users == null) ? Collections.emptyList() : Arrays.asList(users);
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filePath);
             e.printStackTrace();
@@ -68,9 +68,40 @@ public class IO {
 
         return Collections.emptyList();
     }
+    
+    /**
+     * Reads a list of events from a JSON file.
+     */
+    public List<Event> readEvents(String filePath) {
+        JsonDeserializer<Event> eventDeserializer = (json, typeOfT, context) -> {
+            JsonObject jsonObject = json.getAsJsonObject();
+            boolean isImported = (jsonObject.has("isImportedField") && jsonObject.get("isImportedField").getAsBoolean())
+                    || (jsonObject.has("isImported") && jsonObject.get("isImported").getAsBoolean());
+
+            if (isImported) {
+                return context.deserialize(json, ImportedEvent.class);
+            } else {
+                return context.deserialize(json, CreatedEvent.class);
+            }
+        };
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, (JsonDeserializer<LocalDateTime>)
+                        (json, type, context) -> LocalDateTime.parse(json.getAsString()))
+                .registerTypeAdapter(Event.class, eventDeserializer)
+                .create();
+
+        try (FileReader reader = new FileReader(filePath)) {
+            Event[] events = gson.fromJson(reader, Event[].class);
+            return Arrays.asList(events);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
 
     /**
-     * Writes user and calendar data to a JSON file.
+     * Writes user data to a JSON file.
      *
      * @param userList users to persist
      * @param filePath destination file path
@@ -86,6 +117,26 @@ public class IO {
             gson.toJson(userList, writer);
         } catch (IOException e) {
             System.err.println("Failed to write users to: " + filePath);
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Writes a list of events to a JSON file.
+     *
+     * @param eventList events to persist
+     * @param filePath destination file path
+     */
+    public void writeEvents(List<Event> eventList, String filePath) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, (JsonSerializer<LocalDateTime>)
+                        (src, type, context) -> new JsonPrimitive(src.toString()))
+                .create();
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            gson.toJson(eventList, writer);
+        } catch (IOException e) {
+            System.err.println("Failed to write events to: " + filePath);
             e.printStackTrace();
         }
     }

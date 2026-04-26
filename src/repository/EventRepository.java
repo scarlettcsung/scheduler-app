@@ -1,6 +1,10 @@
 package repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import event.Event;
+import invite.Invite;
 
 /**
  * In-memory repository for {@link event} instances.
@@ -65,10 +69,19 @@ public class EventRepository extends Repository<Event> {
      * @param username organizer username whose events should be removed
      */
     public void deleteEventsByOrganizer(String username) {
-        for (Event e : this.data) {
-            if (e.getOrganizer().equals(username)) {
-                deleteItem(e.getEventId());
-            }
-        }
+    	this.data.removeIf(e -> e.getOrganizer().equals(username));
+    }
+    
+    public List<Event> getUserCalendar(String username) {
+    	List<Event> userEvents = new ArrayList<>();
+    	for (Event e: this.data) {
+    		for (Invite i : e.getInvites()) {
+    			if (i.getRecipient().equals(username)) {
+    				userEvents.add(e);
+    				break;
+    			}		
+    		}
+    	}
+    	return userEvents;
     }
 }

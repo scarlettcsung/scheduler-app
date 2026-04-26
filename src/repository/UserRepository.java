@@ -1,6 +1,8 @@
 package repository;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import event.Event;
@@ -123,60 +125,27 @@ public class UserRepository extends Repository<User> {
      * @param username username whose event references should be cleaned up
      */
     public void cleanupUserEventReferences(String username) {
-        Map<String, Event> eventsById = new LinkedHashMap<>();
-
-        for (User user : this.data) {
-            if (user.getCalendar() == null || user.getCalendar().getEvents() == null) {
-                continue;
-            }
-
-            for (Event event : user.getCalendar().getEvents()) {
-                if (event != null && event.getEventId() != null) {
-                    eventsById.putIfAbsent(event.getEventId(), event);
-                }
-            }
+        if (this.eventRepository == null) {
+            return;
         }
 
-        if (this.eventRepository != null) {
-            for (User ignored : this.data) {
-                for (Event event : this.eventRepository.getAll()) {
-                    if (event != null && event.getEventId() != null) {
-                        eventsById.putIfAbsent(event.getEventId(), event);
-                    }
-                }
-                break;
-            }
-        }
+        List<Event> allEvents = new ArrayList<>(this.eventRepository.getAll());
 
-        for (Event event : eventsById.values()) {
-            if (event == null) {
-                continue;
-            }
+        for (Event event : allEvents) {
+            if (event == null) continue;
 
+            // Deletes event if user is organizer
             if (username.equals(event.getOrganizer())) {
-                removeEventFromAllCalendars(event);
-                if (this.eventRepository != null) {
-                    this.eventRepository.deleteItem(event.getEventId());
-                }
-                continue;
+                this.eventRepository.deleteItem(event.getEventId());
+                continue; 
             }
 
             if (event.getInvites() != null) {
-                event.getInvites().removeIf(invite -> invite != null && username.equals(invite.getRecipient()));
+                event.getInvites().removeIf(invite -> 
+                    invite != null && username.equals(invite.getRecipient())
+                );
             }
         }
     }
 
-    /**
-     * Removes an event from every stored user's calendar.
-     *
-     * @param event event to remove from calendars
-     */
-    public void removeEventFromAllCalendars(Event event) {
-        for (User user : this.data) {
-            if (user.getCalendar() != null) {
-                user.getCalendar().removeEvent(event);
-            }
-        }
-    }
 }

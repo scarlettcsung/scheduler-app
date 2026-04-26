@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 import repository.EventRepository;
 import repository.UserRepository;
 import user.User;
-import user.calendar.UserCalendar;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,10 +34,9 @@ public class TestEvent extends TestCase {
     
     protected void setUp() {
     	Locale.setDefault(Locale.ENGLISH);       
-    	exampleOrganizer = new User("Charles","12345",new UserCalendar(null));
-        exampleInvitee = new User("Joe", "67890", new UserCalendar(null));
+    	exampleOrganizer = new User("Charles","12345");
+        exampleInvitee = new User("Joe", "67890");
 
-        UserCalendar calendar = new UserCalendar(null);
         repository = new UserRepository();
         eventRepository = new EventRepository();
     	eventManager = new EventManager(repository, eventRepository);
@@ -56,8 +54,30 @@ public class TestEvent extends TestCase {
     public void testEventTime() {assertNull(event.getEventTime());}
     public void testEventId() {assertNotNull(event.getEventId());}
     public void testOrganizer() {
-    	eventManager.setOrganizer(event, exampleOrganizer);
+    	event.setOrganizer(exampleOrganizer.getUsername());
         assertEquals(exampleOrganizer.getUsername(),event.getOrganizer());
+        inviteManager.addInvite(event, exampleInvitee, Role.GUEST);
+        
+        event.setOrganizer(exampleInvitee.getUsername());
+        assertEquals(exampleInvitee.getUsername(),event.getOrganizer());
+        assertFalse(event.getOrganizer().equals(exampleOrganizer.getUsername()));
+        
+        Invite organizerInvite = null;
+        Invite differentGuyInvite = null;
+        for (Invite i:event.getInvites()) {
+        	if (i.getRecipient().equals(exampleOrganizer.getUsername())) {
+                organizerInvite = i;
+            } else if (i.getRecipient().equals(exampleInvitee.getUsername())) {
+                differentGuyInvite = i;
+            }
+        }
+        
+        assertEquals(Role.ORGANIZER,differentGuyInvite.getRole());
+        assertEquals(Role.GUEST, organizerInvite.getRole());
+    }
+    public void testNoOrganizer( ) {
+    	Event organizerlessEvent = new CreatedEvent("testEvent", 60, "testEvent", null);
+    	assertNull(organizerlessEvent.getOrganizer());
     }
     public void testDescription() {
         assertEquals("testEvent",event.getEventDescription());
@@ -77,4 +97,10 @@ public class TestEvent extends TestCase {
     	assertEquals(expected,event.getTimeString());
     }
     
+    public void testNoTimeString() {
+    	event.setEventTime(null);
+    	String expected = "Time not set";
+    	assertEquals(expected,event.getTimeString());
+    }
+
 }
