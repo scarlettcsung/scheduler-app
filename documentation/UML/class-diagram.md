@@ -4,9 +4,8 @@ classDiagram
         -authenticatedUser: User
         -repository: UserRepository
         +Authentication(repository: UserRepository)
-        +login(UserName: String, UserPassword: String) : boolean
+        +login(username: String, password: String) : boolean
         +logout() : void
-        +getauthenticatedUser() : User
     }
 
     class Main {
@@ -17,10 +16,10 @@ classDiagram
         -userRepository: UserRepository
 		-authentication: Authentication
         +UserService(userRepository: UserRepository)
-		+registerUser(username: String, password: String) : Boolean
+		+registerUser(username: String, password: String) : boolean
 		+authenticateUser(username: String, password: String) : User
 		+login(username: String, password: String) : boolean
-		+listUsernames() : List<String>
+		+listUsernames() : List~String~
 		+deleteUser(username: String, currentUser: User) : UserDeletionResult
 		+deleteOwnAccount(currentUser: User) : UserDeletionResult
     }
@@ -28,9 +27,9 @@ classDiagram
 
     class Repository~T~ {
         <<abstract>>
-        #List~T~ data
+        #data: List~T~
         +Repository()
-        +getItemByID(itemID: String) : T
+        +getItemById(itemId: String) : T
         +save(item: T) : void
         +getAll() : List~T~
         +getRepositoryType() : String
@@ -38,19 +37,18 @@ classDiagram
 
     class EventRepository {
         +EventRepository()
-        +getItemByID(eventID: String) : Event
-        +deleteItem(eventID: String) : int
+        +getItemById(eventId: String) : Event
+        +deleteItem(eventId: String) : int
         +getRepositoryType() : String
         +deleteEventsByOrganizer(username: String) : void
-        +getUserCalendar(String username) : List~Event~
+        +getUserCalendar(username: String) : List~Event~
     }
 
     class UserRepository {
         -eventRepository: EventRepository
         +saveUser(user: User) : void
-        +setEventRepository(eventRepository: EventRepository) : void
         +deleteUserData(username: String, currentUser: User) : UserDeletionResult
-        +getItemByID(username: String) : User
+        +getItemById(username: String) : User
         +isExistingUser(username: String) : boolean
         +cleanupUserEventReferences(username: String) : void
         +getRepositoryType() : String
@@ -60,26 +58,27 @@ classDiagram
         +readUsers(filePath: String) : List~User~
         +writeUsers(userList: List~User~, filePath: String) : void
         +readEvents(filePath: String) : List~Event~
-        +writeEvents(EventList: List~Event~, filePath: String) : void
+        +writeEvents(eventList: List~Event~, filePath: String) : void
     }
 
     class User {
         -username: String
         -password: String
-        +canAccessAdminPanel() : Boolean
-        +canDeleteUser() : Boolean
+        +canAccessAdminPanel() : boolean
+        +canDeleteUser(targetUser: User) : boolean
     }
-        class AdminUser {
-    +canAccessAdminPanel() : boolean
-    +canDeleteUser(targetUser: User) : boolean
-}
+    
+    class AdminUser {
+        +canAccessAdminPanel() : boolean
+        +canDeleteUser(targetUser: User) : boolean
+    }
     
 
     class Scheduler {
         -eventManager: EventManager
         -inviteManager: InviteManager
-        +findAvailableSlot(event: Event) : String
-        +scheduleEvent(event: Event) : Void
+        +findAvailableSlot(event: Event) : LocalDateTime
+        +scheduleEvent(event: Event) : boolean
     }
 
     class EventManager {
@@ -87,11 +86,11 @@ classDiagram
         -eventRepository: EventRepository
         -inviteManager: InviteManager
         +EventManager()
+        +EventManager(repository: UserRepository)
         +EventManager(repository: UserRepository, eventRepository: EventRepository)
         +updateEvent(event: Event, updateAspect: String, newValue: String) : void
         +deleteEvent(event: Event) : void
         +rejectInvite(invite: Invite, event: Event) : void
-        +setOrganizer(event: Event, organizer: User) : void
         +getOrganizer(event: Event) : User
         +returnParticipatingEvents(username: String, repo: EventRepository) : List~Event~
         +returnOrganisedEvents(username: String, repo: EventRepository) : List~Event~
@@ -104,14 +103,28 @@ classDiagram
         +addTemporaryInvite(currentUser: User, event: Event, tempInvites: List~String~, inviteeUsername: String) : String
         +removeInviteFromForm(currentUser: User, event: Event, tempInvites: List~String~, inviteeUsername: String) : String
         +removeInvite(event: Event, recipient: User) : void
-        +addInvite(event: Event, recipient: User) : void
-        -hasExistingInvite(event: Event, username: String) : boolean
+        +addInvite(event: Event, recipient: User, role: Role) : void
+    }
+
+    class EventQueryService {
+        -eventRepository: EventRepository
+        +EventQueryService(eventRepository: EventRepository)
+        +getVisibleEventsForUser(username: String) : List~Event~
+        +getEventsForAdmin() : List~Event~
+        +getInvitesForUser(username: String) : List~EventInviteView~
+        +getInvitesForAdmin() : List~EventInviteView~
+    }
+
+    class EventInviteView {
+        -event: Event
+        -invite: Invite
+        +EventInviteView(event: Event, invite: Invite)
     }
 
     class IcsImporter {
         -ICS_DATE_TIME_FORMAT: DateTimeFormatter$
         +runImport() : void
-        +parseICS(icsFile: String) : List~Event~
+        +parseIcs() : List~Event~
     }
 
     class Event {
@@ -120,34 +133,34 @@ classDiagram
         -eventTime: LocalDateTime
         -eventDuration: int
         -eventDescription: String
-        -eventID: String 
+        -eventId: String 
         -invites: List~Invite~
-        -participantUsernames: List~String~
         #isImportedField: boolean
         
         +isImported(): boolean
-        +setOrganizer(String organizerUsername) : void
-        +getParticipants() List~String~
-        +hasExistingInvite(String username): boolean
+        +setOrganizer(organizerUsername: String) : void
+        +getParticipants() : List~String~
         +getTimeString(): String
         +getOrganizer(): String
 
     }
     
     class CreatedEvent {
-         +isImported() boolean
+         +isImported() : boolean
     }
     
     class ImportedEvent {
-        +isImported() boolean
+        +isImported() : boolean
     }
 
     class Invite {
         -recipientUsername: String
-        -eventID: String
-        -status: inviteStatus
+        -eventId: String
+        -status: InviteStatus
         -role: Role
         +accept() : void
+        +setOrganizer() : void
+        +setGuest() : void
     }
 
     class ImportStatus {
@@ -157,19 +170,32 @@ classDiagram
         UserNotFound
     }
 
-    class inviteStatus {
+    class InviteStatus {
         <<enumeration>>
         PENDING
         ACCEPTED
         REJECTED
     }
 
+    class Role {
+        <<enumeration>>
+        GUEST
+        ORGANIZER
+    }
+
     class UserDeletionResult {
         <<enumeration>>
-        NOT_AUTHENTICATED,
-        DELETED_BY_ADMIN,
-        DELETED_SELF,
-        NOT_PERMITTED;
+        NOT_AUTHENTICATED
+        DELETED_BY_ADMIN
+        DELETED_SELF
+        NOT_PERMITTED
+        +isSuccess() : boolean
+    }
+
+    class FunnyLanguageFacts {
+        -facts: List~String~
+        +allFacts() : List~String~
+        +randomFact() : String
     }
 
     %% Relationships
@@ -197,7 +223,7 @@ classDiagram
     IcsImporter --> Event : creates imported events
     IcsImporter --> User
     IcsImporter --> ImportStatus
-    Invite --> inviteStatus
+    Invite --> InviteStatus
     Invite --> Role
     Repository <|-- EventRepository
     Repository <|-- UserRepository
