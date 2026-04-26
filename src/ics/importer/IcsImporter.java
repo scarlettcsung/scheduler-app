@@ -88,7 +88,7 @@ public class IcsImporter {
                 Invite organizerInvite = new Invite(this.targetUser.getUsername(), event.getEventId(), Role.ORGANIZER);
                 event.getInvites().add(organizerInvite);
             }
-            this.lastImportStatus = ImportStatus.Succes;
+            this.lastImportStatus = ImportStatus.SUCCESS;
         } catch (FileNotFoundException e) {
             this.lastImportStatus = ImportStatus.FileNotFound;
         } catch (Exception e) {

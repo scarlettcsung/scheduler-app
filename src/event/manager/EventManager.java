@@ -167,7 +167,7 @@ public class EventManager {
 
         ImportStatus status = importer.getLastImportStatus();
 
-        if (status == ImportStatus.Succes && this.eventRepository != null) {
+        if (status == ImportStatus.SUCCESS && this.eventRepository != null) {
             // 1. Remove old imported events for this user from the central repository
             List<Event> existingEvents = new ArrayList<>(this.eventRepository.getAll());
             for (Event event : existingEvents) {

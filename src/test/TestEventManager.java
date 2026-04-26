@@ -275,7 +275,7 @@ public class TestEventManager extends TestCase {
 
         ImportStatus status = eveUpdateEvent.importIcs(user, testIcsPath);
 
-        assertEquals(ics.importer.ImportStatus.Succes, status);
+        assertEquals(ics.importer.ImportStatus.SUCCESS, status);
         
         // Verify events are in the central repository
         int importedCount = 0;

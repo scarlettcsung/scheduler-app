@@ -7,7 +7,7 @@ package ics.importer;
  * @version 2
  */
 public enum ImportStatus {
-    Succes,
+    SUCCESS,
     FileNotFound,
     UserNotFound
 }

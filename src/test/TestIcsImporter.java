@@ -78,7 +78,7 @@ public class TestIcsImporter extends TestCase {
             System.out.println("Name: " + e.getEventName() + " | isImported: " + e.isImported());
         }
 
-        assertEquals(ImportStatus.Succes, importer.getLastImportStatus());
+        assertEquals(ImportStatus.SUCCESS, importer.getLastImportStatus());
         assertEquals(2, actualEvents.size());
         assertNotNull(findEvent(actualEvents, "Manual"));
         assertNull(findEvent(actualEvents, "Old import"));
