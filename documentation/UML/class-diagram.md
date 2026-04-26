@@ -184,31 +184,32 @@ classDiagram
     UserService ..> UserRepository
     UserService --> User
     UserRepository *-- User
-    UserRepository --> IO : Relationship
-    Invite ..> User
     Event *-- Invite
     CreatedEvent --|> Event
     ImportedEvent --|> Event
-    Scheduler ..> User
     Scheduler ..> Event
-    Scheduler --> EventManager
     Scheduler --> InviteManager
     EventManager ..> Event
     EventManager --> InviteManager
     InviteManager ..> User
     InviteManager ..> Event
     InviteManager ..> UserRepository
-    InviteManager --> EventRepository
     IcsImporter --> Event : creates imported events
+    IcsImporter --> User
     IcsImporter --> ImportStatus
     Invite --> inviteStatus
+    Invite --> Role
     Repository <|-- EventRepository
     Repository <|-- UserRepository
     EventRepository *-- Event
     UserRepository --> EventRepository : uses
     Scheduler --> EventRepository : uses
+    Scheduler --> UserRepository : uses
     EventManager --> EventRepository
     EventManager --> UserRepository
     EventManager ..> IcsImporter : uses
     AdminUser --|> User
+    EventQueryService --> EventRepository
+    EventInviteView --> Event
+    EventInviteView --> Invite
 ```
