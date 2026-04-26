@@ -154,7 +154,13 @@ public class EventManager {
         return this.repository.getItemById(organizerUsername);
     }
 
-    
+    /**
+     * Returns all events in the repository where the given user participates as a guest.
+     *
+     * @param username username to search for
+     * @param repo repository containing all events
+     * @return list of events in which the user participates as a guest
+     */
     public List<Event> returnParticipatingEvents(String username,EventRepository repo) {
     	List<Event> pEvents= new ArrayList<>();
     	List<Event> allEvents= repo.getAll();
@@ -170,6 +176,12 @@ public class EventManager {
     	
     }
     
+    /* Returns all events in the repository that are organized by the given user.
+    *
+    * @param username username to search for
+    * @param repo repository containing all events
+    * @return list of events organized by the user
+    */
     public List<Event> returnOrganisedEvents(String username,EventRepository repo) {
     	List<Event> oEvents= new ArrayList<>();
     	List<Event> allEvents= repo.getAll();

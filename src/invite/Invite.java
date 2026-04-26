@@ -95,15 +95,26 @@ public class Invite {
     public void setInviteStatus(InviteStatus status) {
         this.status = status;
     }
+    
+    /**
+     * Changes this invitee's role to organizer.
+     */
 
     public void setOrganizer() {
         this.role = Role.ORGANIZER;
     }
-
+    /**
+     * Changes this invitee's role to guest.
+     */
     public void setGuest() {
         this.role = Role.GUEST;
     }
-
+    
+    /**
+     * Returns the role associated with this invite.
+     *
+     * @return invite role
+     */
     public Role getRole() {
         return this.role;
     }

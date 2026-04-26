@@ -3,7 +3,12 @@ package easter.egg;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
+/**
+ * Stores a small collection of language facts for when the admin tries to delete themself
+ *
+ * @author GI SS
+ * @version 4
+ */
 public class FunnyLanguageFacts {
 
 	private final List<String> facts = List.of(
@@ -21,10 +26,19 @@ public class FunnyLanguageFacts {
 			'As if you were one of those we might not be able to make unsuccessful'.
 			""");
 	
+	/**
+	 * Returns all available language facts.
+	 *
+	 * @return list of stored language facts
+	 */
 	public List<String> allFacts() {
 		return new ArrayList<>(this.facts);
 		}
-	
+	/**
+	 * Returns one random language fact.
+	 *
+	 * @return randomly selected language fact
+	 */
 	public String randomFact() {
 		List<String> facts = allFacts();
 		if (facts.isEmpty()) {
